@@ -1,0 +1,58 @@
+
+-- Maybe there should be no relationship object, unless we can make it temporal
+-- Like it has an optional start and stop beat or value_change
+-- Would that make the relationship a value?
+-- YES... this object should not exist.
+/*
+   CREATE TABLE IF NOT EXISTS character_relationship (
+   id INTEGER PRIMARY KEY,
+   label text NOT NULL,
+   characters text -- list of objects like: [ { char_id: 7, role: "brother"} ]
+);
+*/
+
+/*
+    character_relationship objects can be like:
+    { char_id: 7, relationship: -1, magnitude: 37 }
+
+    THIS is the difficult part.
+
+    A value must hold a map of ValueChange ids to Beat ids.
+    Yes... many relationships are contained within THIS object. Very important object.
+
+    Values can have RELATIONSHIPS to one another... they effect each other.
+    Should it be a hierarchy?
+        SOLUTION:
+    A VALUE can be a subsidiary of ANOTHER VALUE.
+        -(don't just make an opposite value, because characters can have negative relationships tot he value instead)
+    But two unrelated values can effect each other, if a certain VALUE CHANGE holds them BOTH.
+    So a VALUE CHANGE is not just a 1:1 map of one VALUE object to one integer of change. It can have a LIST of changes.
+    And some kind of prompt to explain the relation.
+
+    -character (who have relationships to values or value-changes or value-strings)
+    -value (the base object... )
+    -value_change ()
+    -value_thread 
+
+
+    BRAINSTORMING:
+
+    So if the value_thread contains all those relationships, what's the point of the value object itself?
+    Can one value object have multiple threads?
+    No.
+    The value_thread object IS the value object.
+    Which means it's really the other way around. The value object is the value_thread object.
+    So we have no object called "value_thread."
+
+
+    UNRELATED:
+
+    Maybe an ENUM called PHASE:
+    * climax
+    * resolution
+    * inciting incident
+    * etc.
+
+
+*/
+

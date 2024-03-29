@@ -1,0 +1,17 @@
+.title,
+.title_callout {
+    text-align: center;
+}
+
+.cardLabel {
+    text-align: center;
+    font-weight: 600;
+}
+
+.cardSectionLabel {
+    font-weight: 500;
+}
+
+.subcomponent-box {
+    display: none;
+}

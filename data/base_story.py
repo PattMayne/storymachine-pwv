@@ -6,8 +6,9 @@ import json
 # returns a dictionary of dictionaries of dictionaries...
 def get_base_story():
 	return {
+        "loaded": True,
         "label": "Story Title",
-		"description": "Here's a description, ya filthy animals!",
+		"description": "Here's a description, ya \"filthy animals!",
         "acts": [
             {
                 "label": "act 1",
@@ -55,10 +56,21 @@ def get_base_story():
                                 "label": "a scene chapter 2 for act 2",
                                 "beats": [
                                     {
-                                        "label": "act 2, chapter 2, beat 1"
+                                        "label": "act 2, chapter 2, SCENE 1, beat 1"
                                     },
                                     {
-                                        "label": "act 2, chapter 2, beat 2"
+                                        "label": "act 2, chapter 2, SCENE 1, beat 2"
+                                    }
+                                ]
+                            },
+                            {
+                                "label": "SCENE 2 chapter 2 for act 2",
+                                "beats": [
+                                    {
+                                        "label": "act 2, chapter 2, SCENE 2, beat 1"
+                                    },
+                                    {
+                                        "label": "act 2, chapter 2, SCENE 2, beat 2"
                                     }
                                 ]
                             }
@@ -93,7 +105,7 @@ def get_base_story():
 
 # creates vanilla story template data in DB from the above dictionary
 # returns id of new story data in DB
-def create(mainApp):
+def create():
 	empty_base_story = get_base_story()
 
 	story_label = empty_base_story["label"]

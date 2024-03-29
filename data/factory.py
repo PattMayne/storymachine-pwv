@@ -63,13 +63,16 @@ def create_new_author(first_name, last_name):
 
 # creates vanilla story object template
 # returns story_id
-def create_base_story(mainApp):
-	story_id = base_story.create(mainApp)
+def create_base_story():
+	story_id = base_story.create()
 	story_obj = get_story_by_id(story_id)
 	return story_id
 	
 
 # Get story dict by id
-
 def get_story_by_id(story_id):
 	return get_story.by_id(story_id)
+
+
+def get_story_ids():
+    return get_story.ids()
