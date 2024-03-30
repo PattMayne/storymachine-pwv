@@ -195,7 +195,7 @@ def make_beats_from_dict(beats, scene_id, conn, cur):
 		cur.execute(sql_text, 
 		{
 			'label': beat["label"],
-			'description': 'Wellcome t o the scnee!S',
+			'description': 'Wellcome t o the BEAT!S',
 			'scene_id': scene_id,
 			'relative_order': 0
 		})

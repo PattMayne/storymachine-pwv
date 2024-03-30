@@ -24,28 +24,47 @@
     <div class="grid-container">
         <div class="grid-x grid-padding-x">
 
-            <!-- ALWAYS have the story box available -->
+            <!-- ALWAYS have the STORY INFO BOX available -->
             <div class="large-12 cell" id="storyInfoBox">
                 <div class="callout title_callout">
-                    <h6>STORY</h6>
-                    <p>story name is: <span id="storyIdSpan">NULL</span></p>
+                    <h6>STORY:&nbsp;<a class="cardTitleLink" id="storyIdLink">NULL</a></h6>
                 </div>
             </div>
 
             <!-- SUBCOMPONENT BOXES (invisble by default) -->
 
-            <!-- SUBCOMPONENT BOXES -->
+            <!-- ACT INFO BOX -->
             <div class="large-12 cell subcomponent-box" id="actInfoBox">
                 <div class="callout title_callout">
-                    <h6>ACT</h6>
-                    <p>act name is: <span id="storyIdSpan">NULL</span></p>
+                    <h6>ACT:&nbsp;<a class="cardTitleLink" id="actIdLink">NULL</a></h6>
+                </div>
+            </div>
+
+            <!-- CHAPTER INFO BOX BOX -->
+            <div class="large-12 cell subcomponent-box" id="chapterInfoBox">
+                <div class="callout title_callout">
+                    <h6>CHAPTER:&nbsp;<a class="cardTitleLink" id="chapterIdLink">NULL</a></h6>
+                </div>
+            </div>
+
+            <!-- SCENE INFO BOX BOX -->
+            <div class="large-12 cell subcomponent-box" id="sceneInfoBox">
+                <div class="callout title_callout">
+                    <h6>SCENE:&nbsp;<a class="cardTitleLink" id="sceneIdLink">NULL</a></h6>
+                </div>
+            </div>
+
+            <!-- BEAT INFO BOX BOX -->
+            <div class="large-12 cell subcomponent-box" id="beatInfoBox">
+                <div class="callout title_callout">
+                    <h6>BEAT:&nbsp;<a class="cardTitleLink" id="beatIdLink">NULL</a></h6>
                 </div>
             </div>
 
             <div class="large-12 cell">
                 <div class="callout primary">
                     <h2 id="levelLabel">STORY OBJECTS</h2>
-                    <div class="grid-x grid-padding-x" id="storyObjectsBox">
+                    <div class="grid-x grid-padding-x" id="cardsContainer">
                         <!-- STORY OBJECTS INSERTED HERE BY JAVASCRIPT -->
                     </div>
                 </div>

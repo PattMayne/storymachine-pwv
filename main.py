@@ -49,7 +49,7 @@ class Api():
     def get_base_story(self):
         print("getting base story")
         base_story = get_base_story()
-        base_story = get_story.ids()
+        #base_story = get_story.ids()
         return base_story
     
     def get_story_by_id(self, story_id):
@@ -59,18 +59,27 @@ class Api():
     def open_story_window(self):
         global current_story_id
         current_story_id = 1
-        story_window = webview.create_window('story', 'public/story.html', js_api=Api())
+        story_window = webview.create_window('story', 'public/story.html', js_api=Api(), width=1200, height=800)
 
     def get_current_story(self):
         return factory.get_story_by_id(current_story_id)
+    
+    def get_stories_list(self):
+        return factory.get_story_ids_and_labels()
 
 def main_function(window):
     print("WINDOW OPEN")
     # make sure database exists
     factory.setup_db()
 
+global screen
 
-init_window = webview.create_window('storymachine', 'public/init.html', js_api=Api())
+for i, thisScreen in enumerate(webview.screens):
+    global screen
+    #webview.create_window('', html=f'placed on the monitor {i+1}', screen=screen)
+    screen = thisScreen
+
+init_window = webview.create_window('storymachine', 'public/init.html', js_api=Api(), width=1200, height=800)
 # story_window = webview.create_window('story', 'public/story.html', js_api=Api())
 
 # init_window.confirm_close = True

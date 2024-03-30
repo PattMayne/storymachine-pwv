@@ -74,5 +74,5 @@ def get_story_by_id(story_id):
 	return get_story.by_id(story_id)
 
 
-def get_story_ids():
-    return get_story.ids()
+def get_story_ids_and_labels():
+    return get_story.ids_and_labels()

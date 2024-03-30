@@ -1,11 +1,14 @@
 .title,
-.title_callout {
-    text-align: center;
-}
+.title_callout {}
 
 .cardLabel {
     text-align: center;
     font-weight: 600;
+}
+
+.cardLabel:hover {
+    background-color: chocolate;
+    cursor: pointer;
 }
 
 .cardSectionLabel {
@@ -15,3 +18,67 @@
 .subcomponent-box {
     display: none;
 }
+
+body {
+    background-color: #7D451B;
+}
+
+.white_button {
+    background-color: white;
+    color: black;
+    border: none;
+    padding: 7px 9px 7px 9px;
+}
+
+.cardTitleLink {
+    color: black;
+    padding: 7px;
+    padding-top: 12px;
+    border-bottom: 2px solid black;
+}
+
+.cardTitleLink:hover {
+    cursor: default;
+    background-color: #7D451B;
+    color: white;
+}
+
+/*  FOUNDATION OVERRIDES   */
+
+
+.callout {
+    background-color: #D9B26F;
+    border: none;
+}
+
+.primary {
+    background-color: #efefef;
+    border: none;
+}
+
+/*
+const colors = {
+    CINEREOUS: "#7e6c6c",
+    YELLOW: "#f0f600",
+    TURQUOISE: "#42d9c8",
+    MIDNIGHT_GREEN: "#023436",
+    PUMPKIN: "#fa8334",
+    MOONSTONE: "#5eb1bf",
+    PAYNES_GRAY: "#5B6878",
+    ECRU_1: "#A69658",
+    ECRU_2: "#D9B26F",
+    JASMINE: "#FADF7F",
+    VANILLA: "#F2E29F",
+    MADDER: "#B10F2E",
+    SMOKY_BLACK: "#0B0500",
+    RUSSET: "#7D451B",
+    HONEYDEW: "#E5F4E3",
+    WHITE_1: "#FEFDFF",
+    IVORY: "#FDFBE9",
+    ASH_GRAY: "#A4AC96",
+    EGGSHELL: "#faf3dd",
+    ANTI_FLASH_WHITE: "#efefef
+
+}   
+
+*/
