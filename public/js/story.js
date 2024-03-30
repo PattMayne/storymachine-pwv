@@ -35,6 +35,8 @@ const loadAct = actId => {
     actIdLink.innerHTML = currentAct.label
     levelLabel.innerHTML = consts.getChildLevel(level).toUpperCase() + "S"
     cardsContainer.innerHTML = chaptersCardsHTML
+    // set the link to go back to the PARENT level
+    storyIdLink.addEventListener("click", () => loadStory())
 }
 
 const loadChapter = chapterId => {
@@ -49,7 +51,8 @@ const loadChapter = chapterId => {
     chapterIdLink.innerHTML = currentChapter.label
     levelLabel.innerHTML = consts.getChildLevel(level).toUpperCase() + "S"
     cardsContainer.innerHTML = scenesCardsHTML
-    console.log("chapterCardHTML: " + scenesCardsHTML)
+    // set the link to go back to the PARENT level
+    actIdLink.addEventListener("click", () => loadAct(currentAct.id))
 }
 
 const loadScene = sceneId => {
@@ -65,6 +68,8 @@ const loadScene = sceneId => {
     levelLabel.innerHTML = consts.getChildLevel(level).toUpperCase() + "S"
     cardsContainer.innerHTML = beatsCardsHTML
     console.log("chapterCardHTML: " + beatsCardsHTML)
+    // set the link to go back to the PARENT level
+    chapterIdLink.addEventListener("click", () => loadChapter(currentChapter.id))
 }
 
 const loadDOM = () => {
@@ -86,8 +91,9 @@ const loadStory = () => {
     loadDOM()
     level = levels.STORY
     const urlParams = new URLSearchParams(window.location.search)
-    const storyId = urlParams.get('story_id') || -1
+    const storyId = story?.id || urlParams.get('story_id') || -1
     storyIdLink.innerHTML = storyId
+    showInfoBoxes()
 
     pywebview.api.get_story_by_id(storyId).then(incomingStory => {
         story = incomingStory
