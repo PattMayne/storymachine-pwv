@@ -88,6 +88,7 @@ const loadDOM = () => {
 
 // Initially load the whole story, even if you're really trying to load another level of component.
 const loadStory = () => {
+    console.log("STORY LOADED")
     loadDOM()
     level = levels.STORY
     const urlParams = new URLSearchParams(window.location.search)
@@ -104,7 +105,6 @@ const loadStory = () => {
         const actCardsHTML = story.acts.reduce((htmlString, act) => htmlString += html.act(act), "")
         levelLabel.innerHTML = consts.getChildLevel(level).toUpperCase() + "S"
         cardsContainer.innerHTML = actCardsHTML
-        console.log(JSON.stringify(story))
     })
 }
 
@@ -114,6 +114,8 @@ window.onload = () => window.addEventListener('pywebviewready', loadStory())
  * NOTE:
  * Clicking on a link on the HTML, which calls a function here, can immediately update the "Story Objects" section.
  * So I can change between Acts / Chapters / Scenes / Beats without calling the Python API.
+ * 
+ * Some kind of re-entry script so that we can load (or reload) this page from the backend or from another window.
  */
 
 // Make certain functions available to the WINDOW so that they can be called from rendered JS
