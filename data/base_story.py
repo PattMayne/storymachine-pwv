@@ -8,22 +8,27 @@ def get_base_story():
 	return {
         "loaded": True,
         "label": "Story Title",
-		"description": "Here's a description, ya \"filthy animals!",
+		"description": "",
         "acts": [
             {
                 "label": "act 1",
+                "relative_order": 1,
                 "chapters": [
                     {
-                        "label": "a chapter for act 1",
+                        "label": "chapter 1",
+                        "relative_order": 1,
                         "scenes": [
                             {
-                                "label": "a scene for act 1",
+                                "label": "scene 1",
+                                "relative_order": 1,
                                 "beats": [
                                     {
-                                        "label": "act 1, chapter 1, beat 1"
+                                        "label": "beat 1",
+                                        "relative_order": 1
                                     },
                                     {
-                                        "label": "act 1, chapter 1, beat 2"
+                                        "label": "beat 2",
+                                        "relative_order": 2
                                     }
                                 ]
                             }
@@ -33,44 +38,23 @@ def get_base_story():
             },
             {
                 "label": "act 2",
+                "relative_order": 2,
                 "chapters": [
                     {
-                        "label": "a chapter for act 2",
+                        "label": "chapter 1",
+                        "relative_order": 1,
                         "scenes": [
                             {
-                                "label": "a scene for act 2",
+                                "label": "scene 1",
+                                "relative_order": 1,
                                 "beats": [
                                     {
-                                        "label": "act 2, chapter 1, beat 1"
+                                        "label": "beat 1",
+                                        "relative_order": 1
                                     },
                                     {
-                                        "label": "act 2, chapter 1, beat 2"
-                                    }
-                                ]
-                            }
-                        ]
-                    }, {
-                        "label": "a SECOND chapter for act 2",
-                        "scenes": [
-                            {
-                                "label": "a scene chapter 2 for act 2",
-                                "beats": [
-                                    {
-                                        "label": "act 2, chapter 2, SCENE 1, beat 1"
-                                    },
-                                    {
-                                        "label": "act 2, chapter 2, SCENE 1, beat 2"
-                                    }
-                                ]
-                            },
-                            {
-                                "label": "SCENE 2 chapter 2 for act 2",
-                                "beats": [
-                                    {
-                                        "label": "act 2, chapter 2, SCENE 2, beat 1"
-                                    },
-                                    {
-                                        "label": "act 2, chapter 2, SCENE 2, beat 2"
+                                        "label": "beat 2",
+                                        "relative_order": 2
                                     }
                                 ]
                             }
@@ -80,18 +64,23 @@ def get_base_story():
             },
             {
                 "label": "act 3",
+                "relative_order": 3,
                 "chapters": [
                     {
-                        "label": "a chapter for act 3",
+                        "label": "chapter 1",
+                        "relative_order": 1,
                         "scenes": [
                             {
-                                "label": "a scene for act 3",
+                                "label": "scene 1",
+                                "relative_order": 1,
                                 "beats": [
                                     {
-                                        "label": "act 3, chapter 1, beat 1"
+                                        "label": "beat 1",
+                                        "relative_order": 1
                                     },
                                     {
-                                        "label": "act 3, chapter 1, beat 2"
+                                        "label": "beat 2",
+                                        "relative_order": 2
                                     }
                                 ]
                             }
@@ -107,100 +96,98 @@ def get_base_story():
 # returns id of new story data in DB
 def create():
 	empty_base_story = get_base_story()
-
 	story_label = empty_base_story["label"]
 	acts = []
 
-	conn = sqlite3.connect('data/stories.db')
-	cur = conn.cursor()
-	cur.execute("INSERT INTO story(label, description, author_ids) VALUES (:label, :description, :author_ids)",
+	connect = sqlite3.connect('data/stories.db')
+	cursor = connect.cursor()
+	cursor.execute("INSERT INTO story(label, description, author_ids) VALUES (:label, :description, :author_ids)",
 		{
 			'label': story_label,
 			'description': empty_base_story["description"],
 			'author_ids': '[]'
 		})
 
-	conn.commit()
-	story_id =  cur.lastrowid	
+	connect.commit()
+	story_id =  cursor.lastrowid	
 
 	# This starts a chain of functions that each create story grid objects
-	make_acts_from_dict(empty_base_story["acts"], story_id, conn, cur)
+	make_acts_from_dict(empty_base_story["acts"], story_id, connect, cursor)
 
 	# Close the connection
-	conn.close()
+	connect.close()
 	return story_id
 
 
 # fresh story chain 1
-def make_acts_from_dict(acts, story_id, conn, cur):
+def make_acts_from_dict(acts, story_id, connect, cursor):
 	for act in acts:
-		sql_text = "INSERT INTO act(label, description, story_id, relative_order) VALUES(:label, :description, :story_id, :relative_order)"
-		cur.execute(sql_text, 
+		sql_text = "INSERT INTO act(label, description, story_id, relative_order) VALUES(:label, :description, :story_id, :order1)"
+		cursor.execute(sql_text, 
 		{
 			'label': act["label"],
-			'description': 'Describe an act? Preposterous!',
+			'description': '',
 			'story_id': story_id,
-			'relative_order': 0
+			'order1': act["relative_order"]
 		})
 		
-		conn.commit()
-		act_id = cur.lastrowid
+		connect.commit()
+		act_id = cursor.lastrowid
 		print("ACT ID: " + str(act_id))
 
-		make_chapters_from_dict(act["chapters"], act_id, conn, cur)
+		make_chapters_from_dict(act["chapters"], act_id, connect, cursor)
 
 
 # fresh story chain 2
-def make_chapters_from_dict(chapters, act_id, conn, cur):
+def make_chapters_from_dict(chapters, act_id, connect, cursor):
 	for chapter in chapters:
 		sql_text = "INSERT INTO chapter(label, description, act_id, relative_order) VALUES(:label, :description, :act_id, :relative_order)"
-		cur.execute(sql_text, 
+		cursor.execute(sql_text, 
 		{
 			'label': chapter["label"],
-			'description': 'Describez un chapterino? Preposterous!',
+			'description': '',
 			'act_id': act_id,
-			'relative_order': 0
+			'relative_order': chapter["relative_order"]
 		})
 
-		conn.commit()
-		chapter_id = cur.lastrowid
+		connect.commit()
+		chapter_id = cursor.lastrowid
 		print("CHAPTER ID: " + str(chapter_id))
 
-		make_scenes_from_dict(chapter["scenes"], chapter_id, conn, cur)
-
+		make_scenes_from_dict(chapter["scenes"], chapter_id, connect, cursor)
 
 
 # fresh story chain 3
-def make_scenes_from_dict(scenes, chapter_id, conn, cur):
+def make_scenes_from_dict(scenes, chapter_id, connect, cursor):
 	for scene in scenes:
 		sql_text = "INSERT INTO scene(label, description, chapter_id, relative_order) VALUES(:label, :description, :chapter_id, :relative_order)"
-		cur.execute(sql_text, 
+		cursor.execute(sql_text, 
 		{
 			'label': scene["label"],
-			'description': 'Wellcome t o the scnee!S',
+			'description': '',
 			'chapter_id': chapter_id,
-			'relative_order': 0
+			'relative_order': scene["relative_order"]
 		})
 
-		conn.commit()
-		scene_id = cur.lastrowid
+		connect.commit()
+		scene_id = cursor.lastrowid
 		print("SCENE ID: " + str(scene_id))
-		make_beats_from_dict(scene["beats"], scene_id, conn, cur)
+		make_beats_from_dict(scene["beats"], scene_id, connect, cursor)
 
 
 # fresh story chain 4
-def make_beats_from_dict(beats, scene_id, conn, cur):
+def make_beats_from_dict(beats, scene_id, connect, cursor):
 	for beat in beats:
 		sql_text = "INSERT INTO beat(label, description, scene_id, relative_order) VALUES(:label, :description, :scene_id, :relative_order)"
-		cur.execute(sql_text, 
+		cursor.execute(sql_text, 
 		{
 			'label': beat["label"],
-			'description': 'Wellcome t o the BEAT!S',
+			'description': '',
 			'scene_id': scene_id,
-			'relative_order': 0
+			'relative_order': beat["relative_order"]
 		})
 
-		conn.commit()
-		beat_id = cur.lastrowid
+		connect.commit()
+		beat_id = cursor.lastrowid
 		print("BEAT ID: " + str(beat_id))
 

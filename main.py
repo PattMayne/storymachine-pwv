@@ -7,14 +7,8 @@ from data import get_story
 """
 TO DO:
 
-    - Show ALL IDS and/or LABELS of STORIES
-    - Load an actual story
-    - display story data on screen
-    - create classes / models
-        - objects should store the ID for saving later
-        - function for saving/updating objects
-            - the function should actually just call a Factory function... so maybe skip the class function/method?
-    - factory should return classes (not just IDs and not dicts)
+    - create new elements (factory)
+    - edit element page
     - user preferences table
     - multiple screens
         - act, beat, chapter, scene, story (with whole tree)
@@ -46,6 +40,8 @@ class Api():
         print("the function is called")
         return "HELLO"
     
+    # get stuff
+
     def get_base_story(self):
         print("getting base story")
         base_story = get_base_story()
@@ -53,19 +49,69 @@ class Api():
         return base_story
     
     def get_story_by_id(self, story_id):
-        story = factory.get_story_by_id(story_id)
-        return story
+        return factory.get_story_by_id(story_id)
 
-    def open_story_window(self):
-        global current_story_id
-        current_story_id = 1
-        story_window = webview.create_window('story', 'public/story.html', js_api=Api(), width=1200, height=800)
+    def get_act_by_id(self, act_id):
+        return factory.get_act_by_id(act_id)
+
+    def get_chapter_by_id(self, chapter_id):
+        return factory.get_chapter_by_id(chapter_id)
+    
+    def get_scene_by_id(self, scene_id):
+        return factory.get_scene_by_id(scene_id)
+    
+    def get_beat_by_id(self, beat_id):
+        print("beat id: " + str(beat_id))
+        return factory.get_beat_by_id(beat_id)
 
     def get_current_story(self):
         return factory.get_story_by_id(current_story_id)
     
     def get_stories_list(self):
         return factory.get_story_ids_and_labels()
+    
+    # create stuff
+
+    def create_beat(self, scene_id):
+        return factory.create_new_beat(scene_id)
+    
+    def create_scene(self, chapter_id):
+        return factory.create_new_scene(chapter_id)        
+    
+    def create_chapter(self, act_id):
+        return factory.create_new_chapter(act_id)        
+    
+    def create_act(self, story_id):
+        return factory.create_new_act(story_id)    
+
+    def create_empty_story(self, label, description):
+        return factory.create_empty_story(label, description)
+
+    # update stuff
+
+    def update_story(self, id, label, description):
+        return factory.update_story(id, label, description)
+    
+
+    def update_act(self, id, label, description):
+        return factory.update_act(id, label, description)
+    
+    def update_chapter(self, id, label, description):
+        return factory.update_chapter(id, label, description)
+    
+    def update_scene(self, id, label, description):
+        return factory.update_scene(id, label, description)
+    
+    def update_beat(self, id, label, description):
+        return factory.update_beat(id, label, description)
+    
+    def open_story_window(self):
+        global current_story_id
+        current_story_id = 1
+        story_window = webview.create_window('story', 'public/story.html', js_api=Api(), width=1200, height=800)
+
+        
+
 
 def main_function(window):
     print("WINDOW OPEN")
@@ -79,7 +125,7 @@ for i, thisScreen in enumerate(webview.screens):
     #webview.create_window('', html=f'placed on the monitor {i+1}', screen=screen)
     screen = thisScreen
 
-init_window = webview.create_window('storymachine', 'public/init.html', js_api=Api(), width=1200, height=800)
+init_window = webview.create_window('storymachine', 'public/init.html', js_api=Api(), width=1600, height=1200)
 # story_window = webview.create_window('story', 'public/story.html', js_api=Api())
 
 # init_window.confirm_close = True

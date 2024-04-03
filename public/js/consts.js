@@ -11,7 +11,14 @@ const getChildLevel = currentLevel =>
         currentLevel == levels.ACT ? levels.CHAPTER :
             currentLevel == levels.CHAPTER ? levels.SCENE :
                 currentLevel == levels.SCENE ? levels.BEAT :
-                    'NO CHILD ELEMENTS FOR "BEAT"'
+                    'VALUE CHANGES'
+
+const getParentLevel = currentLevel =>
+    currentLevel == levels.BEAT ? levels.SCENE :
+        currentLevel == levels.SCENE ? levels.CHAPTER :
+            currentLevel == levels.CHAPTER ? levels.ACT :
+                currentLevel == levels.ACT ? levels.STORY :
+                    'NO PARENT FOR THIS INPUT'
 
 
 const colors = {
@@ -22,4 +29,4 @@ const colors = {
     PUMPKIN: "#fa8334"
 }
 
-export { levels, getChildLevel }
+export { levels, getChildLevel, getParentLevel }

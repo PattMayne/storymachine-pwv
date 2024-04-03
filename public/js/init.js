@@ -1,28 +1,17 @@
 import * as html from 'html'
 
-var latestStoriesList
-
 // loading functions
 
 const loadPanel = () => {
-    latestStoriesList = document.getElementById("latestStoriesList")
-
-    // Still need the timeout apparently.
-    setTimeout(() => {
-        pywebview.api.get_stories_list().then(storiesList => {
-            latestStoriesList.innerHTML = storiesList.reduce(
-                (htmlString, story) => htmlString + html.storyListItem(story), "")
-        })
-    }, 200)
+    const storiesListContainer = document.getElementById("storiesListContainer")
+    const storyList = html.elements.storyList()
+    storiesListContainer.appendChild(storyList)
+    pywebview.api.get_stories_list().then(storiesList => storiesList.map(story => storyList.appendChild(html.elements.storyListItem(story))))
 }
 
+const createBaseStory = () => pywebview.api.get_base_story().then(baseStory => window.location = "story.html?story_id=" + baseStory.id)
 
 // user input functions
 
-function setTextFromPython(theText) {
-    document.getElementById("theLink").innerHTML = theText
-}
-
-
-window.onload = () => window.addEventListener('pywebviewready', loadPanel())
-window.setTextFromPython = setTextFromPython
+window.addEventListener('pywebviewready', loadPanel())
+window.createBaseStory = createBaseStory

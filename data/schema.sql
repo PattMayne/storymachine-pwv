@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS author (
 CREATE TABLE IF NOT EXISTS story (
    id INTEGER PRIMARY KEY AUTOINCREMENT,
    label text NOT NULL,
+   controlling_idea text,
+   genres text,
    description text,
    author_ids text NOT NULL
 );
