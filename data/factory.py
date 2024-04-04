@@ -261,7 +261,6 @@ def update_story(story_id, label, description):
 
     connect.commit()
     connect.close()
-
     return True
 
 
@@ -277,7 +276,6 @@ def update_act(act_id, label, description):
 
     connect.commit()
     connect.close()
-
     return True
 
 
@@ -293,7 +291,6 @@ def update_chapter(chapter_id, label, description):
 
     connect.commit()
     connect.close()
-
     return True
 
 
@@ -309,7 +306,6 @@ def update_scene(scene_id, label, description):
 
     connect.commit()
     connect.close()
-
     return True
 
 
@@ -325,6 +321,78 @@ def update_beat(beat_id, label, description):
 
     connect.commit()
     connect.close()
-
     return True
 
+
+# just update order
+
+
+def update_story(story_id, label, description):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("UPDATE story SET label=:label, description=:description WHERE id=:id",
+        {
+            'label': label,
+            'description': description,
+            'id': story_id
+        })
+
+    connect.commit()
+    connect.close()
+    return True
+
+
+def update_act_order(act_id, new_order):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("UPDATE act SET relative_order=:relative_order WHERE id=:id",
+        {
+            'relative_order': new_order,
+            'id': act_id
+        })
+
+    connect.commit()
+    connect.close()
+    return True
+
+
+def update_chapter_order(chapter_id, new_order):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("UPDATE chapter SET relative_order=:relative_order WHERE id=:id",
+        {
+            'relative_order': new_order,
+            'id': chapter_id
+        })
+
+    connect.commit()
+    connect.close()
+    return True
+
+
+def update_scene_order(scene_id, new_order):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("UPDATE scene SET relative_order=:relative_order WHERE id=:id",
+        {
+            'relative_order': new_order,
+            'id': scene_id
+        })
+
+    connect.commit()
+    connect.close()
+    return True
+
+
+def update_beat_order(beat_id, new_order):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("UPDATE beat SET relative_order=:relative_order WHERE id=:id",
+        {
+            'relative_order': new_order,
+            'id': beat_id
+        })
+
+    connect.commit()
+    connect.close()
+    return True

@@ -43,7 +43,7 @@ def by_id(story_id):
     }
 
     # next get the acts
-    cursor.execute("SELECT * FROM act WHERE story_id=:story_id", {
+    cursor.execute("SELECT * FROM act WHERE story_id=:story_id ORDER BY relative_order ASC", {
         'story_id': story_id
     })
     records = cursor.fetchall()
@@ -54,11 +54,12 @@ def by_id(story_id):
             'id': act_id,
             'label': act_record[1],
             'description': act_record[2],
-            'chapters': []
+            'chapters': [],
+            'order': act_record[4]
         })
 
         # Within the loop, get the chapters for THIS act
-        cursor.execute("SELECT * FROM chapter WHERE act_id=:act_id", {
+        cursor.execute("SELECT * FROM chapter WHERE act_id=:act_id ORDER BY relative_order ASC", {
             'act_id': act_id
         })
 
@@ -71,11 +72,12 @@ def by_id(story_id):
                 'id': chapter_id,
                 'label': chapter_record[1],
                 'description': chapter_record[2],
-                'scenes': []
+                'scenes': [],
+                'order': chapter_record[4]
             })
 
             # Within the loop, get the scenes for THIS chapter
-            cursor.execute("SELECT * FROM scene WHERE chapter_id=:chapter_id", {
+            cursor.execute("SELECT * FROM scene WHERE chapter_id=:chapter_id ORDER BY relative_order ASC", {
                 'chapter_id': chapter_id
             })
 
@@ -88,11 +90,12 @@ def by_id(story_id):
                     'id': scene_id,
                     'label': scene_record[1],
                     'description': scene_record[2],
-                    'beats': []
+                    'beats': [],
+                    'order': scene_record[4]
                 })
 
                 # Within the loop, get the beats for THIS scene
-                cursor.execute("SELECT * FROM beat WHERE scene_id=:scene_id", {
+                cursor.execute("SELECT * FROM beat WHERE scene_id=:scene_id ORDER BY relative_order ASC", {
                     'scene_id': scene_id
                 })
 
@@ -104,7 +107,8 @@ def by_id(story_id):
                     scene["beats"].append({
                         'id': beat_id,
                         'label': beat_record[1],
-                        'description': beat_record[2]
+                        'description': beat_record[2],
+                        'order': beat_record[4]
                     })
 
 

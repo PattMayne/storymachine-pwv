@@ -90,8 +90,7 @@ class Api():
     # update stuff
 
     def update_story(self, id, label, description):
-        return factory.update_story(id, label, description)
-    
+        return factory.update_story(id, label, description)    
 
     def update_act(self, id, label, description):
         return factory.update_act(id, label, description)
@@ -105,12 +104,15 @@ class Api():
     def update_beat(self, id, label, description):
         return factory.update_beat(id, label, description)
     
+    def switch_act_order(self, order_1, order_2, id_1, id_2):
+        item_2_updated = factory.update_act_order(id_2, order_1)
+        item_1_updated = factory.update_act_order(id_1, order_2)
+        return item_2_updated & item_1_updated
+
     def open_story_window(self):
         global current_story_id
         current_story_id = 1
         story_window = webview.create_window('story', 'public/story.html', js_api=Api(), width=1200, height=800)
-
-        
 
 
 def main_function(window):

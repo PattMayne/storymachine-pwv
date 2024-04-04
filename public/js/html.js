@@ -26,12 +26,32 @@ const elements = {
         callout.setAttribute("class", "callout")
         cardLabel.setAttribute("class", "cardLabel")
         cardLabel.setAttribute("onclick", loadFunctionName + storyComponent.id + ")")
-        cardLabel.innerText = storyComponent.label
-        cardDescription.innerHTML = helpers.htmlSpecialChars(storyComponent.description)
 
-        gridCell.appendChild(callout)
+        // create the "change order" buttons
+        const bottomMenu = document.createElement("div")
+        const switchButtonLeft = document.createElement("div")
+        const switchButtonRight = document.createElement("div")
+        bottomMenu.setAttribute("class", "cardBottomMenu")
+        switchButtonLeft.setAttribute("class", "switchButtonLeft")
+        switchButtonRight.setAttribute("class", "switchButtonRight")
+        switchButtonRight.setAttribute("id", "switchButtonRight_" + level + "_order-" + storyComponent.order)
+        switchButtonLeft.innerHTML = "<< Move"
+        switchButtonRight.innerHTML = "Move >>"
+        if (storyComponent.order > 1) {
+            bottomMenu.appendChild(switchButtonLeft)
+            switchButtonLeft.setAttribute("onclick", "shiftComponentLeft('" + level + "', " + storyComponent.id + ")")
+        }
+        switchButtonRight.setAttribute("onclick", "shiftComponentRight('" + level + "', " + storyComponent.id + ")")
+        bottomMenu.appendChild(switchButtonRight)
+
+
+        cardLabel.innerText = storyComponent.label
+        cardDescription.innerText = helpers.htmlSpecialChars(storyComponent.description) + " order: " + storyComponent.order
+
         callout.appendChild(cardLabel)
         callout.appendChild(cardDescription)
+        callout.appendChild(bottomMenu)
+        gridCell.appendChild(callout)
         return gridCell
     },
 

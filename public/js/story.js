@@ -35,6 +35,52 @@ const showInfoBoxes = () => {
     actInfoBox.style.display = level == levels.ACT || level == levels.CHAPTER || level == levels.SCENE || level == levels.BEAT ? "inline-block" : "none"
 }
 
+
+const shiftComponentLeft = (thisLevel, id) => {
+    console.log("shifting " + thisLevel + ":" + id + " LEFT")
+}
+
+const shiftComponentRight = (thisLevel, id) => {
+    console.log("shifting " + thisLevel + ":" + id + " RIGHT")
+    const fellowComponents =
+        level == levels.SCENE ? currentScene.beats :
+            level == levels.CHAPTER ? currentChapter.scenes :
+                level == levels.ACT ? currentAct.chapters :
+                    level == levels.STORY ? story.acts : ""
+
+    const clickedComponent = fellowComponents.filter(component => component.id == id)[0]
+    console.log("clicked component order: " + clickedComponent.order)
+    console.log("fellow components length: " + fellowComponents.length)
+    const componentToTheRight = fellowComponents.filter(component => component.order == clickedComponent.order + 1)[0]
+
+    console.log("shifting: " + clickedComponent.order + " and " + (componentToTheRight?.order || 0))
+
+    pywebview.api.switch_act_order(
+        clickedComponent.order,
+        componentToTheRight.order,
+        clickedComponent.id,
+        componentToTheRight.id
+    ).then(success => {
+        // make a HELPER script to build a URL to return HERE
+
+        let returnLinkString = window.location = "story.html?story_id=" + story.id
+        if (!!currentAct) {
+            returnLinkString += "&act_id=" + currentAct.id
+            if (!!currentChapter) {
+                returnLinkString += "&chapter_id=" + currentChapter.id
+                if (!!currentScene) {
+                    returnLinkString += "&scene_id=" + currentScene.id
+                    if (!!currentBeat) {
+                        returnLinkString += "&beat_id=" + currentBeat.id
+                    }
+                }
+            }
+        }
+        returnLinkString += "&level=" + level
+        window.location = returnLinkString
+    })
+}
+
 // set HTML attributes based on level change alone (not dependent on contents of lists such as chapters.scenes)
 const changeLevel = (newLevel) => {
     level = newLevel
@@ -97,7 +143,6 @@ const newComponent = newComponentLevel => {
 
 const loadAct = actId => {
     changeLevel(levels.ACT)
-    console.log("loading " + level)
     // get the ACT object from the STORY object // make cards // display everything.
     currentAct = story.acts.filter(act => act.id == actId)[0]
     actIdLink.innerHTML = currentAct.label
@@ -115,7 +160,6 @@ const loadAct = actId => {
 
 const loadChapter = chapterId => {
     changeLevel(levels.CHAPTER)
-    console.log("loading " + level)
     // get the CHAPTER object from the ACT object // make cards // display everything.
     currentChapter = currentAct.chapters.filter(chapter => chapter.id == chapterId)[0]
     chapterIdLink.innerHTML = currentChapter.label
@@ -133,7 +177,6 @@ const loadChapter = chapterId => {
 
 const loadScene = sceneId => {
     changeLevel(levels.SCENE)
-    console.log("loading " + level)
     // get the SCENE object from the CHAPTER object // build HTML string // display everything.
     currentScene = currentChapter.scenes.filter(scene => scene.id == sceneId)[0]
     sceneIdLink.innerHTML = currentScene.label
@@ -151,8 +194,6 @@ const loadScene = sceneId => {
 // Beats do not have child components, but we will list value changes instead
 const loadBeat = beatId => {
     changeLevel(levels.BEAT)
-    console.log("loading " + level)
-
     // get the SCENE object from the CHAPTER object // build HTML string // display everything.
     currentBeat = currentScene.beats.filter(beat => beat.id == beatId)[0]
     beatIdLink.innerHTML = currentBeat.label
@@ -191,7 +232,7 @@ const editComponentLink = () => {
     return linkString
 }
 
-const loadDOM = () => {
+const loadDOM = storyId => {
     storyIdLink = document.getElementById("storyIdLink")
     levelLabel = document.getElementById("levelLabel")
     cardsContainer = document.getElementById("cardsContainer")
@@ -215,28 +256,26 @@ const loadDOM = () => {
     chapterDescription = document.getElementById("chapterDescription")
     sceneDescription = document.getElementById("sceneDescription")
     beatDescription = document.getElementById("beatDescription")
+    storyIdLink.setAttribute("href", "story.html?story_id=" + storyId)
 }
 
 // Initially load the whole story, even if you're really trying to load another level of component.
-const loadStory = (loadLevel = levels.STORY) => {
-    console.log("STORY LOADED")
-    loadDOM()
+const loadStory = loadLevel => {
     const urlParams = new URLSearchParams(window.location.search)
+    // check if we've been sent EXTERNALLY to load a particular component/level
+    const loadLevelParam = urlParams.get('level') || false
+    // check if we've indicated a particular level in the function args
+    loadLevel = !!loadLevel ? loadLevel : levels.STORY
     // get id from already loaded story, or the querystring
     const storyId = urlParams.get('story_id')
+    loadDOM(storyId)
 
     pywebview.api.get_story_by_id(storyId).then(incomingStory => {
         changeLevel(levels.STORY)
-        storyIdLink.innerHTML = storyId
-        storyIdLink.addEventListener("click", () => loadStory())
-
         story = incomingStory
         // Load story objects from one level (currently only ACTs)
         storyIdLink.innerHTML = !!story?.label ? story.label : "NO NAME"
         levelLabel.innerHTML = consts.getChildLevel(level).toUpperCase() + "S"
-
-        // check if we've been sent EXTERNALLY to load a particular component/level
-        const loadLevelParam = urlParams.get('level') || false
 
         if (!!loadLevelParam) {
             loadLevel = loadLevelParam
@@ -271,7 +310,6 @@ const loadStory = (loadLevel = levels.STORY) => {
 
         // regardless of how loadLevel was set, load that level.
         if (loadLevel == levels.STORY) {
-            console.log("level is story?")
             // Get the Document Elements for "act" cards
             story.acts.map(act => cardsContainer.appendChild(
                 html.elements.card(
@@ -282,7 +320,6 @@ const loadStory = (loadLevel = levels.STORY) => {
             cardsContainer.appendChild(html.elements.newComponentButton(consts.getChildLevel(level)))
             storyDescription.innerHTML = story.description
         } else {
-            console.log("we will load to certain level?")
             loadToCurrentLevel(loadLevel)
         }
     })
@@ -298,6 +335,7 @@ const editStory = () => window.location = "edit_story.html?edit=true&story_id=" 
 // DEBUG FUNCTIONS
 
 const printAllCurrent = () => {
+    console.log("level: " + level)
     console.log("curr beat: " + JSON.stringify(currentBeat) || 'NONE')
     console.log("curr scene: " + JSON.stringify(currentScene) || 'NONE')
     console.log("curr chapter: " + JSON.stringify(currentChapter) || 'NONE')
@@ -316,3 +354,5 @@ window.loadChapter = loadChapter
 window.levels = levels
 window.newComponent = newComponent
 window.editStory = editStory
+window.shiftComponentLeft = shiftComponentLeft
+window.shiftComponentRight = shiftComponentRight

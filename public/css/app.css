@@ -19,6 +19,39 @@
     display: none;
 }
 
+.cardBottomMenu {
+    border-top: 2px solid black;
+    width: 100%;
+    position: relative;
+    bottom: 0px;
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+}
+
+.switchButtonLeft {
+    padding-top: 5px;
+    justify-content: left;
+    margin: 0px;
+    margin-right: auto;
+}
+
+.switchButtonRight {
+    padding-top: 5px;
+    text-align: right;
+    margin: 0px;
+    margin-left: auto;
+}
+
+.switchButtonLeft:hover,
+.switchButtonRight:hover {
+    background-color: #023436;
+    color: #fa8334;
+}
+
+
 body {
     background-color: #7D451B;
 }
@@ -82,3 +115,7 @@ const colors = {
 }   
 
 */
+
+.fullWidth {
+    width: 100%;
+}
