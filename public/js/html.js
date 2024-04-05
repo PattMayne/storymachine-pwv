@@ -29,21 +29,27 @@ const elements = {
 
         // create the "change order" buttons
         const bottomMenu = document.createElement("div")
-        const switchButtonLeft = document.createElement("div")
+        const newComponentButtonLeft = document.createElement("div")
+        const deleteButtonMiddle = document.createElement("div")
         const switchButtonRight = document.createElement("div")
-        bottomMenu.setAttribute("class", "cardBottomMenu")
-        switchButtonLeft.setAttribute("class", "switchButtonLeft")
+
+        newComponentButtonLeft.setAttribute("class", "newComponentButtonLeft")
+        newComponentButtonLeft.innerHTML = "<< New " + level
+        newComponentButtonLeft.setAttribute("onclick", "newComponentLeft('" + level + "', " + storyComponent.order + ")")
+
+        deleteButtonMiddle.setAttribute("class", "deleteButtonMiddle")
+        deleteButtonMiddle.setAttribute("onclick", "deleteComponent('" + level + "', " + storyComponent.id + ")")
+        deleteButtonMiddle.innerHTML = "[delete]"
+
         switchButtonRight.setAttribute("class", "switchButtonRight")
         switchButtonRight.setAttribute("id", "switchButtonRight_" + level + "_order-" + storyComponent.order)
-        switchButtonLeft.innerHTML = "<< Move"
         switchButtonRight.innerHTML = "Move >>"
-        if (storyComponent.order > 1) {
-            bottomMenu.appendChild(switchButtonLeft)
-            switchButtonLeft.setAttribute("onclick", "shiftComponentLeft('" + level + "', " + storyComponent.id + ")")
-        }
         switchButtonRight.setAttribute("onclick", "shiftComponentRight('" + level + "', " + storyComponent.id + ")")
-        bottomMenu.appendChild(switchButtonRight)
 
+        bottomMenu.setAttribute("class", "cardBottomMenu")
+        bottomMenu.appendChild(newComponentButtonLeft)
+        bottomMenu.appendChild(deleteButtonMiddle)
+        bottomMenu.appendChild(switchButtonRight)
 
         cardLabel.innerText = storyComponent.label
         cardDescription.innerText = helpers.htmlSpecialChars(storyComponent.description) + " order: " + storyComponent.order

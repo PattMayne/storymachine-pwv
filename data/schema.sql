@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS sequence (
 );
 
 -- a visual overlay to highlight certain key moments.
+-- seems like this is covered by sequence.
 CREATE TABLE IF NOT EXISTS event (
    id INTEGER PRIMARY KEY AUTOINCREMENT,
    label text NOT NULL,
@@ -88,8 +89,8 @@ CREATE TABLE IF NOT EXISTS value_change (
    id INTEGER PRIMARY KEY AUTOINCREMENT,
    label text NOT NULL,
    description text,
-   beat_id INTEGER, -- maybe the beats should hold lists of value_changes instead? Every beat must have MEANING.
-   value_ids text, -- multiple values can "change" on the same bet.
+   beat_id INTEGER, -- One beat and one value per value_change
+   value_id INTEGER,
    magnitutde INTEGER NOT NULL
 );
 

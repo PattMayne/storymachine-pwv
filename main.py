@@ -76,13 +76,28 @@ class Api():
         return factory.create_new_beat(scene_id)
     
     def create_scene(self, chapter_id):
-        return factory.create_new_scene(chapter_id)        
+        return factory.create_new_scene(chapter_id)
     
     def create_chapter(self, act_id):
-        return factory.create_new_chapter(act_id)        
+        return factory.create_new_chapter(act_id)
     
     def create_act(self, story_id):
-        return factory.create_new_act(story_id)    
+        return factory.create_new_act(story_id)
+    
+    # create stuff at certain order
+
+    def create_beat_at_order(self, scene_id, new_order):
+        return factory.create_new_beat_at_order(scene_id, new_order)
+    
+    def create_scene_at_order(self, chapter_id, new_order):
+        return factory.create_new_scene_at_order(chapter_id, new_order)
+    
+    def create_chapter_at_order(self, act_id, new_order):
+        return factory.create_new_chapter_at_order(act_id, new_order)
+    
+    def create_act_at_order(self, story_id, new_order):
+        return factory.create_new_act_at_order(story_id, new_order)
+
 
     def create_empty_story(self, label, description):
         return factory.create_empty_story(label, description)
@@ -108,11 +123,37 @@ class Api():
         item_2_updated = factory.update_act_order(id_2, order_1)
         item_1_updated = factory.update_act_order(id_1, order_2)
         return item_2_updated & item_1_updated
+    
+    def switch_chapter_order(self, order_1, order_2, id_1, id_2):
+        item_2_updated = factory.update_chapter_order(id_2, order_1)
+        item_1_updated = factory.update_chapter_order(id_1, order_2)
+        return item_2_updated & item_1_updated
+    
+    def switch_scene_order(self, order_1, order_2, id_1, id_2):
+        item_2_updated = factory.update_scene_order(id_2, order_1)
+        item_1_updated = factory.update_scene_order(id_1, order_2)
+        return item_2_updated & item_1_updated
 
+    def switch_beat_order(self, order_1, order_2, id_1, id_2):
+        print("beating switching")
+        item_2_updated = factory.update_beat_order(id_2, order_1)
+        item_1_updated = factory.update_beat_order(id_1, order_2)
+        return item_2_updated & item_1_updated
+    
     def open_story_window(self):
         global current_story_id
         current_story_id = 1
         story_window = webview.create_window('story', 'public/story.html', js_api=Api(), width=1200, height=800)
+
+    # delete stuff
+
+    def delete_beat(self, beat_id):
+        print("deleting beat " + str(beat_id))
+        factory.delete_beat(beat_id, True)
+
+    def delete_scene(self, scene_id):
+        print("deleting scene " + str(scene_id))
+        factory.delete_scene(scene_id, True)
 
 
 def main_function(window):

@@ -36,12 +36,56 @@ const showInfoBoxes = () => {
 }
 
 
-const shiftComponentLeft = (thisLevel, id) => {
-    console.log("shifting " + thisLevel + ":" + id + " LEFT")
+const newComponentLeft = (thisLevel, order) => {
+
+    console.log("new " + thisLevel + " incoming")
+
+    switch (thisLevel) {
+        case levels.ACT:
+            pywebview.api.create_act_at_order(story.id, order)
+                .then(success => loadStory(level))
+            break;
+        case levels.CHAPTER:
+            pywebview.api.create_chapter_at_order(currentAct.id, order)
+                .then(success => loadStory(level))
+            break;
+        case levels.SCENE:
+            pywebview.api.create_scene_at_order(currentChapter.id, order)
+                .then(success => loadStory(level))
+            break;
+        case levels.BEAT:
+            pywebview.api.create_beat_at_order(currentScene.id, order)
+                .then(success => loadStory(level))
+            break;
+    }
+
+}
+
+const deleteComponent = (levelToDelete, idToDelete) => {
+    console.log("deleting " + levelToDelete + "#" + idToDelete)
+
+    switch (levelToDelete) {
+        case levels.ACT:
+            pywebview.api.create_act_at_order(story.id, 5)
+                .then(success => loadStory(level))
+            break;
+        case levels.CHAPTER:
+            pywebview.api.create_chapter_at_order(currentAct.id, 5)
+                .then(success => loadStory(level))
+            break;
+        case levels.SCENE:
+            pywebview.api.delete_scene(idToDelete)
+                .then(success => loadStory(level))
+            break;
+        case levels.BEAT:
+            pywebview.api.delete_beat(idToDelete)
+                .then(success => loadStory(level))
+            break;
+    }
 }
 
 const shiftComponentRight = (thisLevel, id) => {
-    console.log("shifting " + thisLevel + ":" + id + " RIGHT")
+    // NOTE: maybe some of this stuff (data) should ALL be saved globally on every load? No need to KEEP checking to get them...
     const fellowComponents =
         level == levels.SCENE ? currentScene.beats :
             level == levels.CHAPTER ? currentChapter.scenes :
@@ -49,37 +93,55 @@ const shiftComponentRight = (thisLevel, id) => {
                     level == levels.STORY ? story.acts : ""
 
     const clickedComponent = fellowComponents.filter(component => component.id == id)[0]
-    console.log("clicked component order: " + clickedComponent.order)
-    console.log("fellow components length: " + fellowComponents.length)
     const componentToTheRight = fellowComponents.filter(component => component.order == clickedComponent.order + 1)[0]
 
-    console.log("shifting: " + clickedComponent.order + " and " + (componentToTheRight?.order || 0))
+    if (level == levels.STORY) {
+        switchActOrders(clickedComponent, componentToTheRight)
+    } else if (level == levels.ACT) {
+        switchChapterOrders(clickedComponent, componentToTheRight)
+    } else if (level == levels.CHAPTER) {
+        switchSceneOrders(clickedComponent, componentToTheRight)
+    } else if (level == levels.SCENE) {
+        switchBeatOrders(clickedComponent, componentToTheRight)
+    }
+}
 
+const switchActOrders = (clickedComponent, componentToTheRight) => {
     pywebview.api.switch_act_order(
         clickedComponent.order,
         componentToTheRight.order,
         clickedComponent.id,
         componentToTheRight.id
-    ).then(success => {
-        // make a HELPER script to build a URL to return HERE
-
-        let returnLinkString = window.location = "story.html?story_id=" + story.id
-        if (!!currentAct) {
-            returnLinkString += "&act_id=" + currentAct.id
-            if (!!currentChapter) {
-                returnLinkString += "&chapter_id=" + currentChapter.id
-                if (!!currentScene) {
-                    returnLinkString += "&scene_id=" + currentScene.id
-                    if (!!currentBeat) {
-                        returnLinkString += "&beat_id=" + currentBeat.id
-                    }
-                }
-            }
-        }
-        returnLinkString += "&level=" + level
-        window.location = returnLinkString
-    })
+    ).then(success => loadStory(level))
 }
+
+const switchChapterOrders = (clickedComponent, componentToTheRight) => {
+    pywebview.api.switch_chapter_order(
+        clickedComponent.order,
+        componentToTheRight.order,
+        clickedComponent.id,
+        componentToTheRight.id
+    ).then(success => loadStory(level))
+}
+
+const switchSceneOrders = (clickedComponent, componentToTheRight) => {
+    pywebview.api.switch_scene_order(
+        clickedComponent.order,
+        componentToTheRight.order,
+        clickedComponent.id,
+        componentToTheRight.id
+    ).then(success => loadStory(level))
+}
+
+const switchBeatOrders = (clickedComponent, componentToTheRight) => {
+    pywebview.api.switch_beat_order(
+        clickedComponent.order,
+        componentToTheRight.order,
+        clickedComponent.id,
+        componentToTheRight.id
+    ).then(success => loadStory(level))
+}
+
 
 // set HTML attributes based on level change alone (not dependent on contents of lists such as chapters.scenes)
 const changeLevel = (newLevel) => {
@@ -113,6 +175,16 @@ const loadToCurrentLevel = loadLevel => {
         case levels.ACT:
             currentAct = story.acts.filter(act => act.id == currentAct.id)[0]
             loadAct(currentAct.id)
+            break;
+        case levels.STORY:
+            story.acts.map(act => cardsContainer.appendChild(
+                html.elements.card(
+                    act,
+                    consts.getChildLevel(level),
+                    levels
+                )))
+            cardsContainer.appendChild(html.elements.newComponentButton(consts.getChildLevel(level)))
+            storyDescription.innerHTML = story.description
             break;
     }
 }
@@ -194,7 +266,7 @@ const loadScene = sceneId => {
 // Beats do not have child components, but we will list value changes instead
 const loadBeat = beatId => {
     changeLevel(levels.BEAT)
-    // get the SCENE object from the CHAPTER object // build HTML string // display everything.
+    // get the BEAT object from the SCENE object // build HTML string // display everything.
     currentBeat = currentScene.beats.filter(beat => beat.id == beatId)[0]
     beatIdLink.innerHTML = currentBeat.label
     editBeatLink.setAttribute("href", editComponentLink())
@@ -259,26 +331,35 @@ const loadDOM = storyId => {
     storyIdLink.setAttribute("href", "story.html?story_id=" + storyId)
 }
 
-// Initially load the whole story, even if you're really trying to load another level of component.
+/**
+ * Initially load the whole story, even if you're really trying to load a subcompnent.
+ * params: loadLevel (which level are we loading to)
+ */
 const loadStory = loadLevel => {
     const urlParams = new URLSearchParams(window.location.search)
-    // check if we've been sent EXTERNALLY to load a particular component/level
-    const loadLevelParam = urlParams.get('level') || false
-    // check if we've indicated a particular level in the function args
-    loadLevel = !!loadLevel ? loadLevel : levels.STORY
+    /**
+     * check if we've been sent EXTERNALLY (from another page) to load a particular component/level
+     * or if we've indicated a particular level in the function args (internal call)
+     * 
+     * args get top priority b/c they're specific to this call (internal to the script)
+     * otherwise get it from querystring from page load, which should be overridden by more specific args.
+     * default to STORY
+     */
+    loadLevel = loadLevel || urlParams.get('level') || levels.STORY
+
     // get id from already loaded story, or the querystring
+    // story_id should ALWAYS be in the params (other info optional)
     const storyId = urlParams.get('story_id')
     loadDOM(storyId)
 
     pywebview.api.get_story_by_id(storyId).then(incomingStory => {
+        // treat the level as STORY for now, to load the STORY level
         changeLevel(levels.STORY)
         story = incomingStory
-        // Load story objects from one level (currently only ACTs)
-        storyIdLink.innerHTML = !!story?.label ? story.label : "NO NAME"
+        storyIdLink.innerHTML = !!story?.label ? story.label : "NOT LOADED"
         levelLabel.innerHTML = consts.getChildLevel(level).toUpperCase() + "S"
 
-        if (!!loadLevelParam) {
-            loadLevel = loadLevelParam
+        if (loadLevel != levels.STORY) {
 
             const actIdParam = urlParams.get('act_id')
             const chapterIdParam = urlParams.get('chapter_id')
@@ -309,19 +390,7 @@ const loadStory = loadLevel => {
         }
 
         // regardless of how loadLevel was set, load that level.
-        if (loadLevel == levels.STORY) {
-            // Get the Document Elements for "act" cards
-            story.acts.map(act => cardsContainer.appendChild(
-                html.elements.card(
-                    act,
-                    consts.getChildLevel(level),
-                    levels
-                )))
-            cardsContainer.appendChild(html.elements.newComponentButton(consts.getChildLevel(level)))
-            storyDescription.innerHTML = story.description
-        } else {
-            loadToCurrentLevel(loadLevel)
-        }
+        loadToCurrentLevel(loadLevel)
     })
 }
 
@@ -354,5 +423,6 @@ window.loadChapter = loadChapter
 window.levels = levels
 window.newComponent = newComponent
 window.editStory = editStory
-window.shiftComponentLeft = shiftComponentLeft
+window.newComponentLeft = newComponentLeft
 window.shiftComponentRight = shiftComponentRight
+window.deleteComponent = deleteComponent

@@ -31,7 +31,7 @@
     align-content: space-between;
 }
 
-.switchButtonLeft {
+.newComponentButtonLeft {
     padding-top: 5px;
     justify-content: left;
     margin: 0px;
@@ -45,10 +45,20 @@
     margin-left: auto;
 }
 
-.switchButtonLeft:hover,
+.newComponentButtonLeft:hover,
 .switchButtonRight:hover {
     background-color: #023436;
     color: #fa8334;
+}
+
+.deleteButtonMiddle:hover {
+    background-color: red;
+    color: #f0f600;
+}
+
+.deleteButtonMiddle {
+    text-align: center;
+    margin: auto;
 }
 
 
