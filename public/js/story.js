@@ -8,10 +8,12 @@ var level = levels.STORY
 
 var storyIdLink, levelLabel, cardsContainer, story, actInfoBox, actIdLink, chapterInfoBox, chapterIdLink, sceneInfoBox, sceneIdLink, beatInfoBox, beatIdLink
 var editStoryLink, editActLink, editChapterLink, editSceneLink, editBeatLink, storyDescription, actDescription, chapterDescription, sceneDescription, beatDescription
+var overlay, confirmText, confirmButtonYes
 var currentAct = null
 var currentChapter = null
 var currentScene = null
 var currentBeat = null
+
 
 // FUNCTIONS
 
@@ -58,11 +60,27 @@ const newComponentLeft = (thisLevel, order) => {
                 .then(success => loadStory(level))
             break;
     }
-
 }
 
+
+const deleteComponentRequest = (levelToDelete, idToDelete) => {
+    overlay.style.display = "inline-block"
+    const deleteComponentOnclickString = "deleteComponent('" + levelToDelete + "', " + idToDelete + ")"
+    confirmButtonYes.setAttribute("onclick", deleteComponentOnclickString)
+}
+
+const cancelRequest = () => {
+    overlay.style.display = "none"
+    confirmButtonYes.removeAttribute("onclick")
+}
+
+
 const deleteComponent = (levelToDelete, idToDelete) => {
+    // hide the overlay which contained the confirmation buttons
+    overlay.style.display = "none"
     console.log("deleting " + levelToDelete + "#" + idToDelete)
+
+    // show dialog asking if you're sure
 
     switch (levelToDelete) {
         case levels.ACT:
@@ -329,6 +347,10 @@ const loadDOM = storyId => {
     sceneDescription = document.getElementById("sceneDescription")
     beatDescription = document.getElementById("beatDescription")
     storyIdLink.setAttribute("href", "story.html?story_id=" + storyId)
+    // overlay elements
+    overlay = document.getElementById("overlay")
+    confirmText = document.getElementById("confirmText")
+    confirmButtonYes = document.getElementById("confirmButtonYes")
 }
 
 /**
@@ -412,7 +434,6 @@ const printAllCurrent = () => {
     console.log("curr story: " + JSON.stringify(story) || 'NONE')
 }
 
-
 window.addEventListener('pywebviewready', loadStory())
 
 // Make certain functions available to the WINDOW so that they can be called from rendered JS
@@ -425,4 +446,6 @@ window.newComponent = newComponent
 window.editStory = editStory
 window.newComponentLeft = newComponentLeft
 window.shiftComponentRight = shiftComponentRight
+window.deleteComponentRequest = deleteComponentRequest
+window.cancelRequest = cancelRequest
 window.deleteComponent = deleteComponent

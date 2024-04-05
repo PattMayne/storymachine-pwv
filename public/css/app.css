@@ -1,3 +1,8 @@
+body {
+    background-color: #7D451B;
+}
+
+
 .title,
 .title_callout {}
 
@@ -66,10 +71,28 @@
     color: black;
 }
 
-
-
-body {
+#overlay {
+    display: none;
     background-color: #7D451B;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    min-width: 100vw;
+    min-height: 100vh;
+    z-index: 200;
+}
+
+#confirmButtonBox {
+    display: flex;
+}
+
+.confirmButton {
+    margin: auto;
+}
+
+#overlayFiller {
+    display: inline-block;
+    height: 30vh;
 }
 
 .white_button {

@@ -80,6 +80,26 @@
         </div>
     </div>
 
+    <div id="overlay">
+        <div class="grid-container">
+
+            <div class="grid-x grid-padding-x">
+                <div class="large-12 cell">
+                    <div id="overlayFiller"></div>
+                </div>
+                <div class="large-12 cell">
+                    <div class="callout">
+                        <h4>Confirm your choice:</h4>
+                        <p id="confirmText"></p>
+                        <div id="confirmButtonBox">
+                            <a class="button confirmButton" id="confirmButtonYes">YES</a>
+                            <a class="button confirmButton alert" id="confirmButtonNo" onclick="cancelRequest()">NO</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="js/vendor/jquery.js"></script>
     <script src="js/vendor/what-input.js"></script>
     <script src="js/vendor/foundation.js"></script>

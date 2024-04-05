@@ -38,7 +38,7 @@ const elements = {
         newComponentButtonLeft.setAttribute("onclick", "newComponentLeft('" + level + "', " + storyComponent.order + ")")
 
         deleteButtonMiddle.setAttribute("class", "deleteButtonMiddle")
-        deleteButtonMiddle.setAttribute("onclick", "deleteComponent('" + level + "', " + storyComponent.id + ")")
+        deleteButtonMiddle.setAttribute("onclick", "deleteComponentRequest('" + level + "', " + storyComponent.id + ")")
         deleteButtonMiddle.innerHTML = "[delete]"
 
         switchButtonRight.setAttribute("class", "switchButtonRight")
@@ -92,6 +92,13 @@ const elements = {
         anchor.innerText = story.label
         return li
     },
+    overlay: dialog => {
+        const overlay = document.createElement("div")
+        overlay.setAttribute("class", "grid-container overlay")
+        !!dialog && overlay.appendChild(dialog)
+        // add an X in the corner to cancel in case no dialog is sent.
+        return dialog
+    }
 }
 
 
