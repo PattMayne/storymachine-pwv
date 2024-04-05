@@ -91,13 +91,6 @@ const elements = {
         li.appendChild(anchor)
         anchor.innerText = story.label
         return li
-    },
-    overlay: dialog => {
-        const overlay = document.createElement("div")
-        overlay.setAttribute("class", "grid-container overlay")
-        !!dialog && overlay.appendChild(dialog)
-        // add an X in the corner to cancel in case no dialog is sent.
-        return dialog
     }
 }
 

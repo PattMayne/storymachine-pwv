@@ -8,7 +8,8 @@ var level = levels.STORY
 
 var storyIdLink, levelLabel, cardsContainer, story, actInfoBox, actIdLink, chapterInfoBox, chapterIdLink, sceneInfoBox, sceneIdLink, beatInfoBox, beatIdLink
 var editStoryLink, editActLink, editChapterLink, editSceneLink, editBeatLink, storyDescription, actDescription, chapterDescription, sceneDescription, beatDescription
-var overlay, confirmText, confirmButtonYes
+var confirmatioOverlay, confirmText, confirmButtonYes, loadingOverlay, loadingText, loadingInterval
+var loadingTimer = 1
 var currentAct = null
 var currentChapter = null
 var currentScene = null
@@ -64,20 +65,20 @@ const newComponentLeft = (thisLevel, order) => {
 
 
 const deleteComponentRequest = (levelToDelete, idToDelete) => {
-    overlay.style.display = "inline-block"
+    confirmatioOverlay.style.display = "inline-block"
     const deleteComponentOnclickString = "deleteComponent('" + levelToDelete + "', " + idToDelete + ")"
     confirmButtonYes.setAttribute("onclick", deleteComponentOnclickString)
 }
 
 const cancelRequest = () => {
-    overlay.style.display = "none"
+    confirmatioOverlay.style.display = "none"
     confirmButtonYes.removeAttribute("onclick")
 }
 
 
 const deleteComponent = (levelToDelete, idToDelete) => {
     // hide the overlay which contained the confirmation buttons
-    overlay.style.display = "none"
+    confirmatioOverlay.style.display = "none"
     console.log("deleting " + levelToDelete + "#" + idToDelete)
 
     // show dialog asking if you're sure
@@ -348,9 +349,11 @@ const loadDOM = storyId => {
     beatDescription = document.getElementById("beatDescription")
     storyIdLink.setAttribute("href", "story.html?story_id=" + storyId)
     // overlay elements
-    overlay = document.getElementById("overlay")
+    confirmatioOverlay = document.getElementById("confirmatioOverlay")
     confirmText = document.getElementById("confirmText")
     confirmButtonYes = document.getElementById("confirmButtonYes")
+    loadingOverlay = document.getElementById("loadingOverlay")
+    loadingText = document.getElementById("loadingText")
 }
 
 /**
@@ -374,46 +377,51 @@ const loadStory = loadLevel => {
     const storyId = urlParams.get('story_id')
     loadDOM(storyId)
 
-    pywebview.api.get_story_by_id(storyId).then(incomingStory => {
-        // treat the level as STORY for now, to load the STORY level
-        changeLevel(levels.STORY)
-        story = incomingStory
-        storyIdLink.innerHTML = !!story?.label ? story.label : "NOT LOADED"
-        levelLabel.innerHTML = consts.getChildLevel(level).toUpperCase() + "S"
+    // pywebview doesn't load immediately, so do a timeout:
+    showLoading()
+    setTimeout(() => {
+        pywebview.api.get_story_by_id(storyId).then(incomingStory => {
+            // treat the level as STORY for now, to load the STORY level
+            changeLevel(levels.STORY)
+            story = incomingStory
+            storyIdLink.innerHTML = !!story?.label ? story.label : "NOT LOADED"
+            levelLabel.innerHTML = consts.getChildLevel(level).toUpperCase() + "S"
 
-        if (loadLevel != levels.STORY) {
+            if (loadLevel != levels.STORY) {
 
-            const actIdParam = urlParams.get('act_id')
-            const chapterIdParam = urlParams.get('chapter_id')
-            const sceneIdParam = urlParams.get('scene_id')
-            const beatIdParam = urlParams.get('beat_id')
+                const actIdParam = urlParams.get('act_id')
+                const chapterIdParam = urlParams.get('chapter_id')
+                const sceneIdParam = urlParams.get('scene_id')
+                const beatIdParam = urlParams.get('beat_id')
 
-            // load parent data until we reach current level
+                // load parent data until we reach current level
 
-            if (!!actIdParam) {
-                currentAct = getActById(actIdParam)
-                loadAct(actIdParam)
+                if (!!actIdParam) {
+                    currentAct = getActById(actIdParam)
+                    loadAct(actIdParam)
+                }
+
+                if (!!chapterIdParam) {
+                    currentChapter = getChapterById(chapterIdParam)
+                    loadChapter(chapterIdParam)
+                }
+
+                if (!!sceneIdParam) {
+                    currentScene = getSceneById(sceneIdParam)
+                    loadScene(sceneIdParam)
+                }
+
+                if (!!beatIdParam) {
+                    currentBeat = getBeatById(beatIdParam)
+                    loadBeat(beatIdParam)
+                }
             }
 
-            if (!!chapterIdParam) {
-                currentChapter = getChapterById(chapterIdParam)
-                loadChapter(chapterIdParam)
-            }
-
-            if (!!sceneIdParam) {
-                currentScene = getSceneById(sceneIdParam)
-                loadScene(sceneIdParam)
-            }
-
-            if (!!beatIdParam) {
-                currentBeat = getBeatById(beatIdParam)
-                loadBeat(beatIdParam)
-            }
-        }
-
-        // regardless of how loadLevel was set, load that level.
-        loadToCurrentLevel(loadLevel)
-    })
+            // regardless of how loadLevel was set, load that level.
+            loadToCurrentLevel(loadLevel)
+            hideLoading()
+        })
+    }, 700)
 }
 
 const getActById = actId => story.acts.filter(act => act.id == actId)[0]
@@ -422,6 +430,26 @@ const getSceneById = sceneId => currentChapter.scenes.filter(scene => scene.id =
 const getBeatById = beatId => currentScene.beats.filter(beat => beat.id == beatId)[0]
 
 const editStory = () => window.location = "edit_story.html?edit=true&story_id=" + story.id
+
+const showLoading = () => {
+    loadingOverlay.style.display = "inline-block"
+    loadingInterval = setInterval(() => {
+        if (loadingTimer > 5) {
+            loadingTimer = 0
+        }
+        let loadingString = "Loading."
+        for (let i = 0; i < loadingTimer; i++) {
+            loadingString += "."
+        }
+        loadingText.innerHTML = loadingString
+        loadingTimer++
+    }, 340)
+}
+
+const hideLoading = () => {
+    clearInterval(loadingInterval)
+    loadingOverlay.style.display = "none"
+}
 
 // DEBUG FUNCTIONS
 

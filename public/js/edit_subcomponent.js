@@ -17,33 +17,42 @@ var aspect = null
 var level = null
 var storyId, actId, chapterId, sceneId, beatId
 
+// overlays
+var loadingOverlay, loadingText, loadingInterval
+var loadingTimer = 0
+
 const setAspect = () => {
-    // discover the purpose of this visit
-    const urlParams = new URLSearchParams(window.location.search)
-    aspect = urlParams.get('edit') ? aspects.EDIT : aspects.NEW
-    storyId = urlParams.get('story_id') || 0
-    actId = urlParams.get('act_id') || 0
-    chapterId = urlParams.get('chapter_id') || 0
-    sceneId = urlParams.get('scene_id') || 0
-    beatId = urlParams.get('beat_id')
-    level = urlParams.get('level')
+    loadDOM()
+    showLoading()
+    setTimeout(() => {
+        // discover the purpose of this visit
+        const urlParams = new URLSearchParams(window.location.search)
+        aspect = urlParams.get('edit') ? aspects.EDIT : aspects.NEW
+        storyId = urlParams.get('story_id') || 0
+        actId = urlParams.get('act_id') || 0
+        chapterId = urlParams.get('chapter_id') || 0
+        sceneId = urlParams.get('scene_id') || 0
+        beatId = urlParams.get('beat_id')
+        level = urlParams.get('level')
 
-    labelElement = document.getElementById("label")
-    descriptionElement = document.getElementById("description")
-    pageTitleElement = document.getElementById("pageTitle")
-    pageTitleElement.innerHTML = "Edit " + level + " and beat_id = " + beatId
+        labelElement = document.getElementById("label")
+        descriptionElement = document.getElementById("description")
+        pageTitleElement = document.getElementById("pageTitle")
+        pageTitleElement.innerHTML = "Edit " + level + " and beat_id = " + beatId
 
-    // if EDIT, get the subcomponent and populate from that object
-    // else, populate fields with boilerplate stuff for the NEW subcomponent
-    if (aspect == aspects.EDIT) {
-        // check the level (cubcomponent type) and set the component
-        level == levels.BEAT ? getBeat() :
-            level == levels.SCENE ? getScene() :
-                level == levels.CHAPTER ? getChapter() :
-                    level == levels.ACT ? getAct() : null
-    } else {
-        console.log("we are NOT editing")
-    }
+        // if EDIT, get the subcomponent and populate from that object
+        // else, populate fields with boilerplate stuff for the NEW subcomponent
+        if (aspect == aspects.EDIT) {
+            // check the level (cubcomponent type) and set the component
+            level == levels.BEAT ? getBeat() :
+                level == levels.SCENE ? getScene() :
+                    level == levels.CHAPTER ? getChapter() :
+                        level == levels.ACT ? getAct() : null
+        } else {
+            console.log("we are NOT editing")
+        }
+        hideLoading()
+    }, 300)
 }
 
 // Once you get the subcomponent (any subcomponent!) set it.
@@ -131,5 +140,31 @@ const updateComponent = () => {
 
 }
 
-window.addEventListener('pywebviewready', setAspect())
+const loadDOM = () => {
+    // overlay elements
+    loadingOverlay = document.getElementById("loadingOverlay")
+    loadingText = document.getElementById("loadingText")
+}
+
+const showLoading = () => {
+    loadingOverlay.style.display = "inline-block"
+    loadingInterval = setInterval(() => {
+        if (loadingTimer > 5) {
+            loadingTimer = 0
+        }
+        let loadingString = "Loading."
+        for (let i = 0; i < loadingTimer; i++) {
+            loadingString += "."
+        }
+        loadingText.innerHTML = loadingString
+        loadingTimer++
+    }, 340)
+}
+
+const hideLoading = () => {
+    clearInterval(loadingInterval)
+    loadingOverlay.style.display = "none"
+}
+
+window.addEventListener('load', () => setAspect())
 window.submit = submit
