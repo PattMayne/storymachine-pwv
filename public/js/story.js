@@ -15,6 +15,8 @@ var currentChapter = null
 var currentScene = null
 var currentBeat = null
 
+var pyviewLoaded = false
+
 
 // FUNCTIONS
 
@@ -378,7 +380,7 @@ const loadStory = loadLevel => {
     loadDOM(storyId)
 
     // pywebview doesn't load immediately, so do a timeout:
-    showLoading()
+    loadLevel == levels.STORY && showLoading()
     setTimeout(() => {
         pywebview.api.get_story_by_id(storyId).then(incomingStory => {
             // treat the level as STORY for now, to load the STORY level
@@ -421,7 +423,9 @@ const loadStory = loadLevel => {
             loadToCurrentLevel(loadLevel)
             hideLoading()
         })
-    }, 700)
+        // choose loading time
+    }, pyviewLoaded ? 10 : 500)
+    pyviewLoaded = true
 }
 
 const getActById = actId => story.acts.filter(act => act.id == actId)[0]
@@ -447,7 +451,7 @@ const showLoading = () => {
 }
 
 const hideLoading = () => {
-    clearInterval(loadingInterval)
+    !!loadingInterval && clearInterval(loadingInterval)
     loadingOverlay.style.display = "none"
 }
 
