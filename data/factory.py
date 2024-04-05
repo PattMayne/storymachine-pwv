@@ -542,6 +542,7 @@ def delete_scene(scene_id, reorder = True):
     connect = sqlite3.connect('data/stories.db')
     cursor = connect.cursor()
 
+    # get id of parent (so we can get their siblings)
     cursor.execute("SELECT chapter_id FROM scene WHERE id=:scene_id", {
         'scene_id': scene_id
     })
@@ -552,17 +553,96 @@ def delete_scene(scene_id, reorder = True):
         {
             'id': scene_id
         })
-    # delete any beats belonging to this scene
-    cursor.execute("DELETE FROM beat WHERE scene_id = :scene_id",
+    # delete any beats belonging to this scene (get the beats, loop through, call the delete function)
+    cursor.execute("SELECT id FROM beat WHERE scene_id = :scene_id",
         {
             'scene_id': scene_id
         })
+    records = cursor.fetchall()
+
     connect.commit()
     connect.close()
+
+    for record in records:
+        delete_beat(record[0], False)
 
     # next reorder all beats
     if reorder:
         reorder_scenes(chapter_id)
+
+    return True
+
+
+def delete_chapter(chapter_id, reorder = True):
+    # this will have to also delete any BEAT objects
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+
+    # get id of parent (so we can get their siblings)
+    cursor.execute("SELECT act_id FROM chapter WHERE id=:chapter_id", {
+        'chapter_id': chapter_id
+    })
+    records = cursor.fetchall()
+    act_id = records[0][0]
+
+    cursor.execute("DELETE FROM chapter WHERE id = :id",
+        {
+            'id': chapter_id
+        })
+    
+    # delete any scenes belonging to this chapter (get the scenes, loop through, call the delete function)
+    cursor.execute("SELECT id FROM scene WHERE chapter_id = :chapter_id",
+        {
+            'chapter_id': chapter_id
+        })
+    records = cursor.fetchall()
+
+    connect.commit()
+    connect.close()
+
+    for record in records:
+        delete_scene(record[0], False)
+
+    # next reorder all chapters
+    if reorder:
+        reorder_chapters(act_id)
+
+    return True
+
+
+def delete_act(act_id, reorder = True):
+    # this will have to also delete any BEAT objects
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+
+    # get id of parent (so we can get their siblings)
+    cursor.execute("SELECT story_id FROM act WHERE id=:act_id", {
+        'act_id': act_id
+    })
+    records = cursor.fetchall()
+    story_id = records[0][0]
+
+    cursor.execute("DELETE FROM act WHERE id = :id",
+        {
+            'id': act_id
+        })
+    
+    # delete any chapters belonging to this act (get the chapters, loop through, call the delete function)
+    cursor.execute("SELECT id FROM chapter WHERE act_id = :act_id",
+        {
+            'act_id': act_id
+        })
+    records = cursor.fetchall()
+
+    connect.commit()
+    connect.close()
+
+    for record in records:
+        delete_chapter(record[0], False)
+
+    # next reorder all chapters
+    if reorder:
+        reorder_acts(story_id)
 
     return True
 

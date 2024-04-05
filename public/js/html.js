@@ -34,7 +34,7 @@ const elements = {
         const switchButtonRight = document.createElement("div")
 
         newComponentButtonLeft.setAttribute("class", "newComponentButtonLeft")
-        newComponentButtonLeft.innerHTML = "<< New " + level
+        newComponentButtonLeft.innerHTML = "<< new " + level
         newComponentButtonLeft.setAttribute("onclick", "newComponentLeft('" + level + "', " + storyComponent.order + ")")
 
         deleteButtonMiddle.setAttribute("class", "deleteButtonMiddle")
@@ -43,7 +43,7 @@ const elements = {
 
         switchButtonRight.setAttribute("class", "switchButtonRight")
         switchButtonRight.setAttribute("id", "switchButtonRight_" + level + "_order-" + storyComponent.order)
-        switchButtonRight.innerHTML = "Move >>"
+        switchButtonRight.innerHTML = "move >>"
         switchButtonRight.setAttribute("onclick", "shiftComponentRight('" + level + "', " + storyComponent.id + ")")
 
         bottomMenu.setAttribute("class", "cardBottomMenu")

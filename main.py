@@ -154,6 +154,14 @@ class Api():
     def delete_scene(self, scene_id):
         print("deleting scene " + str(scene_id))
         factory.delete_scene(scene_id, True)
+    
+    def delete_chapter(self, chapter_id):
+        print("deleting chapter " + str(chapter_id))
+        factory.delete_chapter(chapter_id, True)
+    
+    def delete_act(self, act_id):
+        print("deleting act " + str(act_id))
+        factory.delete_act(act_id, True)
 
 
 def main_function(window):

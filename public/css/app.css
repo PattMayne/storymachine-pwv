@@ -32,34 +32,40 @@
 }
 
 .newComponentButtonLeft {
-    padding-top: 5px;
+    padding: 3px 14px 0px 14px;
     justify-content: left;
     margin: 0px;
     margin-right: auto;
 }
 
 .switchButtonRight {
-    padding-top: 5px;
+    padding: 5px 14px 0px 14px;
     text-align: right;
     margin: 0px;
     margin-left: auto;
 }
 
-.newComponentButtonLeft:hover,
+.deleteButtonMiddle {
+    padding: 5px 14px 0px 14px;
+    text-align: center;
+    margin: auto;
+}
+
 .switchButtonRight:hover {
+    background-color: blue;
+    color: #fa8334;
+}
+
+.newComponentButtonLeft:hover {
     background-color: #023436;
     color: #fa8334;
 }
 
 .deleteButtonMiddle:hover {
     background-color: red;
-    color: #f0f600;
+    color: black;
 }
 
-.deleteButtonMiddle {
-    text-align: center;
-    margin: auto;
-}
 
 
 body {

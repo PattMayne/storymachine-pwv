@@ -66,20 +66,20 @@ const deleteComponent = (levelToDelete, idToDelete) => {
 
     switch (levelToDelete) {
         case levels.ACT:
-            pywebview.api.create_act_at_order(story.id, 5)
-                .then(success => loadStory(level))
+            pywebview.api.delete_act(idToDelete)
+                .then(success => loadStory(levels.STORY))
             break;
         case levels.CHAPTER:
-            pywebview.api.create_chapter_at_order(currentAct.id, 5)
-                .then(success => loadStory(level))
+            pywebview.api.delete_chapter(idToDelete)
+                .then(success => loadStory(levels.ACT))
             break;
         case levels.SCENE:
             pywebview.api.delete_scene(idToDelete)
-                .then(success => loadStory(level))
+                .then(success => loadStory(levels.CHAPTER))
             break;
         case levels.BEAT:
             pywebview.api.delete_beat(idToDelete)
-                .then(success => loadStory(level))
+                .then(success => loadStory(levels.SCENE))
             break;
     }
 }
