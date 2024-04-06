@@ -38,7 +38,7 @@ const setAspect = () => {
         labelElement = document.getElementById("label")
         descriptionElement = document.getElementById("description")
         pageTitleElement = document.getElementById("pageTitle")
-        pageTitleElement.innerHTML = "Edit " + level + " and beat_id = " + beatId
+        pageTitleElement.innerHTML = "Edit " + level
 
         // if EDIT, get the subcomponent and populate from that object
         // else, populate fields with boilerplate stuff for the NEW subcomponent

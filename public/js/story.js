@@ -468,7 +468,7 @@ const printAllCurrent = () => {
 
 window.addEventListener('pywebviewready', loadStory())
 
-// Make certain functions available to the WINDOW so that they can be called from rendered JS
+// Make certain functions available to the WINDOW so that they can be called from JS
 window.loadBeat = loadBeat
 window.loadScene = loadScene
 window.loadAct = loadAct

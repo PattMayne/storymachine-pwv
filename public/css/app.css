@@ -2,6 +2,10 @@ body {
     background-color: #7D451B;
 }
 
+input,
+textarea {
+    border: 3px solid black !important;
+}
 
 .title,
 .title_callout {}
