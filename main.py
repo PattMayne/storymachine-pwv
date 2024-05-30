@@ -20,6 +20,9 @@ TO DO:
     - panel to create new author
     - panel to create new story
     - file for text to be used as instructions and labels
+    - Replace "delete" with "archive"
+        - then enable "delete" within the archives
+        - Archives will be tricky since "archiving" a parent object must archive its children.
 
 """
 

@@ -1,5 +1,5 @@
 body {
-    background-color: #7D451B;
+    background-color: #ffffff;
 }
 
 input,
@@ -7,12 +7,17 @@ textarea {
     border: 3px solid #111111 !important;
 }
 
-.title,
-.title_callout {}
+.title_callout {
+    margin-top: 14px;
+}
 
 .cardLabel {
     text-align: center;
     font-weight: 600;
+}
+
+#storyInfoBox {
+    margin-top: 14px;
 }
 
 .cardLabel:hover {
@@ -134,13 +139,13 @@ textarea {
 
 
 .callout {
-    background-color: #D9B26F;
-    border: none;
+    background-color: #f0f0f0;
+    border: 1px solid black;
 }
 
 .primary {
-    background-color: #efefef;
-    border: none;
+    background-color: #ffffff;
+    border: 1px solid black;
 }
 
 /*
