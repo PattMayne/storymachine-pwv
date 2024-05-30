@@ -712,3 +712,59 @@ def reorder_acts(story_id):
 
     for i in range(0, len(records)):
         update_act_order(records[i][0], i + 1)
+
+
+
+#   VALUE OBJECTS
+
+# creates new character object in the db
+def create_character(first_name, last_name, description, notes):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("INSERT INTO character(first_name, last_name, description, notes) VALUES (:first_name, :last_name, :description, :notes)",
+        {
+            'first_name': first_name,
+            'last_name': last_name,
+            'description': description,
+            'notes': notes
+        })
+
+    connect.commit()
+    char_id = cursor.lastrowid
+    connect.close()
+    return char_id
+
+
+# creates new location object in the db
+def create_location(name, description, notes):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("INSERT INTO character(name, description, notes) VALUES (:name, :description, :notes)",
+        {
+            'name': name,
+            'description': description,
+            'notes': notes
+        })
+
+    connect.commit()
+    char_id = cursor.lastrowid
+    connect.close()
+    return char_id
+
+
+# creates new location object in the db
+def create_value(name, description, notes):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("INSERT INTO character(name, description, notes) VALUES (:name, :description, :notes)",
+        {
+            'name': name,
+            'description': description,
+            'notes': notes
+        })
+
+    connect.commit()
+    char_id = cursor.lastrowid
+    connect.close()
+    return char_id
+

@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS value (
     notes, text
 );
 
-/* The value-connection to the temporal hierarchy. */
+/* The value-connection to the temporal hierarchy: connects beat and value */
 CREATE TABLE IF NOT EXISTS value_change (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     label text NOT NULL,
@@ -105,4 +105,4 @@ CREATE TABLE IF NOT EXISTS location (
     name text NOT NULL,
     description text,
     notes, text
-)
+);
