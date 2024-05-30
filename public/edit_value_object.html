@@ -1,0 +1,157 @@
+<!doctype html>
+<html class="no-js" lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>storymachine</title>
+    <link rel="stylesheet" href="css/foundation.css">
+    <link rel="stylesheet" href="css/app.css">
+    <script type="importmap">
+        {
+          "imports": {
+            "html": "./js/html.js",
+            "helpers": "./js/helpers.js",
+            "consts": "./js/consts.js"
+          }
+        }
+      </script>
+</head>
+
+<body>
+    <div class="grid-container">
+        <div class="grid-x grid-padding-x">
+            <div class="large-12 cell">
+                <div class="callout title_callout">
+                    <h1 class="title" id="pageTitle">EDIT VALUE OBJECT</h1>
+                </div>
+            </div>
+
+            <!-- create or edit VALUE -->
+            <div class="large-12 cell">
+                <div class="callout">
+                    <h2>VALUE form</h2>
+                    <label for="valueLabel">Label:</label>
+                    <input id="valueLabel" type="text" value="Subcomponent" placeholder="Label or Name" />
+
+                    <div class="grid-x grid-padding-x">
+                        <div class="large-6 medium-6 small-12 cell">
+                            <label for="valueDescription">Description:</label>
+                            <textarea id="valueDescription" placeholder="Description"></textarea>
+                        </div>
+                        <div class="large-6 medium-6 small-12 cell">
+                            <label for="valueNotes">Notes:</label>
+                            <textarea placeholder="Notes" id="valueNotes"></textarea>
+                        </div>
+                    </div>
+                    <input id="valueSubmit" class="button" type="submit" onclick="submit()" />
+                </div>
+            </div>
+
+            <!-- create or edit VALUE CHANGE -->
+            <!-- beat_id and value_id will be fed in via querystring params -->
+            <div class="large-12 cell">
+                <div class="callout">
+                    <h2>VALUE CHANGE form</h2>
+                    <label for="valueChangeLabel">Label:</label>
+                    <input id="valueChangeLabel" type="text" value="Subcomponent" placeholder="Label or Name" />
+                    <div class="grid-x grid-padding-x">
+                        <div class="large-6 medium-6 small-12 cell">
+                            <label for="valueChangeDescription">Description:</label>
+                            <textarea id="valueChangeDescription" placeholder="Description"></textarea>
+                        </div>
+                        <div class="large-6 medium-6 small-12 cell">
+                            <label for="valueChangeNotes">Notes:</label>
+                            <textarea id="valueChangeNotes" placeholder="Notes"></textarea>
+                        </div>
+                        <div class="large-6 medium-6 small-12 cell">
+                            <label for="valueChangeMag">Magnitude of change:</label>
+                            <input type="number" id="valueChangeMag" />
+                        </div>
+                    </div>
+                    <input id="submit" class="button" type="submit" onclick="submit()" />
+                </div>
+            </div>
+
+            <!-- create or edit CHARACTER -->
+            <div class="large-12 cell">
+                <div class="callout">
+                    <h2>CHARACTER form</h2>
+                    <div class="grid-x grid-padding-x">
+                        <div class="large-6 medium-6 small-12 cell">
+                            <label for="charFirstName">First Name:</label>
+                            <input type="text" id="charFirstName" placeholder="First Name">
+                        </div>
+                        <div class="large-6 medium-6 small-12 cell">
+                            <label for="charLastName">Last Name:</label>
+                            <input type="text" id="charLastName" placeholder="Last Name">
+                        </div>
+
+                        <div class="large-6 medium-6 small-12 cell">
+                            <label for="charDescription">Description:</label>
+                            <textarea id="charDescription" placeholder="Description"></textarea>
+                        </div>
+                        <div class="large-6 medium-6 small-12 cell">
+                            <label for="charNotes">Notes:</label>
+                            <textarea id="charNotes" placeholder="Notes"></textarea>
+                        </div>
+
+                    </div>
+                    <input id="submit" class="button" type="submit" onclick="submit()" />
+                </div>
+            </div>
+
+            <!-- create or edit LOCATION -->
+            <div class="large-12 cell">
+                <div class="callout">
+                    <h2>LOCATION form</h2>
+                    <div class="grid-x grid-padding-x">
+                        <div class="large-6 medium-6 small-12 cell">
+                            <label for="locationName">Name / Title:</label>
+                            <input type="text" id="locationName" placeholder="Name /  Title">
+                        </div>
+                        <div class="large-6 medium-6 small-12 cell">
+                            &nbsp;
+                        </div>
+
+                        <div class="large-6 medium-6 small-12 cell">
+                            <label for="locationDescription">Description:</label>
+                            <textarea id="locationDescription" placeholder="Description"></textarea>
+                        </div>
+                        <div class="large-6 medium-6 small-12 cell">
+                            <label for="locationNotes">Notes:</label>
+                            <textarea id="locationNotes" placeholder="Notes"></textarea>
+                        </div>
+
+                    </div>
+                    <input id="submit" class="button" type="submit" onclick="submit()" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="loadingOverlay">
+        <div class="grid-container">
+
+            <div class="grid-x grid-padding-x">
+                <div class="large-12 cell">
+                    <div class="overlayFiller"></div>
+                </div>
+                <div class="large-12 cell">
+                    <div class="callout">
+                        <h2 id="loadingText">Loading.</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/vendor/jquery.js"></script>
+    <script src="js/vendor/what-input.js"></script>
+    <script src="js/vendor/foundation.js"></script>
+    <script type="module" src="js/edit_subcomponent.js"></script>
+</body>
+
+</html>

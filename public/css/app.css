@@ -1,9 +1,23 @@
-.title,
-.title_callout {}
+body {
+    background-color: #ffffff;
+}
+
+input,
+textarea {
+    border: 3px solid #111111 !important;
+}
+
+.title_callout {
+    margin-top: 14px;
+}
 
 .cardLabel {
     text-align: center;
     font-weight: 600;
+}
+
+#storyInfoBox {
+    margin-top: 14px;
 }
 
 .cardLabel:hover {
@@ -19,8 +33,86 @@
     display: none;
 }
 
-body {
+.cardBottomMenu {
+    border-top: 2px solid black;
+    width: 100%;
+    position: relative;
+    bottom: 0px;
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+}
+
+.newComponentButtonLeft {
+    padding: 3px 14px 0px 14px;
+    justify-content: left;
+    margin: 0px;
+    margin-right: auto;
+}
+
+.switchButtonRight {
+    padding: 5px 14px 0px 14px;
+    text-align: right;
+    margin: 0px;
+    margin-left: auto;
+}
+
+.deleteButtonMiddle {
+    padding: 5px 14px 0px 14px;
+    text-align: center;
+    margin: auto;
+}
+
+.switchButtonRight:hover {
+    background-color: blue;
+    color: #fa8334;
+}
+
+.newComponentButtonLeft:hover {
+    background-color: #023436;
+    color: #fa8334;
+}
+
+.deleteButtonMiddle:hover {
+    background-color: red;
+    color: black;
+}
+
+#loadingOverlay {
+    display: none;
     background-color: #7D451B;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    min-width: 100vw;
+    min-height: 100vh;
+    z-index: 199;
+}
+
+#confirmatioOverlay {
+    display: none;
+    background-color: #7D451B;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    min-width: 100vw;
+    min-height: 100vh;
+    z-index: 200;
+}
+
+#confirmButtonBox {
+    display: flex;
+}
+
+.confirmButton {
+    margin: auto;
+}
+
+.overlayFiller {
+    display: inline-block;
+    height: 30vh;
 }
 
 .white_button {
@@ -47,13 +139,13 @@ body {
 
 
 .callout {
-    background-color: #D9B26F;
-    border: none;
+    background-color: #f0f0f0;
+    border: 1px solid black;
 }
 
 .primary {
-    background-color: #efefef;
-    border: none;
+    background-color: #ffffff;
+    border: 1px solid black;
 }
 
 /*
@@ -82,3 +174,7 @@ const colors = {
 }   
 
 */
+
+.fullWidth {
+    width: 100%;
+}

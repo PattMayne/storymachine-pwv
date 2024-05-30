@@ -27,7 +27,17 @@
             <!-- ALWAYS have the STORY INFO BOX available -->
             <div class="large-12 cell" id="storyInfoBox">
                 <div class="callout title_callout">
-                    <h6>STORY:&nbsp;<a class="cardTitleLink" id="storyIdLink">NULL</a></h6>
+                    <div class="grid-x grid-padding-x">
+                        <div class="large-6 medium-6 small-12 cell">
+                            <h6>STORY:&nbsp;<a class="cardTitleLink" id="storyIdLink">NULL</a></h6>
+                            <p id="storyDescription"></p>
+                            <a id="editStoryLink" onclick="editStory()">edit story</a>
+                        </div>
+                        <div class="large-6 medium-6 small-12 cell">
+                            <h6>&bnsp;</h6>
+                            <a href="edit_value_object.html">edit VALUE OBJECT</a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -37,6 +47,8 @@
             <div class="large-12 cell subcomponent-box" id="actInfoBox">
                 <div class="callout title_callout">
                     <h6>ACT:&nbsp;<a class="cardTitleLink" id="actIdLink">NULL</a></h6>
+                    <p id="actDescription"></p>
+                    <a id="editActLink">edit act</a>
                 </div>
             </div>
 
@@ -44,6 +56,8 @@
             <div class="large-12 cell subcomponent-box" id="chapterInfoBox">
                 <div class="callout title_callout">
                     <h6>CHAPTER:&nbsp;<a class="cardTitleLink" id="chapterIdLink">NULL</a></h6>
+                    <p id="chapterDescription"></p>
+                    <a id="editChapterLink">edit chapter</a>
                 </div>
             </div>
 
@@ -51,6 +65,8 @@
             <div class="large-12 cell subcomponent-box" id="sceneInfoBox">
                 <div class="callout title_callout">
                     <h6>SCENE:&nbsp;<a class="cardTitleLink" id="sceneIdLink">NULL</a></h6>
+                    <p id="sceneDescription"></p>
+                    <a id="editSceneLink">edit scene</a>
                 </div>
             </div>
 
@@ -58,20 +74,56 @@
             <div class="large-12 cell subcomponent-box" id="beatInfoBox">
                 <div class="callout title_callout">
                     <h6>BEAT:&nbsp;<a class="cardTitleLink" id="beatIdLink">NULL</a></h6>
+                    <p id="beatDescription"></p>
+                    <a id="editBeatLink">edit beat</a>
                 </div>
             </div>
 
             <div class="large-12 cell">
-                <div class="callout primary">
-                    <h2 id="levelLabel">STORY OBJECTS</h2>
-                    <div class="grid-x grid-padding-x" id="cardsContainer">
-                        <!-- STORY OBJECTS INSERTED HERE BY JAVASCRIPT -->
+                <h2 id="levelLabel">STORY OBJECTS</h2>
+                <div class="grid-x grid-padding-x" id="cardsContainer">
+                    <!-- STORY OBJECTS INSERTED HERE BY JAVASCRIPT -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirmatioOverlay">
+        <div class="grid-container">
+
+            <div class="grid-x grid-padding-x">
+                <div class="large-12 cell">
+                    <div class="overlayFiller"></div>
+                </div>
+                <div class="large-12 cell">
+                    <div class="callout">
+                        <h4>Confirm your choice:</h4>
+                        <p id="confirmText"></p>
+                        <div id="confirmButtonBox">
+                            <a class="button confirmButton" id="confirmButtonYes">YES</a>
+                            <a class="button confirmButton alert" id="confirmButtonNo" onclick="cancelRequest()">NO</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <div id="loadingOverlay">
+        <div class="grid-container">
+
+            <div class="grid-x grid-padding-x">
+                <div class="large-12 cell">
+                    <div class="overlayFiller"></div>
+                </div>
+                <div class="large-12 cell">
+                    <div class="callout">
+                        <h2 id="loadingText">Loading.</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="js/vendor/jquery.js"></script>
     <script src="js/vendor/what-input.js"></script>

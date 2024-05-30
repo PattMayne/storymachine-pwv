@@ -7,12 +7,12 @@ import json
 
 def ids_and_labels():
     story_ids_and_labels = []
-    conn = sqlite3.connect('data/stories.db')
-    cur = conn.cursor()
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
 
     # Get the story info from the database
-    cur.execute("SELECT id, label FROM story")
-    records = cur.fetchall()
+    cursor.execute("SELECT id, label FROM story")
+    records = cursor.fetchall()
 
     for record in records:
         story_ids_and_labels.append({"id": record[0], "label": record[1]})
@@ -23,29 +23,30 @@ def ids_and_labels():
 # Get story dict by id
 
 def by_id(story_id):
-    conn = sqlite3.connect('data/stories.db')
-    cur = conn.cursor()
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
 
     # Get the story info from the database
-    cur.execute("SELECT * FROM story WHERE id=:story_id", {
+    cursor.execute("SELECT * FROM story WHERE id=:story_id", {
         'story_id': story_id
     })
-    records = cur.fetchall()
+    records = cursor.fetchall()
 
     print("Story ID: " + str(story_id))
 
     story = {
+        'id': records[0][0],
         'label': records[0][1],
-        'description': records[0][2],
-        'authors': records[0][3],
+        'description': records[0][4],
+        'authors': records[0][5],
         'acts': []
     }
 
     # next get the acts
-    cur.execute("SELECT * FROM act WHERE story_id=:story_id", {
+    cursor.execute("SELECT * FROM act WHERE story_id=:story_id ORDER BY relative_order ASC", {
         'story_id': story_id
     })
-    records = cur.fetchall()
+    records = cursor.fetchall()
 
     for act_record in records:
         act_id = act_record[0]
@@ -53,15 +54,16 @@ def by_id(story_id):
             'id': act_id,
             'label': act_record[1],
             'description': act_record[2],
-            'chapters': []
+            'chapters': [],
+            'order': act_record[4]
         })
 
         # Within the loop, get the chapters for THIS act
-        cur.execute("SELECT * FROM chapter WHERE act_id=:act_id", {
+        cursor.execute("SELECT * FROM chapter WHERE act_id=:act_id ORDER BY relative_order ASC", {
             'act_id': act_id
         })
 
-        chapter_records = cur.fetchall()
+        chapter_records = cursor.fetchall()
         act = story["acts"][len(story["acts"])-1]
 
         for chapter_record in chapter_records:
@@ -70,15 +72,16 @@ def by_id(story_id):
                 'id': chapter_id,
                 'label': chapter_record[1],
                 'description': chapter_record[2],
-                'scenes': []
+                'scenes': [],
+                'order': chapter_record[4]
             })
 
             # Within the loop, get the scenes for THIS chapter
-            cur.execute("SELECT * FROM scene WHERE chapter_id=:chapter_id", {
+            cursor.execute("SELECT * FROM scene WHERE chapter_id=:chapter_id ORDER BY relative_order ASC", {
                 'chapter_id': chapter_id
             })
 
-            scene_records = cur.fetchall()
+            scene_records = cursor.fetchall()
             chapter = act["chapters"][len(act["chapters"])-1]
 
             for scene_record in scene_records:
@@ -87,15 +90,16 @@ def by_id(story_id):
                     'id': scene_id,
                     'label': scene_record[1],
                     'description': scene_record[2],
-                    'beats': []
+                    'beats': [],
+                    'order': scene_record[4]
                 })
 
                 # Within the loop, get the beats for THIS scene
-                cur.execute("SELECT * FROM beat WHERE scene_id=:scene_id", {
+                cursor.execute("SELECT * FROM beat WHERE scene_id=:scene_id ORDER BY relative_order ASC", {
                     'scene_id': scene_id
                 })
 
-                beat_records = cur.fetchall()
+                beat_records = cursor.fetchall()
                 scene = chapter["scenes"][len(chapter["scenes"])-1]
 
                 for beat_record in beat_records:
@@ -103,10 +107,11 @@ def by_id(story_id):
                     scene["beats"].append({
                         'id': beat_id,
                         'label': beat_record[1],
-                        'description': beat_record[2]
+                        'description': beat_record[2],
+                        'order': beat_record[4]
                     })
 
 
-    conn.commit()
-    conn.close()
+    connect.commit()
+    connect.close()
     return story
