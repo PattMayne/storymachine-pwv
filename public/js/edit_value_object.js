@@ -1,5 +1,6 @@
 // IMPORTS
 import * as consts from 'consts'
+import * as html from 'html'
 
 const valueObjects = consts.valueObjects
 const levels = consts.levels
@@ -130,26 +131,27 @@ const editValue = () => pywebview.api.get_value_by_id(valueObjectId).then(value 
     pywebview.api.get_characters().then(characters => {
         relations_cell.style.display = ''
         let selectBox = document.getElementById("charactersToRelate")
+        let relatedCharsBox = document.getElementById("relatedCharactersBox")
 
         // separate characters WITH relationship from characters with NONE.
 
         let relatedCharacters = []
         let nonRelatedCharacters = []
 
-        characters.map(character => {
+        for (let i = 0; i < characters.length; i++) {
             let isRelated = false
             value["character_values"].map(characterValue => {
-                if (character["id"] == characterValue["character_id"]) {
+                if (characters[i]["id"] == characterValue["character_id"]) {
+                    characters[i]["character_value"] = characterValue
                     isRelated = true
                 }
             })
 
-            !!isRelated ? relatedCharacters.push(character) : nonRelatedCharacters.push(character)
-        })
+            !!isRelated ? relatedCharacters.push(characters[i]) : nonRelatedCharacters.push(characters[i])
+        }
 
-        // Putting non-related characters in the dropbox.
+        // Putting non-related characters in the dropdown.
         nonRelatedCharacters.map(character => {
-            //console.log("CHARACTER: " + character)
             let newOption = document.createElement("option")
             newOption.value = character["id"]
             newOption.innerText = character["first_name"]
@@ -157,7 +159,9 @@ const editValue = () => pywebview.api.get_value_by_id(valueObjectId).then(value 
         })
 
         // Listing related characters in a chart.
-
+        relatedCharacters.map(character => {
+            relatedCharsBox.appendChild(html.elements.characterValueItem(character))
+        })
     })
 })
 

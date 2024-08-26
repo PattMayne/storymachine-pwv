@@ -139,6 +139,36 @@ select {
     color: #e90000;
 }
 
+#relatedCharactersBox {
+    margin: auto 0px;
+    padding: auto 0px;
+    width: 100%;
+}
+
+.characterValuesListItem {
+    display: flex;
+    width: 100%;
+}
+
+.characterValuesListItem>div {
+    margin: 2px;
+    padding: 1px 2px 0px 4px;
+    background-color: #4b4b4b;
+    color: white;
+}
+
+.characterValuesListItemName {
+    flex-grow: 8;
+}
+
+.characterValuesListItemAligned {
+    flex-grow: 1;
+}
+
+.characterValuesListItemDelete {
+    flex-grow: 1;
+}
+
 
 .listButton {
     margin: 1px;

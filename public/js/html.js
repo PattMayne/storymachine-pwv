@@ -118,6 +118,37 @@ const elements = {
         return button
     },
 
+    characterValueItem: (character) => {
+        let charName = character["first_name"]
+        charName += !!character["last_name"] ? " " + character["last_name"] : ""
+
+        const container = document.createElement("div")
+        container.setAttribute("class", "characterValuesListItem")
+
+        const nameDiv = document.createElement("div")
+        nameDiv.setAttribute("class", "characterValuesListItemName")
+
+        const nameText = document.createElement("h6")
+        nameText.innerText = charName
+        nameDiv.appendChild(nameText)
+
+        const alignedDiv = document.createElement("div")
+        alignedDiv.setAttribute("class", "characterValuesListItemAligned")
+        alignedDiv.innerText = !!character["character_value"]["aligned"] ? "aligned" : "against"
+
+        const deleteDiv = document.createElement("div")
+        deleteDiv.setAttribute("class", "characterValuesListItemDelete")
+        deleteDiv.setAttribute("innerHTML", "DELETE")
+
+        container.appendChild(nameDiv)
+        container.appendChild(alignedDiv)
+        container.appendChild(deleteDiv)
+
+        console.log("doing a container")
+
+        return container
+    },
+
     // INIT.HTML 
     storyList: () => {
         const ul = document.createElement("ul")
