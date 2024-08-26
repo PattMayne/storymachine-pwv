@@ -15,6 +15,9 @@ const elements = {
         const callout = document.createElement("div")
         const cardLabel = document.createElement("h5")
         const cardDescription = document.createElement("p")
+        const cardLabelContainer = document.createElement("div")
+        const orderPar = document.createElement("h5")
+
 
         // Get name of loading function (card has link to its story component)
         const loadFunctionName = level == levels.ACT ? "loadAct(" :
@@ -26,6 +29,9 @@ const elements = {
         callout.setAttribute("class", "callout")
         cardLabel.setAttribute("class", "cardLabel")
         cardLabel.setAttribute("onclick", loadFunctionName + storyComponent.id + ")")
+
+        cardLabelContainer.setAttribute("class", "cardLabelContainer")
+        cardLabelContainer.appendChild(cardLabel)
 
         // create the "change order" buttons
         const bottomMenu = document.createElement("div")
@@ -51,10 +57,14 @@ const elements = {
         bottomMenu.appendChild(deleteButtonMiddle)
         bottomMenu.appendChild(switchButtonRight)
 
-        cardLabel.innerText = storyComponent.label
-        cardDescription.innerText = helpers.htmlSpecialChars(storyComponent.description) + " order: " + storyComponent.order
+        orderPar.setAttribute("class", "orderPar")
+        orderPar.innerText = storyComponent.order
 
-        callout.appendChild(cardLabel)
+        cardLabel.innerText = storyComponent.label
+        cardDescription.innerText = helpers.htmlSpecialChars(storyComponent.description)
+
+        callout.appendChild(orderPar)
+        callout.appendChild(cardLabelContainer)
         callout.appendChild(cardDescription)
         callout.appendChild(bottomMenu)
         gridCell.appendChild(callout)
@@ -78,15 +88,47 @@ const elements = {
         return gridCell
     },
 
+    valueButton: (storyId, valueId, label) => {
+        const button = document.createElement("a")
+        button.setAttribute("class", "button small listButton")
+        button.innerText = label
+        button.setAttribute(
+            "href",
+            "edit_value_object.html?edit=true&value_object_type=value&value_object_id=" + valueId + "&story_id=" + storyId)
+        return button
+    },
+
+    locationButton: (storyId, locationId, name) => {
+        const button = document.createElement("a")
+        button.setAttribute("class", "button small listButton")
+        button.innerText = name
+        button.setAttribute(
+            "href",
+            "edit_value_object.html?edit=true&value_object_type=location&value_object_id=" + locationId + "&story_id=" + storyId)
+        return button
+    },
+
+    characterButton: (storyId, characterId, name) => {
+        const button = document.createElement("a")
+        button.setAttribute("class", "button small listButton")
+        button.innerText = name
+        button.setAttribute(
+            "href",
+            "edit_value_object.html?edit=true&value_object_type=character&value_object_id=" + characterId + "&story_id=" + storyId)
+        return button
+    },
+
     // INIT.HTML 
     storyList: () => {
         const ul = document.createElement("ul")
         ul.setAttribute("id", "storiesList")
         return ul
     },
+
     storyListItem: story => {
         const li = document.createElement("li")
         const anchor = document.createElement("a")
+        anchor.setAttribute("class", "storiesListItem, button")
         anchor.setAttribute("href", "story.html?story_id=" + story.id)
         li.appendChild(anchor)
         anchor.innerText = story.label

@@ -7,8 +7,9 @@ const levels = consts.levels
 var level = levels.STORY
 
 var storyIdLink, levelLabel, cardsContainer, story, actInfoBox, actIdLink, chapterInfoBox, chapterIdLink, sceneInfoBox, sceneIdLink, beatInfoBox, beatIdLink
-var editStoryLink, editActLink, editChapterLink, editSceneLink, editBeatLink, storyDescription, actDescription, chapterDescription, sceneDescription, beatDescription
+var editStoryLink, editActLink, editChapterLink, editSceneLink, editBeatLink, storyDescription, actDescription, chapterDescription, sceneDescription, beatDescription, descriptionButton
 var confirmatioOverlay, confirmText, confirmButtonYes, loadingOverlay, loadingText, loadingInterval
+var newValueButton, newLocationButton, newCharacterButton
 var loadingTimer = 1
 var currentAct = null
 var currentChapter = null
@@ -325,6 +326,39 @@ const editComponentLink = () => {
     return linkString
 }
 
+
+// Build the HTML for a div full of buttons. Each button is a link to edit a value object.
+const loadExistingValues = storyId => {
+
+    // Set the NEW ITEM links for all value object types
+    newValueButton.setAttribute("href", "edit_value_object.html?value_object_type=value&story_id=" + story.id)
+    newLocationButton.setAttribute("href", "edit_value_object.html?value_object_type=location&story_id=" + story.id)
+    newCharacterButton.setAttribute("href", "edit_value_object.html?value_object_type=character&story_id=" + story.id)
+
+    // Loop through VALUEs and append "edit" link to DIV
+    const valuesListBox = document.getElementById("valuesListBox")
+    story.values.map(value => {
+        // for each iteration, APPEND the value
+        valuesListBox.appendChild(html.elements.valueButton(storyId, value["id"], value["label"]))
+    })
+
+    // Loop through LOCATIONs and append "edit" link to DIV
+    const locationsListBox = document.getElementById("locationsListBox")
+    story.locations.map(location => {
+        // for each iteration, APPEND the value
+        locationsListBox.appendChild(html.elements.locationButton(storyId, location["id"], location["name"]))
+    })
+
+    // Loop through CHARACTERs and append "edit" link to DIV
+    const charactersListBox = document.getElementById("charactersListBox")
+    story.characters.map(character => {
+        // for each iteration, APPEND the value
+        const concat_name = character["first_name"] + " " + character["last_name"]
+        charactersListBox.appendChild(html.elements.characterButton(storyId, character["id"], concat_name))
+    })
+}
+
+
 const loadDOM = storyId => {
     storyIdLink = document.getElementById("storyIdLink")
     levelLabel = document.getElementById("levelLabel")
@@ -349,6 +383,8 @@ const loadDOM = storyId => {
     chapterDescription = document.getElementById("chapterDescription")
     sceneDescription = document.getElementById("sceneDescription")
     beatDescription = document.getElementById("beatDescription")
+    descriptionButton = document.getElementById("descriptionButton")
+
     storyIdLink.setAttribute("href", "story.html?story_id=" + storyId)
     // overlay elements
     confirmatioOverlay = document.getElementById("confirmatioOverlay")
@@ -356,6 +392,13 @@ const loadDOM = storyId => {
     confirmButtonYes = document.getElementById("confirmButtonYes")
     loadingOverlay = document.getElementById("loadingOverlay")
     loadingText = document.getElementById("loadingText")
+
+    // Value objects
+    newValueButton = document.getElementById("new_value_button")
+    newLocationButton = document.getElementById("new_location_button")
+    newCharacterButton = document.getElementById("new_character_button")
+
+    storyDescription.style.visibility = "visible"
 }
 
 /**
@@ -388,6 +431,8 @@ const loadStory = loadLevel => {
             story = incomingStory
             storyIdLink.innerHTML = !!story?.label ? story.label : "NOT LOADED"
             levelLabel.innerHTML = consts.getChildLevel(level).toUpperCase() + "S"
+
+            loadExistingValues(storyId)
 
             if (loadLevel != levels.STORY) {
 
@@ -455,6 +500,18 @@ const hideLoading = () => {
     loadingOverlay.style.display = "none"
 }
 
+
+const toggleDescription = () => {
+    if (storyDescription.style.display == "none") {
+        descriptionButton.innerHTML = "[&minus;]"
+        storyDescription.style.display = ""
+    } else {
+        descriptionButton.innerHTML = "[&plus;]"
+        storyDescription.style.display = "none"
+    }
+}
+
+
 // DEBUG FUNCTIONS
 
 const printAllCurrent = () => {
@@ -481,3 +538,4 @@ window.shiftComponentRight = shiftComponentRight
 window.deleteComponentRequest = deleteComponentRequest
 window.cancelRequest = cancelRequest
 window.deleteComponent = deleteComponent
+window.toggleDescription = toggleDescription

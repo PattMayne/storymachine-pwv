@@ -1,18 +1,177 @@
+@font-face {
+    font-family: alte;
+    src: url(../fonts/alte-haas-grotesk.regular.ttf);
+}
+
+@font-face {
+    font-family: alte-bold;
+    src: url(../fonts/alte-haas-grotesk.bold.ttf);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: alte-bold;
+}
+
+
+p,
+a {
+    font-family: alte;
+}
+
 body {
+    font-family: alte;
     background-color: #ffffff;
 }
 
 input,
-textarea {
-    border: 3px solid #111111 !important;
+textarea,
+select {
+    border: 1px solid #111111 !important;
 }
+
+
+/*  FOUNDATION OVERRIDES   */
+
+.button {
+    font-family: alte-bold;
+    background-color: #000;
+    color: #fff;
+}
+
+.button:hover {
+    color: #fa8334;
+    background-color: #000;
+}
+
+
+.callout {
+    background-color: #fff;
+    border: 1px solid black;
+}
+
+.primary {
+    background-color: #ffffff;
+    border: 1px solid black;
+}
+
+
+/* general style addon classes */
+
+.red {
+    color: #e90000;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+
+/* New classes */
+
+
+/* Some containers, cards, and boxes */
+
+
+.solid {
+    background-color: #4b4b4b;
+    color: #cbcbcb;
+    border: none;
+
+    a {
+        color: #cbcbcb;
+    }
+
+    a:hover {
+        color: #000000;
+    }
+}
+
+.solidInsert {
+    background-color: #cbcbcb;
+    color: #4b4b4b;
+    border: none;
+
+    a {
+        color: #4b4b4b;
+    }
+
+    a:hover {
+        color: #cbcbcb;
+    }
+
+    .button {
+        color: white;
+    }
+}
+
+.blackBack {
+    background-color: #000;
+    color: #fff;
+}
+
+.storyTitleCardBox {
+    background-color: white;
+    border: none;
+    color: black;
+    margin: 0px 0px 10px 0px;
+    padding: 2px 10px;
+
+    a {
+        color: black;
+    }
+
+    a:hover {
+        color: #e90000;
+    }
+}
+
+.storyTitle {
+    color: black;
+    font-weight: bold;
+}
+
+.storyTitle:hover {
+    color: #e90000;
+}
+
+
+.listButton {
+    margin: 1px;
+}
+
 
 .title_callout {
     margin-top: 14px;
 }
 
+
+.cardLabelContainer {
+    margin: none;
+    padding: 0px 5px 5px 5px;
+    display: inline-block;
+    max-width: 90%;
+}
+
+
 .cardLabel {
-    text-align: center;
+    padding-top: 0px;
+    margin-top: 0px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.orderPar {
+    display: inline-block;
+    border: 1px solid black;
+    margin-right: 5px;
+    padding: 0px 5px;
+    vertical-align: top;
+    color: #e90000;
     font-weight: 600;
 }
 
@@ -21,7 +180,6 @@ textarea {
 }
 
 .cardLabel:hover {
-    background-color: chocolate;
     cursor: pointer;
 }
 
@@ -31,6 +189,23 @@ textarea {
 
 .subcomponent-box {
     display: none;
+}
+
+
+/* inner items */
+
+#storiesList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.storiesListItem {
+    padding: 14px;
+}
+
+.storiesListItem:hover {
+    color: #e90000;
 }
 
 .cardBottomMenu {
@@ -123,29 +298,80 @@ textarea {
 }
 
 .cardTitleLink {
-    color: black;
-    padding: 7px;
-    padding-top: 12px;
-    border-bottom: 2px solid black;
+    background-color: #000;
+    color: white;
+    border-radius: 7px;
+    padding: 7px 10px;
+    margin-top: 0px;
 }
 
 .cardTitleLink:hover {
-    cursor: default;
-    background-color: #7D451B;
-    color: white;
+    cursor: pointer;
 }
 
-/*  FOUNDATION OVERRIDES   */
-
-
-.callout {
-    background-color: #f0f0f0;
+.componentLabel {
+    display: inline-block;
     border: 1px solid black;
+    margin-right: 5px;
+    padding: 4px;
+    color: #e90000;
+    font-weight: 600;
 }
 
-.primary {
-    background-color: #ffffff;
-    border: 1px solid black;
+
+.descriptionButton:hover {
+    cursor: pointer;
+}
+
+
+#storyIdLink {
+    text-decoration: none;
+}
+
+
+.flex-container {
+    display: flex;
+    width: 100%;
+    padding: none;
+    margin: none;
+    margin-bottom: 5px;
+}
+
+.flex-container>div {
+    margin: none;
+    padding: none;
+}
+
+.flex-half {
+    flex: 50%;
+}
+
+.flex-quarter {
+    flex: 25%;
+}
+
+.flex-3-quarters {
+    flex: 75%;
+}
+
+/* isolated add-on classes */
+
+
+.border_bottom {
+    border-bottom: 1px solid black;
+}
+
+.align_right {
+    text-align: right;
+}
+
+.noBottomMarginOrPadding {
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+.fullWidth {
+    width: 100%;
 }
 
 /*
@@ -174,7 +400,3 @@ const colors = {
 }   
 
 */
-
-.fullWidth {
-    width: 100%;
-}

@@ -6,6 +6,13 @@ const levels = {
     BEAT: 'beat'
 }
 
+const valueObjects = {
+    VALUE: 'value',
+    VALUE_CHANGE: 'value_change',
+    CHARACTER: 'character',
+    LOCATION: 'location'
+}
+
 const getChildLevel = currentLevel =>
     currentLevel == levels.STORY ? levels.ACT :
         currentLevel == levels.ACT ? levels.CHAPTER :
@@ -29,4 +36,4 @@ const colors = {
     PUMPKIN: "#fa8334"
 }
 
-export { levels, getChildLevel, getParentLevel }
+export { levels, getChildLevel, getParentLevel, valueObjects }

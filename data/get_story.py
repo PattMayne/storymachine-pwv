@@ -39,7 +39,10 @@ def by_id(story_id):
         'label': records[0][1],
         'description': records[0][4],
         'authors': records[0][5],
-        'acts': []
+        'acts': [],
+        'values': [],
+        "characters": [],
+        "locations": []
     }
 
     # next get the acts
@@ -111,6 +114,52 @@ def by_id(story_id):
                         'order': beat_record[4]
                     })
 
+
+    # Get the value objects from the database
+    cursor.execute("SELECT id, label, description, notes FROM value WHERE story_id=:story_id", {
+        'story_id': story_id
+    })
+    value_records = cursor.fetchall()
+
+    for value_record in value_records:
+        story["values"].append({
+            'id': value_record[0],
+            'label': value_record[1],
+            'description': value_record[2],
+            'notes': value_record[3],
+        })
+    
+
+    # Get the location objects from the database
+    cursor.execute("SELECT id, name, description, notes FROM location WHERE story_id=:story_id", {
+        'story_id': story_id
+    })
+    location_records = cursor.fetchall()
+
+    for location_record in location_records:
+        story["locations"].append({
+            'id': location_record[0],
+            'name': location_record[1],
+            'description': location_record[2],
+            'notes': location_record[3],
+        })
+    
+
+    # Get the character objects from the database
+    cursor.execute("SELECT id, first_name, last_name, description, notes FROM character WHERE story_id=:story_id", {
+        'story_id': story_id
+    })
+    character_records = cursor.fetchall()
+
+    for character_record in character_records:
+        story["characters"].append({
+            'id': character_record[0],
+            'first_name': character_record[1],
+            'last_name': character_record[2],
+            'description': character_record[3],
+            'notes': character_record[4],
+        })
+    
 
     connect.commit()
     connect.close()

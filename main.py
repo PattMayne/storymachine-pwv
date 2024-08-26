@@ -64,7 +64,6 @@ class Api():
         return factory.get_scene_by_id(scene_id)
     
     def get_beat_by_id(self, beat_id):
-        print("beat id: " + str(beat_id))
         return factory.get_beat_by_id(beat_id)
 
     def get_current_story(self):
@@ -73,6 +72,24 @@ class Api():
     def get_stories_list(self):
         return factory.get_story_ids_and_labels()
     
+    def get_characters(self):
+        return factory.get_characters()
+    
+    def get_locations(self):
+        return factory.get_locations()
+    
+    def get_values(self):
+        return factory.get_values()
+
+    def get_value_by_id(self, value_id):
+        return factory.get_value_by_id(value_id)
+
+    def get_character_by_id(self, character_id):
+        return factory.get_character_by_id(character_id)
+    
+    def get_location_by_id(self, location_id):
+        return factory.get_location_by_id(location_id)
+
     # create stuff
 
     def create_beat(self, scene_id):
@@ -87,6 +104,16 @@ class Api():
     def create_act(self, story_id):
         return factory.create_new_act(story_id)
     
+    def create_value(self, story_id, label, description, notes):
+        return factory.create_value(story_id, label, description, notes)
+    
+    def create_character(self, story_id, first_name, last_name, description, notes):
+        return factory.create_character(story_id, first_name, last_name, description, notes)
+    
+    def create_location(self, story_id, name, description, notes):
+        return factory.create_location(story_id, name, description, notes)
+
+
     # create stuff at certain order
 
     def create_beat_at_order(self, scene_id, new_order):
@@ -100,7 +127,6 @@ class Api():
     
     def create_act_at_order(self, story_id, new_order):
         return factory.create_new_act_at_order(story_id, new_order)
-
 
     def create_empty_story(self, label, description):
         return factory.create_empty_story(label, description)
@@ -122,6 +148,15 @@ class Api():
     def update_beat(self, id, label, description):
         return factory.update_beat(id, label, description)
     
+    def update_value(self, id, label, description, notes):
+        return factory.update_value(id, label, description, notes)
+
+    def update_character(self, id, first_name, last_name, description, notes):
+        return factory.update_character(id, first_name, last_name, description, notes)
+
+    def update_location(self, id, name, description, notes):
+        return factory.update_location(id, name, description, notes)
+
     def switch_act_order(self, order_1, order_2, id_1, id_2):
         item_2_updated = factory.update_act_order(id_2, order_1)
         item_1_updated = factory.update_act_order(id_1, order_2)

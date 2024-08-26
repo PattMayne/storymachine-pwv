@@ -92,6 +92,7 @@ def get_act_by_id(act_id):
     }
     connect.close()
     return act
+   
 
 
 def get_chapter_by_id(chapter_id):
@@ -353,7 +354,7 @@ def create_empty_story(label, description):
 
 
 
-# UPDATE
+# UPDATE COMPONENTS
 
 def update_story(story_id, label, description):
     connect = sqlite3.connect('data/stories.db')
@@ -503,6 +504,7 @@ def update_beat_order(beat_id, new_order):
     connect.commit()
     connect.close()
     return True
+
 
 # delete stuff
 
@@ -717,12 +719,15 @@ def reorder_acts(story_id):
 
 #   VALUE OBJECTS
 
+# CREATE value objects
+
 # creates new character object in the db
-def create_character(first_name, last_name, description, notes):
+def create_character(story_id, first_name, last_name, description, notes):
     connect = sqlite3.connect('data/stories.db')
     cursor = connect.cursor()
-    cursor.execute("INSERT INTO character(first_name, last_name, description, notes) VALUES (:first_name, :last_name, :description, :notes)",
+    cursor.execute("INSERT INTO character(story_id, first_name, last_name, description, notes) VALUES (:story_id, :first_name, :last_name, :description, :notes)",
         {
+            'story_id': story_id,
             'first_name': first_name,
             'last_name': last_name,
             'description': description,
@@ -736,35 +741,216 @@ def create_character(first_name, last_name, description, notes):
 
 
 # creates new location object in the db
-def create_location(name, description, notes):
+def create_location(story_id, name, description, notes):
     connect = sqlite3.connect('data/stories.db')
     cursor = connect.cursor()
-    cursor.execute("INSERT INTO character(name, description, notes) VALUES (:name, :description, :notes)",
+    print("creating a location")
+    cursor.execute("INSERT INTO location(story_id, name, description, notes) VALUES (:story_id, :name, :description, :notes)",
         {
+            'story_id': story_id,
             'name': name,
             'description': description,
             'notes': notes
         })
 
     connect.commit()
-    char_id = cursor.lastrowid
+    location_id = cursor.lastrowid
     connect.close()
-    return char_id
+    return location_id
 
 
-# creates new location object in the db
-def create_value(name, description, notes):
+# creates new value object in the db
+def create_value(story_id, label, description, notes):
     connect = sqlite3.connect('data/stories.db')
     cursor = connect.cursor()
-    cursor.execute("INSERT INTO character(name, description, notes) VALUES (:name, :description, :notes)",
+    cursor.execute("INSERT INTO value(story_id, label, description, notes) VALUES (:story_id, :label, :description, :notes)",
         {
-            'name': name,
+            'story_id': story_id,
+            'label': label,
             'description': description,
             'notes': notes
         })
 
     connect.commit()
-    char_id = cursor.lastrowid
+    value_id = cursor.lastrowid
     connect.close()
-    return char_id
+    return value_id
+
+
+# UPDATE value objects
+
+def update_value(value_id, label, description, notes):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("UPDATE value SET label=:label, description=:description, notes=:notes WHERE id=:id",
+        {
+            'label': label,
+            'description': description,
+            'notes': notes,
+            'id': value_id
+        })
+
+    connect.commit()
+    connect.close()
+    return True
+
+
+def update_character(char_id, first_name, last_name, description, notes):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("UPDATE character SET first_name=:first_name, last_name=:last_name, description=:description, notes=:notes WHERE id=:id",
+        {
+            'first_name': first_name,
+            'last_name': last_name,
+            'description': description,
+            'notes': notes,
+            'id': char_id
+        })
+
+    connect.commit()
+    connect.close()
+    return True
+
+
+def update_location(location_id, name, description, notes):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("UPDATE location SET name=:name, description=:description, notes=:notes WHERE id=:id",
+        {
+            'name': name,
+            'description': description,
+            'notes': notes,
+            'id': location_id
+        })
+
+    connect.commit()
+    connect.close()
+    return True
+
+
+# GET value objects
+
+def get_values():
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("SELECT * FROM value")
+    records = cursor.fetchall()
+
+    connect.commit()
+    connect.close()
+    return records
+
+
+def get_characters():
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("SELECT * FROM character")
+    records = cursor.fetchall()
+    characters = []
+
+    for record in records:
+        characters.append({
+            "id": record[0],
+            "first_name": record[2],
+            "last_name": record[3],
+            "description": record[4],
+            "notes": record[5]
+        })
+
+    connect.commit()
+    connect.close()
+    return characters
+
+
+def get_locations():
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("SELECT * FROM location")
+    records = cursor.fetchall()
+
+    connect.commit()
+    connect.close()
+    return records
+
+
+def get_value_changes():
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("SELECT * FROM value_change")
+    records = cursor.fetchall()
+
+    connect.commit()
+    connect.close()
+    return records
+
+
+# Get individual value objects
+
+def get_value_by_id(value_id):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("SELECT * FROM value WHERE id=:value_id", {
+        'value_id': value_id
+    })
+    records = cursor.fetchall()
+    value = {
+        'id': records[0][0],
+        'label': records[0][2],
+        'description': records[0][3],
+        'notes': records[0][4]
+    }
+    connect.close()
+    return value
+
+
+def get_location_by_id(location_id):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("SELECT * FROM location WHERE id=:location_id", {
+        'location_id': location_id
+    })
+    records = cursor.fetchall()
+    location = {
+        'id': records[0][0],
+        'name': records[0][2],
+        'description': records[0][3],
+        'notes': records[0][4]
+    }
+    connect.close()
+    return location
+
+
+def get_character_by_id(character_id):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("SELECT * FROM character WHERE id=:character_id", {
+        'character_id': character_id
+    })
+    records = cursor.fetchall()
+    character = {
+        'id': records[0][0],
+        'first_name': records[0][2],
+        'last_name': records[0][3],
+        'description': records[0][4],
+        'notes': records[0][5]
+    }
+    connect.close()
+    return character
+
+
+# def get_value_change_by_id(value_id):
+#     connect = sqlite3.connect('data/stories.db')
+#     cursor = connect.cursor()
+#     cursor.execute("SELECT * FROM value_change WHERE id=:value_change_id", {
+#         'value_change_id': value_change_id
+#     })
+#     records = cursor.fetchall()
+#     value_change = {
+#         'id': records[0][0],
+#         'label': records[0][2],
+#         'description': records[0][3],
+#         'notes': records[0][4]
+#     }
+#     connect.close()
+#     return value_change
 

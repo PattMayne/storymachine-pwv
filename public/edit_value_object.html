@@ -23,15 +23,14 @@
     <div class="grid-container">
         <div class="grid-x grid-padding-x">
             <div class="large-12 cell">
-                <div class="callout title_callout">
-                    <h1 class="title" id="pageTitle">EDIT VALUE OBJECT</h1>
-                </div>
+                <!-- EDIT OR CREATE VALUE OBJECT OF SPECIFIC TYPE TITLE -->
+                <h1 class="title" id="pageTitle">EDIT VALUE OBJECT</h1>
             </div>
 
             <!-- create or edit VALUE -->
-            <div class="large-12 cell">
+            <div class="large-12 cell" id="value_cell">
                 <div class="callout">
-                    <h2>VALUE form</h2>
+                    <h3 class="red">VALUE</h3>
                     <label for="valueLabel">Label:</label>
                     <input id="valueLabel" type="text" value="Subcomponent" placeholder="Label or Name" />
 
@@ -47,13 +46,40 @@
                     </div>
                     <input id="valueSubmit" class="button" type="submit" onclick="submit()" />
                 </div>
+                <div class="callout" id="relations_cell">
+                    <div class="grid-x grid-padding-x">
+                        <div class="large-12 cell">
+                            <h3 class="red">Character Relationships:</h3>
+                        </div>
+
+                        <div class="large-6 medium-6 small-12 cell">
+                            <p>Here we will display a chart of characters, with the option to invert their alignment or
+                                delete their relationship.</p>
+                        </div>
+
+                        <div class="large-6 medium-6 small-12 cell">
+                            <label for="charactersToRelate">Add Character Relationship:</label>
+                            <select id="charactersToRelate">
+                                <option selected disabled>Choose a Character</option>
+                            </select>
+
+                            <input type="checkbox" id="aligned" name="aligned">
+                            <label for="aligned">Character aligned with Value?</label>
+                            <br />
+
+                            <input id="addCharacterRelation" class="button small" type="submit"
+                                onclick="addCharacterRelation" value="Add Relation" />
+
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- create or edit VALUE CHANGE -->
             <!-- beat_id and value_id will be fed in via querystring params -->
-            <div class="large-12 cell">
+            <div class="large-12 cell" id="value_change_cell">
                 <div class="callout">
-                    <h2>VALUE CHANGE form</h2>
+                    <h3 class="red">VALUE CHANGE</h3>
                     <label for="valueChangeLabel">Label:</label>
                     <input id="valueChangeLabel" type="text" value="Subcomponent" placeholder="Label or Name" />
                     <div class="grid-x grid-padding-x">
@@ -75,9 +101,9 @@
             </div>
 
             <!-- create or edit CHARACTER -->
-            <div class="large-12 cell">
+            <div class="large-12 cell" id="character_cell">
                 <div class="callout">
-                    <h2>CHARACTER form</h2>
+                    <h3 class="red">CHARACTER</h3>
                     <div class="grid-x grid-padding-x">
                         <div class="large-6 medium-6 small-12 cell">
                             <label for="charFirstName">First Name:</label>
@@ -97,15 +123,18 @@
                             <textarea id="charNotes" placeholder="Notes"></textarea>
                         </div>
 
+                        <div class="large-12 cell">
+                            <input id="submit" class="button" type="submit" onclick="submit()" />
+                        </div>
                     </div>
-                    <input id="submit" class="button" type="submit" onclick="submit()" />
                 </div>
+
             </div>
 
             <!-- create or edit LOCATION -->
-            <div class="large-12 cell">
+            <div class="large-12 cell" id="location_cell">
                 <div class="callout">
-                    <h2>LOCATION form</h2>
+                    <h3 class="red">LOCATION</h3>
                     <div class="grid-x grid-padding-x">
                         <div class="large-6 medium-6 small-12 cell">
                             <label for="locationName">Name / Title:</label>
@@ -151,7 +180,7 @@
     <script src="js/vendor/jquery.js"></script>
     <script src="js/vendor/what-input.js"></script>
     <script src="js/vendor/foundation.js"></script>
-    <script type="module" src="js/edit_subcomponent.js"></script>
+    <script type="module" src="js/edit_value_object.js"></script>
 </body>
 
 </html>

@@ -43,7 +43,7 @@ const setAspect = () => {
         // if EDIT, get the subcomponent and populate from that object
         // else, populate fields with boilerplate stuff for the NEW subcomponent
         if (aspect == aspects.EDIT) {
-            // check the level (cubcomponent type) and set the component
+            // check the level (subcomponent type) and set the component
             level == levels.BEAT ? getBeat() :
                 level == levels.SCENE ? getScene() :
                     level == levels.CHAPTER ? getChapter() :

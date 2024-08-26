@@ -26,16 +26,68 @@
 
             <!-- ALWAYS have the STORY INFO BOX available -->
             <div class="large-12 cell" id="storyInfoBox">
-                <div class="callout title_callout">
+                <div class="callout solid title_callout">
                     <div class="grid-x grid-padding-x">
                         <div class="large-6 medium-6 small-12 cell">
-                            <h6>STORY:&nbsp;<a class="cardTitleLink" id="storyIdLink">NULL</a></h6>
-                            <p id="storyDescription"></p>
+                            <div class="storyTitleCardBox">
+                                <h3><a class="storyTitle" id="storyIdLink">$ STORY TITLE MISSING $</a></h3>
+                            </div>
+                            <div class="callout solidInsert">
+                                <h6>
+                                    <span class="underline">Description</span>
+                                    &nbsp;
+                                    <span id="descriptionButton" class="descriptionButton"
+                                        onclick="toggleDescription()">
+                                        [&minus;]
+                                    </span>
+                                </h6>
+                                <p id="storyDescription"></p>
+                            </div>
                             <a id="editStoryLink" onclick="editStory()">edit story</a>
                         </div>
                         <div class="large-6 medium-6 small-12 cell">
-                            <h6>&bnsp;</h6>
-                            <a href="edit_value_object.html">edit VALUE OBJECT</a>
+
+                            <div class="callout solidInsert">
+                                <div class="flex-container">
+                                    <div class="flex-three-quarters">
+                                        <h4>VALUE OBJECTS:</h4>
+                                    </div>
+                                    <div class="flex-quarter align_right">
+                                        <a class="button small" id="new_value_button">New Value</a>
+                                    </div>
+                                </div>
+                                <p>Represents some goal or threat, and tracks their progress.
+                                    Or tracks any kind of change.</p>
+                                <div id="valuesListBox"></div>
+                            </div>
+
+                            <div class="callout solidInsert">
+                                <div class="flex-container">
+                                    <div class="flex-three-quarters">
+                                        <h4>CHARACTERS:</h4>
+                                    </div>
+                                    <div class="flex-quarter align_right">
+                                        <a class="button small" id="new_character_button">New
+                                            Character</a>
+                                    </div>
+                                </div>
+                                <div id="charactersListBox"></div>
+                            </div>
+
+                            <div class="callout solidInsert">
+                                <div class="flex-container">
+                                    <div class="flex-three-quarters">
+                                        <h4>LOCATIONS:</h4>
+                                    </div>
+                                    <div class="flex-quarter align_right">
+                                        <a class="button small" id="new_location_button">
+                                            New Location
+                                        </a>
+                                    </div>
+                                </div>
+                                <div id="locationsListBox"></div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -46,7 +98,7 @@
             <!-- ACT INFO BOX -->
             <div class="large-12 cell subcomponent-box" id="actInfoBox">
                 <div class="callout title_callout">
-                    <h6>ACT:&nbsp;<a class="cardTitleLink" id="actIdLink">NULL</a></h6>
+                    <h6 class="componentLabel">ACT:</h6><a class="cardTitleLink" id="actIdLink">NULL</a>
                     <p id="actDescription"></p>
                     <a id="editActLink">edit act</a>
                 </div>
@@ -55,7 +107,7 @@
             <!-- CHAPTER INFO BOX BOX -->
             <div class="large-12 cell subcomponent-box" id="chapterInfoBox">
                 <div class="callout title_callout">
-                    <h6>CHAPTER:&nbsp;<a class="cardTitleLink" id="chapterIdLink">NULL</a></h6>
+                    <h6 class="componentLabel">CHAPTER:</h6><a class="cardTitleLink" id="chapterIdLink">NULL</a>
                     <p id="chapterDescription"></p>
                     <a id="editChapterLink">edit chapter</a>
                 </div>
@@ -64,7 +116,7 @@
             <!-- SCENE INFO BOX BOX -->
             <div class="large-12 cell subcomponent-box" id="sceneInfoBox">
                 <div class="callout title_callout">
-                    <h6>SCENE:&nbsp;<a class="cardTitleLink" id="sceneIdLink">NULL</a></h6>
+                    <h6 class="componentLabel">SCENE:</h6><a class="cardTitleLink" id="sceneIdLink">NULL</a>
                     <p id="sceneDescription"></p>
                     <a id="editSceneLink">edit scene</a>
                 </div>
@@ -73,7 +125,7 @@
             <!-- BEAT INFO BOX BOX -->
             <div class="large-12 cell subcomponent-box" id="beatInfoBox">
                 <div class="callout title_callout">
-                    <h6>BEAT:&nbsp;<a class="cardTitleLink" id="beatIdLink">NULL</a></h6>
+                    <h6 class="componentLabel">BEAT:</h6><a class="cardTitleLink" id="beatIdLink">NULL</a>
                     <p id="beatDescription"></p>
                     <a id="editBeatLink">edit beat</a>
                 </div>
