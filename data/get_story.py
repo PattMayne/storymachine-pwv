@@ -122,11 +122,30 @@ def by_id(story_id):
     value_records = cursor.fetchall()
 
     for value_record in value_records:
+        value_id = value_record[0]
+
+        # Get the character_value objects for this value from the database
+        cursor.execute("SELECT id, aligned, character_id, value_id FROM character_value WHERE value_id=:value_id", {
+            'value_id': value_id
+        })
+        character_values = []
+
+        character_value_records = cursor.fetchall()
+
+        for character_value_record in character_value_records:
+            character_values.append({
+                'id': character_value_record[0],
+                'aligned': character_value_record[1],
+                'character_id': character_value_record[2],
+                'value_id': character_value_record[3]
+            })
+
         story["values"].append({
-            'id': value_record[0],
+            'id': value_id,
             'label': value_record[1],
             'description': value_record[2],
             'notes': value_record[3],
+            'character_values': character_values
         })
     
 

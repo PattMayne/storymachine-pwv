@@ -432,6 +432,8 @@ const loadStory = loadLevel => {
             storyIdLink.innerHTML = !!story?.label ? story.label : "NOT LOADED"
             levelLabel.innerHTML = consts.getChildLevel(level).toUpperCase() + "S"
 
+            console.log("STORY: " + JSON.stringify(story))
+
             loadExistingValues(storyId)
 
             if (loadLevel != levels.STORY) {

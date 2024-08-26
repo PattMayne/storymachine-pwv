@@ -929,12 +929,33 @@ def get_value_by_id(value_id):
         'value_id': value_id
     })
     records = cursor.fetchall()
+
+    value_id = records[0][0]
+
+    # Get the character_value objects for this value from the database
+    cursor.execute("SELECT id, aligned, character_id, value_id FROM character_value WHERE value_id=:value_id", {
+        'value_id': value_id
+    })
+    character_values = []
+
+    character_value_records = cursor.fetchall()
+
+    for character_value_record in character_value_records:
+        character_values.append({
+            'id': character_value_record[0],
+            'aligned': character_value_record[1],
+            'character_id': character_value_record[2],
+            'value_id': character_value_record[3]
+        })
+
     value = {
-        'id': records[0][0],
+        'id': value_id,
         'label': records[0][2],
         'description': records[0][3],
-        'notes': records[0][4]
+        'notes': records[0][4],
+        'character_values': character_values
     }
+    print(character_values)
     connect.close()
     return value
 

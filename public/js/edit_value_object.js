@@ -114,7 +114,7 @@ const newLocation = () => {
     location_cell.style.display = ''
 }
 
-
+// load value for editing
 const editValue = () => pywebview.api.get_value_by_id(valueObjectId).then(value => {
     // TO DO:
     //  THE VALUE should ALREADY COME WITH a list of character relations (just the IDs of the characters)
@@ -130,19 +130,38 @@ const editValue = () => pywebview.api.get_value_by_id(valueObjectId).then(value 
     pywebview.api.get_characters().then(characters => {
         relations_cell.style.display = ''
         let selectBox = document.getElementById("charactersToRelate")
-        console.log("CHARACTERS: " + characters)
+
+        // separate characters WITH relationship from characters with NONE.
+
+        let relatedCharacters = []
+        let nonRelatedCharacters = []
+
         characters.map(character => {
-            console.log("CHARACTER: " + character)
+            let isRelated = false
+            value["character_values"].map(characterValue => {
+                if (character["id"] == characterValue["character_id"]) {
+                    isRelated = true
+                }
+            })
+
+            !!isRelated ? relatedCharacters.push(character) : nonRelatedCharacters.push(character)
+        })
+
+        // Putting non-related characters in the dropbox.
+        nonRelatedCharacters.map(character => {
+            //console.log("CHARACTER: " + character)
             let newOption = document.createElement("option")
             newOption.value = character["id"]
             newOption.innerText = character["first_name"]
             selectBox.appendChild(newOption)
         })
 
+        // Listing related characters in a chart.
+
     })
 })
 
-
+// load character for editing
 const editCharacter = () => pywebview.api.get_character_by_id(valueObjectId).then(character => {
     character_cell.style.display = ''
     console.log(character)
@@ -153,6 +172,7 @@ const editCharacter = () => pywebview.api.get_character_by_id(valueObjectId).the
     charNotes.value = character["notes"]
 })
 
+// load location for editing
 const editLocation = () => pywebview.api.get_location_by_id(valueObjectId).then(location => {
     location_cell.style.display = ''
     console.log(location)
@@ -162,8 +182,10 @@ const editLocation = () => pywebview.api.get_location_by_id(valueObjectId).then(
     locationNotes.value = location["notes"]
 })
 
+// same function for updating as for creating a new value object
 const submit = () => aspect == aspects.EDIT ? updateValueObject() : createValueObject()
 
+// Find out which value object type we're using, and create one
 const createValueObject = () => {
     if (valueObjectType == valueObjects.VALUE) {
         const description = valueDescription.value
@@ -210,7 +232,7 @@ const createValueObject = () => {
 
 }
 
-// find out which component we're using, and update that component.
+// find out which value object type we're using, and update that object.
 const updateValueObject = () => {
     if (valueObjectType == valueObjects.VALUE) {
         const description = valueDescription.value
@@ -259,6 +281,7 @@ const updateValueObject = () => {
     }
 }
 
+// add a character_value to the database
 const addCharacterRelation = () => {
     let characterIdToAdd = charactersToRelate.value
     let aligned = document.getElementById("aligned").checked
