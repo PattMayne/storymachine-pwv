@@ -777,6 +777,22 @@ def create_value(story_id, label, description, notes):
     return value_id
 
 
+def create_character_value(character_id, value_id, aligned):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("INSERT INTO character_value(aligned, character_id, value_id) VALUES (:aligned, :character_id, :value_id)",
+        {
+            'aligned': aligned,
+            'character_id': character_id,
+            'value_id': value_id
+        })
+
+    connect.commit()
+    character_value_id = cursor.lastrowid
+    connect.close()
+    return character_value_id
+
+
 # UPDATE value objects
 
 def update_value(value_id, label, description, notes):
@@ -882,6 +898,26 @@ def get_value_changes():
     connect.commit()
     connect.close()
     return records
+
+
+def get_character_values():
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("SELECT * FROM character_value")
+    records = cursor.fetchall()
+    character_values = []
+
+    for record in records:
+        characters.append({
+            "id": record[0],
+            "aligned": record[1],
+            "character_id": record[2],
+            "value_id": record[3]
+        })
+
+    connect.commit()
+    connect.close()
+    return character_values
 
 
 # Get individual value objects

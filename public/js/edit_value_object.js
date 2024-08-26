@@ -259,6 +259,21 @@ const updateValueObject = () => {
     }
 }
 
+const addCharacterRelation = () => {
+    let characterIdToAdd = charactersToRelate.value
+    let aligned = document.getElementById("aligned").checked
+    // pywebview add character_value
+    pywebview.api.create_character_value(characterIdToAdd, valueObjectId, aligned).then(success => {
+        if (success) {
+            console.log("RELATION SAVED")
+        } else {
+            console.log("RELATION NOT SAVED")
+        }
+        // Do something with the success
+        // give popup notice of success (or failure)
+    })
+}
+
 const loadDOM = () => {
     // overlay elements
     loadingOverlay = document.getElementById("loadingOverlay")
@@ -297,3 +312,4 @@ const hideAllCells = () => {
 
 window.addEventListener('load', () => setAspect())
 window.submit = submit
+window.addCharacterRelation = addCharacterRelation

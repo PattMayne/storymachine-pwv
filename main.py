@@ -81,6 +81,9 @@ class Api():
     def get_values(self):
         return factory.get_values()
 
+    def get_character_values(self):
+        return factory.get_character_values()
+
     def get_value_by_id(self, value_id):
         return factory.get_value_by_id(value_id)
 
@@ -89,6 +92,7 @@ class Api():
     
     def get_location_by_id(self, location_id):
         return factory.get_location_by_id(location_id)
+
 
     # create stuff
 
@@ -113,6 +117,8 @@ class Api():
     def create_location(self, story_id, name, description, notes):
         return factory.create_location(story_id, name, description, notes)
 
+    def create_character_value(self, character_id, value_id, aligned):
+        return factory.create_character_value(character_id, value_id, aligned)
 
     # create stuff at certain order
 
