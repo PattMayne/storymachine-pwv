@@ -26,7 +26,7 @@
 
             <!-- ALWAYS have the STORY INFO BOX available -->
             <div class="large-12 cell" id="storyInfoBox">
-                <div class="callout solid title_callout">
+                <div class="callout title_callout">
                     <div class="grid-x grid-padding-x">
                         <div class="large-6 medium-6 small-12 cell">
                             <div class="storyTitleCardBox">
@@ -43,7 +43,7 @@
                                 </h6>
                                 <p id="storyDescription"></p>
                             </div>
-                            <a id="editStoryLink" onclick="editStory()">edit story</a>
+                            <a id="editStoryLink" class="editbutton" onclick="editStory()">edit story</a>
                         </div>
                         <div class="large-6 medium-6 small-12 cell">
 
@@ -98,46 +98,70 @@
             <!-- ACT INFO BOX -->
             <div class="large-12 cell subcomponent-box" id="actInfoBox">
                 <div class="callout title_callout">
-                    <h6 class="componentLabel">ACT:</h6><a class="cardTitleLink" id="actIdLink">NULL</a>
+                    <h6 class="componentLabel">ACT:</h6>
+                    <a class="cardTitleLink" id="actIdLink">NULL</a>
+                    <div class="editComponentButtonBox">
+                        <a id="editActLink" class="editbutton">edit act</a>
+                    </div>
                     <p id="actDescription"></p>
-                    <a id="editActLink">edit act</a>
                 </div>
             </div>
 
             <!-- CHAPTER INFO BOX BOX -->
             <div class="large-12 cell subcomponent-box" id="chapterInfoBox">
                 <div class="callout title_callout">
-                    <h6 class="componentLabel">CHAPTER:</h6><a class="cardTitleLink" id="chapterIdLink">NULL</a>
+                    <h6 class="componentLabel">CHAPTER:</h6>
+                    <a class="cardTitleLink" id="chapterIdLink">NULL</a>
+                    <div class="editComponentButtonBox">
+                        <a id="editChapterLink" class="editbutton">edit chapter</a>
+                    </div>
                     <p id="chapterDescription"></p>
-                    <a id="editChapterLink">edit chapter</a>
                 </div>
             </div>
 
             <!-- SCENE INFO BOX BOX -->
             <div class="large-12 cell subcomponent-box" id="sceneInfoBox">
                 <div class="callout title_callout">
-                    <h6 class="componentLabel">SCENE:</h6><a class="cardTitleLink" id="sceneIdLink">NULL</a>
+                    <h6 class="componentLabel">SCENE:</h6>
+                    <a class="cardTitleLink" id="sceneIdLink">NULL</a>
+                    <div class="editComponentButtonBox">
+                        <a id="editSceneLink" class="editbutton">edit scene</a>
+                    </div>
                     <p id="sceneDescription"></p>
-                    <a id="editSceneLink">edit scene</a>
                 </div>
             </div>
+
 
             <!-- BEAT INFO BOX BOX -->
             <div class="large-12 cell subcomponent-box" id="beatInfoBox">
                 <div class="callout title_callout">
-                    <h6 class="componentLabel">BEAT:</h6><a class="cardTitleLink" id="beatIdLink">NULL</a>
+                    <h6 class="componentLabel">BEAT:</h6>
+                    <a class="cardTitleLink" id="beatIdLink">NULL</a>
+                    <div class="editComponentButtonBox">
+                        <a id="editBeatLink" class="editbutton">edit beat</a>
+                    </div>
                     <p id="beatDescription"></p>
-                    <a id="editBeatLink">edit beat</a>
-                </div>
-            </div>
-
-            <div class="large-12 cell">
-                <h2 id="levelLabel">STORY OBJECTS</h2>
-                <div class="grid-x grid-padding-x" id="cardsContainer">
-                    <!-- STORY OBJECTS INSERTED HERE BY JAVASCRIPT -->
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="grid-x grid-padding-x">
+
+        <div class="large-4 medium-4 small-4 cell">
+            <h2 id="levelLabel">STORY OBJECTS</h2>
+        </div>
+        <div class="large-8 medium-8 small-8 cell" id="otherObjsBtnsCell">
+            <h2>OTHER OBJECTS</h2>
+        </div>
+
+        <div class="large-12 cell">
+            <div class="grid-x grid-padding-x" id="cardsContainer">
+                <!-- STORY OBJECTS INSERTED HERE BY JAVASCRIPT -->
+            </div>
+        </div>
+
+
     </div>
 
     <div id="confirmatioOverlay">

@@ -69,7 +69,9 @@ def create_base_story():
 
 # Get story dict by id
 def get_story_by_id(story_id):
-    return get_story.by_id(story_id)
+    #return get_story.by_id(story_id)
+    # TESTING FOR NOW (orders break for unknown reason)
+    return check_all_orders(get_story.by_id(story_id))
 
 
 def get_story_ids_and_labels():
@@ -305,7 +307,7 @@ def create_new_chapter_at_order(act_id, new_order):
     connect.close()
     # create new chapter with the specified order
     new_chapter_id = create_new_chapter(act_id, new_order)
-    print("made a new chapter at order: " + str(new_order))
+    #print("made a new chapter at order: " + str(new_order))
     return new_chapter_id
 
 
@@ -333,7 +335,7 @@ def create_new_act_at_order(story_id, new_order):
     connect.close()
     # create new act with the specified order
     new_act_id = create_new_act(story_id, new_order)
-    print("made a new act at order: " + str(new_order))
+    # print("made a new act at order: " + str(new_order))
     return new_act_id
 
 
@@ -744,7 +746,7 @@ def create_character(story_id, first_name, last_name, description, notes):
 def create_location(story_id, name, description, notes):
     connect = sqlite3.connect('data/stories.db')
     cursor = connect.cursor()
-    print("creating a location")
+    # print("creating a location")
     cursor.execute("INSERT INTO location(story_id, name, description, notes) VALUES (:story_id, :name, :description, :notes)",
         {
             'story_id': story_id,
@@ -777,6 +779,43 @@ def create_value(story_id, label, description, notes):
     return value_id
 
 
+# creates a new value change object in the db
+def create_value_change(story_id, beat_id, value_id, magnitude, label, description, notes):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("INSERT INTO value_change(story_id, beat_id, value_id, magnitude, label, description, notes) VALUES (:story_id, :beat_id, :value_id, :magnitude, :label, :description, :notes)",
+        {
+            'story_id': story_id,
+            'beat_id': beat_id,
+            'value_id': value_id,
+            'magnitude': magnitude,
+            'label': label,
+            'description': description,
+            'notes': notes
+        })
+
+    connect.commit()
+    value_change_id = cursor.lastrowid
+    connect.close()
+    return value_change_id
+
+
+def create_character_value(character_id, value_id, aligned):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("INSERT INTO character_value(aligned, character_id, value_id) VALUES (:aligned, :character_id, :value_id)",
+        {
+            'aligned': aligned,
+            'character_id': character_id,
+            'value_id': value_id
+        })
+
+    connect.commit()
+    character_value_id = cursor.lastrowid
+    connect.close()
+    return character_value_id
+
+
 # UPDATE value objects
 
 def update_value(value_id, label, description, notes):
@@ -788,6 +827,24 @@ def update_value(value_id, label, description, notes):
             'description': description,
             'notes': notes,
             'id': value_id
+        })
+
+    connect.commit()
+    connect.close()
+    return True
+
+
+def update_value_change(value_id, value_change_id, label, description, notes, magnitude):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("UPDATE value_change SET label=:label, description=:description, notes=:notes, magnitude=:magnitude, value_id=:value_id WHERE id=:id",
+        {
+            'label': label,
+            'description': description,
+            'notes': notes,
+            'value_id': value_id,
+            'magnitude': magnitude,
+            'id': value_change_id
         })
 
     connect.commit()
@@ -828,6 +885,21 @@ def update_location(location_id, name, description, notes):
     return True
 
 
+def update_character_value(character_value_id, aligned):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("UPDATE character_value SET aligned=:aligned WHERE id=:character_value_id",
+        {
+            'character_value_id': character_value_id,
+            'aligned': aligned
+
+        })
+
+    connect.commit()
+    connect.close()
+    return True
+
+
 # GET value objects
 
 def get_values():
@@ -836,9 +908,19 @@ def get_values():
     cursor.execute("SELECT * FROM value")
     records = cursor.fetchall()
 
+    values = []
+
+    for record in records:
+        values.append({
+            "id": record[0],
+            "label": record[2],
+            "description": record[3],
+            "notes": record[4]
+        })
+
     connect.commit()
     connect.close()
-    return records
+    return values
 
 
 def get_characters():
@@ -884,6 +966,26 @@ def get_value_changes():
     return records
 
 
+def get_character_values():
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("SELECT * FROM character_value")
+    records = cursor.fetchall()
+    character_values = []
+
+    for record in records:
+        characters.append({
+            "id": record[0],
+            "aligned": record[1],
+            "character_id": record[2],
+            "value_id": record[3]
+        })
+
+    connect.commit()
+    connect.close()
+    return character_values
+
+
 # Get individual value objects
 
 def get_value_by_id(value_id):
@@ -893,12 +995,33 @@ def get_value_by_id(value_id):
         'value_id': value_id
     })
     records = cursor.fetchall()
+
+    value_id = records[0][0]
+
+    # Get the character_value objects for this value from the database
+    cursor.execute("SELECT id, aligned, character_id, value_id FROM character_value WHERE value_id=:value_id", {
+        'value_id': value_id
+    })
+    character_values = []
+
+    character_value_records = cursor.fetchall()
+
+    for character_value_record in character_value_records:
+        character_values.append({
+            'id': character_value_record[0],
+            'aligned': character_value_record[1],
+            'character_id': character_value_record[2],
+            'value_id': character_value_record[3]
+        })
+
     value = {
-        'id': records[0][0],
+        'id': value_id,
         'label': records[0][2],
         'description': records[0][3],
-        'notes': records[0][4]
+        'notes': records[0][4],
+        'character_values': character_values
     }
+    # print(character_values)
     connect.close()
     return value
 
@@ -927,30 +1050,179 @@ def get_character_by_id(character_id):
         'character_id': character_id
     })
     records = cursor.fetchall()
+
+    character_id = records[0][0]
+    character_values = []
+
+    # Get the character_value objects for this character from the database
+    cursor.execute("SELECT id, aligned, character_id, value_id FROM character_value WHERE character_id=:character_id", {
+        'character_id': character_id
+    })
+
+    character_value_records = cursor.fetchall()
+
+    for character_value_record in character_value_records:
+        character_values.append({
+            'id': character_value_record[0],
+            'aligned': character_value_record[1],
+            'character_id': character_value_record[2],
+            'value_id': character_value_record[3]
+        })
+    
     character = {
-        'id': records[0][0],
+        'id': character_id,
         'first_name': records[0][2],
         'last_name': records[0][3],
         'description': records[0][4],
-        'notes': records[0][5]
+        'notes': records[0][5],
+        'character_values': character_values
     }
     connect.close()
     return character
 
 
-# def get_value_change_by_id(value_id):
-#     connect = sqlite3.connect('data/stories.db')
-#     cursor = connect.cursor()
-#     cursor.execute("SELECT * FROM value_change WHERE id=:value_change_id", {
-#         'value_change_id': value_change_id
-#     })
-#     records = cursor.fetchall()
-#     value_change = {
-#         'id': records[0][0],
-#         'label': records[0][2],
-#         'description': records[0][3],
-#         'notes': records[0][4]
-#     }
-#     connect.close()
-#     return value_change
+def get_character_value_by_id(character_value_id):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("SELECT * FROM character_value WHERE id=:character_value_id", {
+        'character_value_id': character_value_id
+    })
+    records = cursor.fetchall()
+    character_value = {
+        'id': records[0][0],
+        'aligned': records[0][1],
+        'character_id': records[0][2],
+        'value_id': records[0][3]
+    }
+    connect.close()
+    return character_value
+
+
+def get_value_changes_by_beat_id(beat_id):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("SELECT * FROM value_change WHERE beat_id=:beat_id", {
+        'beat_id': beat_id
+    })
+
+    records = cursor.fetchall()
+    value_changes = []
+
+    for record in records:
+        value_changes.append({
+            'id': record[0],
+            'label': record[2],
+            'description': record[3],
+            'beat_id': record[4],
+            'value_id': record[5],
+            'magnitude': record[6],
+            'notes': record[7]
+        })
+    connect.close()
+    return value_changes
+
+
+def get_value_change_by_id(id):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("SELECT * FROM value_change WHERE id=:id", {
+        'id': id
+    })
+    records = cursor.fetchall()
+    value_change = {
+        'id': records[0][0],
+        'label': records[0][2],
+        'description': records[0][3],
+        'beat_id': records[0][4],
+        'value_id': records[0][5],
+        'magnitude': records[0][6],
+        'notes': records[0][7]
+    }
+    connect.close()
+    return value_change
+
+
+# DELETE value objects
+
+
+def delete_character_value(character_value_id):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+
+    # delete any chapters belonging to this act (get the chapters, loop through, call the delete function)
+    cursor.execute("DELETE FROM character_value WHERE id = :character_value_id",
+        {
+            'character_value_id': character_value_id
+        })
+
+    rowcount = cursor.rowcount
+    connect.commit()
+    connect.close()
+
+    print("Deleted " + str(rowcount))
+
+    return rowcount
+
+
+
+# TESTING FUNCTIONS
+
+
+def check_all_orders(story):
+    # check the story for order issues
+    print("ACT ORDERS")
+    story['acts'] = check_components_order(story['acts'])  
+
+    for act in story['acts']:        
+        # check the order of the chapters
+        print("CHAPTER ORDERS")
+        act['chapters'] = check_components_order(act['chapters'])
+
+        for chapter in act['chapters']:
+            # check the order of the scenes
+            print("SCENES ORDERS")
+            chapter['scenes'] = check_components_order(chapter['scenes'])
+
+            for scene in chapter['scenes']:
+                # check the order of the beats
+                print("BEATS ORDERS")
+                scene['beats'] = check_components_order(scene['beats'])
+    return story
+
+
+
+# Make sure the order goes sequentially from 1 to the final item.
+# This shouldn't need to be used in production. This is a tool for me now.
+def check_components_order(components):
+    order_broken = False
+    for index, component in enumerate(components, start=1):
+        # print(index)
+        if component['order'] != index:
+            print(str(index) + " is NOT " + str(component['order']))
+            order_broken = True
+            # NOW we have to FIX them
+            component['order'] = index
+            # NOW we have to SAVE the broken one
+            update_component_order(component, index)
+        else:
+            print(str(index) + " IS " + str(component['order']))
+    print("Order is BROKEN" if order_broken else "Order is OK")
+    return components
+
+
+def update_component_order(component, new_order):
+    # THIS is a BAD way to check... they should be objects instead of dicts.
+    print("fixing error")
+    if 'chapters' in component:
+        update_act_order(component['id'], new_order)
+    elif 'scenes' in component:
+        update_chapter_order(component['id'], new_order)
+    elif 'beats' in component:
+        update_scene_order(component['id'], new_order)
+    elif 'scene_id' in component:
+        print("NOW WE HAVE TO FIX A BEAT")
+        update_beat_order(component['id'], new_order)
+    else:
+        print(component)
+        
 

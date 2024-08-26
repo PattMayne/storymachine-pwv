@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS value_change (
     description text,
     beat_id INTEGER, -- One beat and one value per value_change
     value_id INTEGER,
-    magnitutde INTEGER NOT NULL,
+    magnitude INTEGER NOT NULL,
     notes text
 );
 
