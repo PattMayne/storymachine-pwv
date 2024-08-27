@@ -335,24 +335,36 @@ const loadExistingValues = storyId => {
     newLocationButton.setAttribute("href", "edit_value_object.html?value_object_type=location&story_id=" + story.id)
     newCharacterButton.setAttribute("href", "edit_value_object.html?value_object_type=character&story_id=" + story.id)
 
-    // Loop through VALUEs and append "edit" link to DIV
     const valuesListBox = document.getElementById("valuesListBox")
+    const locationsListBox = document.getElementById("locationsListBox")
+    const charactersListBox = document.getElementById("charactersListBox")
+
+    // remove existing links and add them again
+    while (valuesListBox.hasChildNodes()) {
+        valuesListBox.removeChild(valuesListBox.firstChild);
+    }
+
+    while (locationsListBox.hasChildNodes()) {
+        locationsListBox.removeChild(locationsListBox.firstChild);
+    }
+
+    while (charactersListBox.hasChildNodes()) {
+        charactersListBox.removeChild(charactersListBox.firstChild);
+    }
+
+
+    // Loop through VALUEs and append "edit" link to DIV
     story.values.map(value => {
-        // for each iteration, APPEND the value
         valuesListBox.appendChild(html.elements.valueButton(storyId, value["id"], value["label"]))
     })
 
     // Loop through LOCATIONs and append "edit" link to DIV
-    const locationsListBox = document.getElementById("locationsListBox")
     story.locations.map(location => {
-        // for each iteration, APPEND the value
         locationsListBox.appendChild(html.elements.locationButton(storyId, location["id"], location["name"]))
     })
 
     // Loop through CHARACTERs and append "edit" link to DIV
-    const charactersListBox = document.getElementById("charactersListBox")
     story.characters.map(character => {
-        // for each iteration, APPEND the value
         const concat_name = character["first_name"] + " " + character["last_name"]
         charactersListBox.appendChild(html.elements.characterButton(storyId, character["id"], concat_name))
     })
@@ -424,6 +436,7 @@ const loadStory = loadLevel => {
 
     // pywebview doesn't load immediately, so do a timeout:
     loadLevel == levels.STORY && showLoading()
+
     setTimeout(() => {
         pywebview.api.get_story_by_id(storyId).then(incomingStory => {
             // treat the level as STORY for now, to load the STORY level

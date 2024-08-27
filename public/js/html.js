@@ -1,4 +1,5 @@
 import * as helpers from 'helpers'
+import * as consts from 'consts'
 
 const elements = {
     // STORY.HTML
@@ -118,7 +119,7 @@ const elements = {
         return button
     },
 
-    characterValueItem: (character) => {
+    characterValueItemCharacter: (character) => {
         let charName = character["first_name"]
         charName += !!character["last_name"] ? " " + character["last_name"] : ""
 
@@ -143,6 +144,36 @@ const elements = {
         deleteDiv.innerText = "DELETE"
 
         container.appendChild(nameDiv)
+        container.appendChild(alignedDiv)
+        container.appendChild(deleteDiv)
+
+        console.log("doing a container")
+
+        return container
+    },
+
+    characterValueItemValue: (value) => {
+        const container = document.createElement("div")
+        container.setAttribute("class", "characterValuesListItem")
+
+        const labelDiv = document.createElement("div")
+        labelDiv.setAttribute("class", "characterValuesListItemName")
+
+        const labelText = document.createElement("h6")
+        labelText.innerText = value["label"]
+        labelDiv.appendChild(labelText)
+
+        const alignedDiv = document.createElement("div")
+        alignedDiv.setAttribute("class", "characterValuesListItemAligned")
+        alignedDiv.setAttribute("onclick", "invertAlignment(" + value["character_value"]["id"] + ")")
+        alignedDiv.innerText = !!value["character_value"]["aligned"] ? "aligned" : "against"
+
+        const deleteDiv = document.createElement("div")
+        deleteDiv.setAttribute("class", "characterValuesListItemDelete")
+        deleteDiv.setAttribute("onclick", "deleteCharacterValue(" + value["character_value"]["id"] + ")")
+        deleteDiv.innerText = "DELETE"
+
+        container.appendChild(labelDiv)
         container.appendChild(alignedDiv)
         container.appendChild(deleteDiv)
 

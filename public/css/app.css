@@ -78,12 +78,12 @@ select {
 
 
 .solid {
-    background-color: #4b4b4b;
-    color: #cbcbcb;
+    background-color: #343865;
+    color: #e5e5e5;
     border: none;
 
     a {
-        color: #cbcbcb;
+        color: #e5e5e5;
     }
 
     a:hover {
@@ -92,8 +92,8 @@ select {
 }
 
 .solidInsert {
-    background-color: #cbcbcb;
-    color: #4b4b4b;
+    background-color: #e4ae39;
+    color: #222222;
     border: none;
 
     a {

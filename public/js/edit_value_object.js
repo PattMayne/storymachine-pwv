@@ -29,7 +29,7 @@ var loadingTimer = 0
 
 // document elements
 
-var value_cell, value_change_cell, character_cell, location_cell, relations_cell
+var value_cell, value_change_cell, character_cell, location_cell, char_relations_cell
 var valueDescription, valueLabel, valueNotes
 var charFirstName, charLastName, charDescription, charNotes
 var locationName, locationDescription, locationNotes
@@ -71,7 +71,7 @@ const setAspect = () => {
     value_change_cell = document.getElementById("value_change_cell")
     character_cell = document.getElementById("character_cell")
     location_cell = document.getElementById("location_cell")
-    relations_cell = document.getElementById("relations_cell")
+    char_relations_cell = document.getElementById("char_relations_cell")
 
     hideAllCells()
 
@@ -129,7 +129,7 @@ const editValue = () => pywebview.api.get_value_by_id(valueObjectId).then(value 
 
     // We need ALL the characters for the "character relationships" panel.
     pywebview.api.get_characters().then(characters => {
-        relations_cell.style.display = ''
+        char_relations_cell.style.display = ''
         let selectBox = document.getElementById("charactersToRelate")
         let relatedCharsBox = document.getElementById("relatedCharactersBox")
 
@@ -160,7 +160,7 @@ const editValue = () => pywebview.api.get_value_by_id(valueObjectId).then(value 
 
         // Listing related characters in a chart.
         relatedCharacters.map(character => {
-            relatedCharsBox.appendChild(html.elements.characterValueItem(character))
+            relatedCharsBox.appendChild(html.elements.characterValueItemCharacter(character))
         })
     })
 })
@@ -174,6 +174,43 @@ const editCharacter = () => pywebview.api.get_character_by_id(valueObjectId).the
     charFirstName.value = character["first_name"]
     charLastName.value = character["last_name"]
     charNotes.value = character["notes"]
+
+    // We need ALL the values for the "character relationships" panel.
+    pywebview.api.get_values().then(values => {
+        value_relations_cell.style.display = ''
+        let selectBox = document.getElementById("valuesToRelate")
+        let relatedValuesBox = document.getElementById("relatedValuesBox")
+
+        // separate values WITH relationship from values with NONE.
+
+        let relatedValues = []
+        let nonRelatedValues = []
+
+        for (let i = 0; i < values.length; i++) {
+            let isRelated = false
+            character["character_values"].map(characterValue => {
+                if (values[i]["id"] == characterValue["value_id"]) {
+                    values[i]["character_value"] = characterValue
+                    isRelated = true
+                }
+            })
+
+            !!isRelated ? relatedValues.push(values[i]) : nonRelatedValues.push(values[i])
+        }
+
+        // Putting non-related values in the dropdown.
+        nonRelatedValues.map(value => {
+            let newOption = document.createElement("option")
+            newOption.value = value["id"]
+            newOption.innerText = value["label"]
+            selectBox.appendChild(newOption)
+        })
+
+        // Listing related values in a chart.
+        relatedValues.map(value => {
+            relatedValuesBox.appendChild(html.elements.characterValueItemValue(value))
+        })
+    })
 })
 
 // load location for editing
@@ -315,6 +352,22 @@ const addCharacterRelation = () => {
     })
 }
 
+// add a character_value to the database
+const addValueRelation = () => {
+    let valueIdToAdd = valuesToRelate.value
+    let aligned = document.getElementById("aligned_v").checked
+    // pywebview add character_value
+    pywebview.api.create_character_value(valueObjectId, valueIdToAdd, aligned).then(success => {
+        if (success) {
+            location.reload()
+        } else {
+            console.log("RELATION NOT SAVED")
+        }
+        // Do something with the success
+        // give popup notice of success (or failure)
+    })
+}
+
 const loadDOM = () => {
     // overlay elements
     loadingOverlay = document.getElementById("loadingOverlay")
@@ -348,7 +401,8 @@ const hideAllCells = () => {
     value_change_cell.style.display = "none"
     character_cell.style.display = "none"
     location_cell.style.display = "none"
-    relations_cell.style.display = "none"
+    char_relations_cell.style.display = "none"
+    value_relations_cell.style.display = "none"
 }
 
 window.addEventListener('load', () => setAspect())
@@ -356,3 +410,4 @@ window.submit = submit
 window.addCharacterRelation = addCharacterRelation
 window.deleteCharacterValue = deleteCharacterValue
 window.invertAlignment = invertAlignment
+window.addValueRelation = addValueRelation

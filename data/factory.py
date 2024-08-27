@@ -867,9 +867,19 @@ def get_values():
     cursor.execute("SELECT * FROM value")
     records = cursor.fetchall()
 
+    values = []
+
+    for record in records:
+        values.append({
+            "id": record[0],
+            "label": record[2],
+            "description": record[3],
+            "notes": record[4]
+        })
+
     connect.commit()
     connect.close()
-    return records
+    return values
 
 
 def get_characters():
@@ -999,12 +1009,32 @@ def get_character_by_id(character_id):
         'character_id': character_id
     })
     records = cursor.fetchall()
+
+    character_id = records[0][0]
+    character_values = []
+
+    # Get the character_value objects for this character from the database
+    cursor.execute("SELECT id, aligned, character_id, value_id FROM character_value WHERE character_id=:character_id", {
+        'character_id': character_id
+    })
+
+    character_value_records = cursor.fetchall()
+
+    for character_value_record in character_value_records:
+        character_values.append({
+            'id': character_value_record[0],
+            'aligned': character_value_record[1],
+            'character_id': character_value_record[2],
+            'value_id': character_value_record[3]
+        })
+    
     character = {
-        'id': records[0][0],
+        'id': character_id,
         'first_name': records[0][2],
         'last_name': records[0][3],
         'description': records[0][4],
-        'notes': records[0][5]
+        'notes': records[0][5],
+        'character_values': character_values
     }
     connect.close()
     return character

@@ -46,7 +46,7 @@
                     </div>
                     <input id="valueSubmit" class="button" type="submit" onclick="submit()" />
                 </div>
-                <div class="callout" id="relations_cell">
+                <div class="callout" id="char_relations_cell">
                     <div class="grid-x grid-padding-x">
                         <div class="large-12 cell">
                             <h3 class="red">Character Relationships:</h3>
@@ -126,6 +126,35 @@
 
                         <div class="large-12 cell">
                             <input id="submit" class="button" type="submit" onclick="submit()" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout" id="value_relations_cell">
+                    <div class="grid-x grid-padding-x">
+                        <div class="large-12 cell">
+                            <h3 class="red">Value Relationships:</h3>
+                        </div>
+
+                        <div class="large-6 medium-6 small-12 cell">
+                            <p>Here we will display a chart of values, with the option to invert their alignment or
+                                delete their relationship.</p>
+                            <div id="relatedValuesBox"></div>
+                        </div>
+
+                        <div class="large-6 medium-6 small-12 cell">
+                            <label for="valuesToRelate">Add Value Relationship:</label>
+                            <select id="valuesToRelate">
+                                <option selected disabled>Choose a Value</option>
+                            </select>
+
+                            <input type="checkbox" id="aligned_v" name="aligned_v">
+                            <label for="aligned_v">Character aligned with Value?</label>
+                            <br />
+
+                            <input id="addValueRelation" class="button small" type="submit" onclick="addValueRelation()"
+                                value="Add Relation" />
+
                         </div>
                     </div>
                 </div>
