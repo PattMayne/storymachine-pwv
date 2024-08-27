@@ -193,6 +193,10 @@ const deleteCharacterValue = characterValueId => {
     //pywebview delete this character_value object
 }
 
+const invertAlignment = characterValueId => {
+    // pywebview invert alignment of this character_value object
+}
+
 // Find out which value object type we're using, and create one
 const createValueObject = () => {
     if (valueObjectType == valueObjects.VALUE) {
