@@ -134,7 +134,7 @@ const elements = {
 
         const alignedDiv = document.createElement("div")
         alignedDiv.setAttribute("class", "characterValuesListItemAligned")
-        deleteDiv.setAttribute("onclick", "invertAlignment(" + character["character_value"]["id"] + ")")
+        alignedDiv.setAttribute("onclick", "invertAlignment(" + character["character_value"]["id"] + ")")
         alignedDiv.innerText = !!character["character_value"]["aligned"] ? "aligned" : "against"
 
         const deleteDiv = document.createElement("div")

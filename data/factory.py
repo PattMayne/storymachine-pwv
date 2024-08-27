@@ -1011,3 +1011,24 @@ def get_character_by_id(character_id):
 #     connect.close()
 #     return value_change
 
+
+# DELETE value objects
+
+
+def delete_character_value(character_value_id):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+
+    # delete any chapters belonging to this act (get the chapters, loop through, call the delete function)
+    cursor.execute("DELETE FROM character_value WHERE id = :character_value_id",
+        {
+            'character_value_id': character_value_id
+        })
+
+    rowcount = cursor.rowcount
+    connect.commit()
+    connect.close()
+
+    print("Deleted " + str(rowcount))
+
+    return rowcount

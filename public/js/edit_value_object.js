@@ -189,9 +189,10 @@ const editLocation = () => pywebview.api.get_location_by_id(valueObjectId).then(
 // same function for updating as for creating a new value object
 const submit = () => aspect == aspects.EDIT ? updateValueObject() : createValueObject()
 
-const deleteCharacterValue = characterValueId => {
-    //pywebview delete this character_value object
-}
+const deleteCharacterValue = characterValueId => pywebview.api.delete_character_value(characterValueId).then(count => {
+    console.log("Deleted " + count)
+    !!count && location.reload()
+})
 
 const invertAlignment = characterValueId => {
     // pywebview invert alignment of this character_value object
@@ -208,6 +209,9 @@ const createValueObject = () => {
             // Change the aspect to EDIT, set the ID
             valueObjectId = newValueId
             aspect = aspects.EDIT
+            location.href = "edit_value_object.html?value_object_type=" + valueObjectType
+                + "&value_object_id=" + newValueId
+                + "&edit=true" + "&story_id=" + storyId
 
             // give popup notice of success (or failure)
             // change the text of the button to "update"
@@ -300,7 +304,7 @@ const addCharacterRelation = () => {
     // pywebview add character_value
     pywebview.api.create_character_value(characterIdToAdd, valueObjectId, aligned).then(success => {
         if (success) {
-            console.log("RELATION SAVED")
+            location.reload()
         } else {
             console.log("RELATION NOT SAVED")
         }
@@ -348,3 +352,4 @@ const hideAllCells = () => {
 window.addEventListener('load', () => setAspect())
 window.submit = submit
 window.addCharacterRelation = addCharacterRelation
+window.deleteCharacterValue = deleteCharacterValue

@@ -192,20 +192,20 @@ class Api():
     # delete stuff
 
     def delete_beat(self, beat_id):
-        print("deleting beat " + str(beat_id))
         factory.delete_beat(beat_id, True)
 
     def delete_scene(self, scene_id):
-        print("deleting scene " + str(scene_id))
         factory.delete_scene(scene_id, True)
     
     def delete_chapter(self, chapter_id):
-        print("deleting chapter " + str(chapter_id))
         factory.delete_chapter(chapter_id, True)
     
     def delete_act(self, act_id):
-        print("deleting act " + str(act_id))
         factory.delete_act(act_id, True)
+    
+    def delete_character_value(self, character_value_id):
+        print("deleting character_value " + str(character_value_id))
+        return factory.delete_character_value(character_value_id)
 
 
 def main_function(window):
