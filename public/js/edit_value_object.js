@@ -189,6 +189,10 @@ const editLocation = () => pywebview.api.get_location_by_id(valueObjectId).then(
 // same function for updating as for creating a new value object
 const submit = () => aspect == aspects.EDIT ? updateValueObject() : createValueObject()
 
+const deleteCharacterValue = characterValueId => {
+    //pywebview delete this character_value object
+}
+
 // Find out which value object type we're using, and create one
 const createValueObject = () => {
     if (valueObjectType == valueObjects.VALUE) {

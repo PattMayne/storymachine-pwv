@@ -138,7 +138,8 @@ const elements = {
 
         const deleteDiv = document.createElement("div")
         deleteDiv.setAttribute("class", "characterValuesListItemDelete")
-        deleteDiv.setAttribute("innerHTML", "DELETE")
+        deleteDiv.setAttribute("onclick", "deleteCharacterValue(" + character["character_value"]["id"] + ")")
+        deleteDiv.innerText = "DELETE"
 
         container.appendChild(nameDiv)
         container.appendChild(alignedDiv)
