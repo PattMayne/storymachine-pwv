@@ -194,9 +194,9 @@ const deleteCharacterValue = characterValueId => pywebview.api.delete_character_
     !!count && location.reload()
 })
 
-const invertAlignment = characterValueId => {
-    // pywebview invert alignment of this character_value object
-}
+const invertAlignment = characterValueId => pywebview.api.switch_character_value_alignment(characterValueId).then(() => {
+    location.reload()
+})
 
 // Find out which value object type we're using, and create one
 const createValueObject = () => {
@@ -206,15 +206,17 @@ const createValueObject = () => {
         const notes = valueNotes.value
 
         pywebview.api.create_value(storyId, label, description, notes).then(newValueId => {
-            // Change the aspect to EDIT, set the ID
-            valueObjectId = newValueId
-            aspect = aspects.EDIT
-            location.href = "edit_value_object.html?value_object_type=" + valueObjectType
-                + "&value_object_id=" + newValueId
-                + "&edit=true" + "&story_id=" + storyId
-
-            // give popup notice of success (or failure)
-            // change the text of the button to "update"
+            if (!!newValueId) {
+                // Change the aspect to EDIT, set the ID
+                valueObjectId = newValueId
+                aspect = aspects.EDIT
+                location.href = "edit_value_object.html?value_object_type=" + valueObjectType
+                    + "&value_object_id=" + newValueId
+                    + "&edit=true" + "&story_id=" + storyId
+                // change text of button to "update"
+            } else {
+                // Give notice of failure
+            }
         })
     } else if (valueObjectType == valueObjects.CHARACTER) {
         const firstName = charFirstName.value
@@ -353,3 +355,4 @@ window.addEventListener('load', () => setAspect())
 window.submit = submit
 window.addCharacterRelation = addCharacterRelation
 window.deleteCharacterValue = deleteCharacterValue
+window.invertAlignment = invertAlignment

@@ -155,6 +155,7 @@ class Api():
         return factory.update_beat(id, label, description)
     
     def update_value(self, id, label, description, notes):
+        print("UPDATING A VALUE NOW")
         return factory.update_value(id, label, description, notes)
 
     def update_character(self, id, first_name, last_name, description, notes):
@@ -184,6 +185,13 @@ class Api():
         item_1_updated = factory.update_beat_order(id_1, order_2)
         return item_2_updated & item_1_updated
     
+
+    def switch_character_value_alignment(self, character_value_id):
+        current_alignment = factory.get_character_value_by_id(character_value_id)["aligned"]
+        factory.update_character_value(character_value_id, not current_alignment)
+        return True
+
+
     def open_story_window(self):
         global current_story_id
         current_story_id = 1

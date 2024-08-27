@@ -844,6 +844,21 @@ def update_location(location_id, name, description, notes):
     return True
 
 
+def update_character_value(character_value_id, aligned):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("UPDATE character_value SET aligned=:aligned WHERE id=:character_value_id",
+        {
+            'character_value_id': character_value_id,
+            'aligned': aligned
+
+        })
+
+    connect.commit()
+    connect.close()
+    return True
+
+
 # GET value objects
 
 def get_values():
@@ -993,6 +1008,23 @@ def get_character_by_id(character_id):
     }
     connect.close()
     return character
+
+
+def get_character_value_by_id(character_value_id):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("SELECT * FROM character_value WHERE id=:character_value_id", {
+        'character_value_id': character_value_id
+    })
+    records = cursor.fetchall()
+    character_value = {
+        'id': records[0][0],
+        'aligned': records[0][1],
+        'character_id': records[0][2],
+        'value_id': records[0][3]
+    }
+    connect.close()
+    return character_value
 
 
 # def get_value_change_by_id(value_id):
