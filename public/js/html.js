@@ -10,6 +10,7 @@ const elements = {
         return div
     },
 
+    // Story components (acts, chapters, scenes, beats) are listed on these cards.
     card: (storyComponent, level, levels) => {
         // create the HTML elements
         const gridCell = document.createElement("div")
@@ -83,6 +84,23 @@ const elements = {
         callout.setAttribute("class", "callout")
         cardLabel.innerText = "Create new " + level
         cardLabel.setAttribute("onclick", newComponentFunctionName)
+
+        gridCell.appendChild(callout)
+        callout.appendChild(cardLabel)
+        return gridCell
+    },
+
+    newValueChangeButton: (beatId, valueId) => {
+        // create the HTML elements
+        const gridCell = document.createElement("div")
+        const callout = document.createElement("div")
+        const cardLabel = document.createElement("h5")
+
+        const newValueChangeFunctionName = "newValueChange('" + beatId + ", " + valueId + "')"
+        gridCell.setAttribute("class", "large-4 medium-4 small-6 cell")
+        callout.setAttribute("class", "callout")
+        cardLabel.innerText = "Create new Value Change"
+        cardLabel.setAttribute("onclick", newValueChangeFunctionName)
 
         gridCell.appendChild(callout)
         callout.appendChild(cardLabel)

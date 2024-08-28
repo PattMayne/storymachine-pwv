@@ -1057,21 +1057,48 @@ def get_character_value_by_id(character_value_id):
     return character_value
 
 
-# def get_value_change_by_id(value_id):
-#     connect = sqlite3.connect('data/stories.db')
-#     cursor = connect.cursor()
-#     cursor.execute("SELECT * FROM value_change WHERE id=:value_change_id", {
-#         'value_change_id': value_change_id
-#     })
-#     records = cursor.fetchall()
-#     value_change = {
-#         'id': records[0][0],
-#         'label': records[0][2],
-#         'description': records[0][3],
-#         'notes': records[0][4]
-#     }
-#     connect.close()
-#     return value_change
+def get_value_changes_by_beat_id(beat_id):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("SELECT * FROM value_change WHERE beat_id=:beat_id", {
+        'beat_id': beat_id
+    })
+
+    records = cursor.fetchall()
+    value_changes = []
+
+    for record in records:
+        value_change.append({
+            'id': records[0],
+            'label': records[2],
+            'description': records[3],
+            'beat_id': records[4],
+            'value_id': records[5],
+            'magnitutde': records[6],
+            'notes': records[7]
+        })
+    connect.close()
+    return value_changes
+
+
+def get_value_change_by_id(id):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("SELECT * FROM value_change WHERE id=:id", {
+        'id': id
+    })
+    records = cursor.fetchall()
+    value_change = {
+        'id': records[0][0],
+        'label': records[0][2],
+        'description': records[0][3],
+        'beat_id': records[0][4],
+        'value_id': records[0][5],
+        'magnitutde': records[0][6],
+        'notes': records[0][7]
+    }
+    connect.close()
+    return value_change
 
 
 # DELETE value objects

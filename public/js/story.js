@@ -293,7 +293,21 @@ const loadBeat = beatId => {
     beatIdLink.innerHTML = currentBeat.label
     editBeatLink.setAttribute("href", editComponentLink())
     beatDescription.innerHTML = currentBeat.description
-    cardsContainer.innerHTML = "SHOW VALUE CHANGE CARDS HERE"
+
+    // get value_changes, list them as cards
+    // edit them on this screen? no, that would be crazy
+
+    pywebview.api.get_value_changes_by_beat_id(beatId).then(valueChanges => {
+        valueChanges.map(valueChange => {
+            const newTestThing = document.createElement("div")
+            newTestThing.setAttribute("class", "callout")
+            newTestThing.innerText = "A Value Change"
+            cardsContainer.appendChild(newTestThing)
+        })
+        cardsContainer.appendChild(html.elements.newValueChangeButton(beatId))
+    })
+
+    //cardsContainer.innerHTML = "SHOW VALUE CHANGE CARDS HERE"
 }
 
 // build a link to the "edit_component.html" page
@@ -326,6 +340,9 @@ const editComponentLink = () => {
     return linkString
 }
 
+const newValueChange = () => {
+    location.href = "edit_value_object.html?value_object_type=" + consts.valueObjects.VALUE_CHANGE + "&story_id=" + story.id
+}
 
 // Build the HTML for a div full of buttons. Each button is a link to edit a value object.
 const loadExistingValues = storyId => {
@@ -554,3 +571,4 @@ window.deleteComponentRequest = deleteComponentRequest
 window.cancelRequest = cancelRequest
 window.deleteComponent = deleteComponent
 window.toggleDescription = toggleDescription
+window.newValueChange = newValueChange

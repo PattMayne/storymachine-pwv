@@ -93,6 +93,14 @@ class Api():
     def get_location_by_id(self, location_id):
         return factory.get_location_by_id(location_id)
 
+    def get_value_changes_by_beat_id(self, beat_id):
+        return factory.get_value_changes_by_beat_id(beat_id)
+
+    def get_value_changes(self, id):
+        return factory.get_value_changes(id)
+
+    def get_value_change_by_id(self, id):
+        return factory.get_value_change_by_id(id)
 
     # create stuff
 

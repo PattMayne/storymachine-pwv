@@ -115,7 +115,16 @@ const newLocation = () => {
     location_cell.style.display = ''
 }
 
+const newValueChange = () => {
+    value_change_cell.style.display = ''
+}
+
 // load value for editing
+
+const editValueChange = () => {
+    value_change_cell.style.display = ''
+}
+
 const editValue = () => pywebview.api.get_value_by_id(valueObjectId).then(value => {
     // TO DO:
     //  THE VALUE should ALREADY COME WITH a list of character relations (just the IDs of the characters)
@@ -250,9 +259,9 @@ const createValueObject = () => {
                 location.href = "edit_value_object.html?value_object_type=" + valueObjectType
                     + "&value_object_id=" + newValueId
                     + "&edit=true" + "&story_id=" + storyId
-                // change text of button to "update"
+                // TODO: change text of button to "update"
             } else {
-                // Give notice of failure
+                // TODO: Give notice of failure
             }
         })
     } else if (valueObjectType == valueObjects.CHARACTER) {
@@ -262,12 +271,19 @@ const createValueObject = () => {
         const notes = charNotes.value
 
         pywebview.api.create_character(storyId, firstName, lastName, description, notes).then(newCharId => {
-            // Change the aspect to EDIT, set the ID
-            valueObjectId = newCharId
-            aspect = aspects.EDIT
+            if (!!newCharId) {
+                // Change the aspect to EDIT, set the ID
+                valueObjectId = newCharId
+                aspect = aspects.EDIT
 
-            // give popup notice of success (or failure)
-            // change the text of the button to "update"
+                location.href = "edit_value_object.html?value_object_type=" + valueObjectType
+                    + "&value_object_id=" + newCharId
+                    + "&edit=true" + "&story_id=" + storyId
+
+                // TODO: change the text of the button to "update"
+            } else {
+                // TODO: report failure
+            }
         })
     } else if (valueObjectType == valueObjects.LOCATION) {
         console.log("creating a location")
@@ -411,3 +427,5 @@ window.addCharacterRelation = addCharacterRelation
 window.deleteCharacterValue = deleteCharacterValue
 window.invertAlignment = invertAlignment
 window.addValueRelation = addValueRelation
+window.newValueChange = newValueChange
+window.editValueChange = editValueChange
