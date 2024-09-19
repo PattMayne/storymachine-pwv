@@ -18,15 +18,22 @@ var currentBeat = null
 
 var pyviewLoaded = false
 
+/**
+ * Story always loads a component. Beat, Scene, Chapter, Act, Story.
+ * Loaded component is the current component.
+ */
+
 
 // FUNCTIONS
 
+// parent of the current component
 const getParentComponent = () => level == levels.BEAT ? currentScene :
     level == levels.SCENE ? currentChapter :
         level == levels.CHAPTER ? currentAct :
             level == levels.ACT ? story : {}
 
 
+// current component is the component that is loaded on the page now.
 const getCurrentComponent = () => level == levels.BEAT ? currentBeat :
     level == levels.SCENE ? currentScene :
         level == levels.CHAPTER ? currentChapter :
@@ -356,7 +363,7 @@ const loadExistingValues = storyId => {
     const locationsListBox = document.getElementById("locationsListBox")
     const charactersListBox = document.getElementById("charactersListBox")
 
-    // remove existing links and add them again
+    // remove existing links (html elements) and add them again
     while (valuesListBox.hasChildNodes()) {
         valuesListBox.removeChild(valuesListBox.firstChild);
     }
@@ -432,13 +439,13 @@ const loadDOM = storyId => {
 
 /**
  * Initially load the whole story, even if you're really trying to load a subcompnent.
- * params: loadLevel (which level are we loading to)
+ * params: loadLevel (which level of component (act, chapter, etc) are we loading to)
  */
 const loadStory = loadLevel => {
     const urlParams = new URLSearchParams(window.location.search)
     /**
      * check if we've been sent EXTERNALLY (from another page) to load a particular component/level
-     * or if we've indicated a particular level in the function args (internal call)
+     * or if we've indicated a particular level in the function args (internal call from this page)
      * 
      * args get top priority b/c they're specific to this call (internal to the script)
      * otherwise get it from querystring from page load, which should be overridden by more specific args.

@@ -93,11 +93,23 @@
                             <textarea id="valueChangeNotes" placeholder="Notes"></textarea>
                         </div>
                         <div class="large-6 medium-6 small-12 cell">
+                            <label for="valueToChange">Value to change:</label>
+                            <select id="valueToChange">
+                                <option selected disabled>Choose a Value</option>
+                            </select>
+                        </div>
+                        <div class="large-6 medium-6 small-12 cell">
                             <label for="valueChangeMag">Magnitude of change:</label>
                             <input type="number" id="valueChangeMag" />
                         </div>
+
                     </div>
                     <input id="submit" class="button" type="submit" onclick="submit()" />
+                </div>
+
+                <div class="callout">
+                    <p>Get the values to change and make a list.</p>
+                    <p>On submit, send the selection AND the beat_id to python.</p>
                 </div>
             </div>
 

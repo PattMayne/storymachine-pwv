@@ -116,14 +116,28 @@ const newLocation = () => {
 }
 
 const newValueChange = () => {
-    value_change_cell.style.display = ''
+    // We need ALL the values to choose which one to change
+    pywebview.api.get_values().then(values => {
+        let selectBox = document.getElementById("valueToChange")
+
+        // add each value to the select box
+        values.map(value => {
+            let newOption = document.createElement("option")
+            newOption.value = value["id"]
+            newOption.innerText = value["label"]
+            selectBox.appendChild(newOption)
+            // TO DO: Check to see if this beat already changed this value
+        })
+
+        // do this last, when everything is loaded
+        value_change_cell.style.display = ''
+    })
 }
 
 // load value for editing
 
-const editValueChange = () => {
-    value_change_cell.style.display = ''
-}
+const editValueChange = () => value_change_cell.style.display = ''
+
 
 const editValue = () => pywebview.api.get_value_by_id(valueObjectId).then(value => {
     // TO DO:
@@ -147,6 +161,7 @@ const editValue = () => pywebview.api.get_value_by_id(valueObjectId).then(value 
         let relatedCharacters = []
         let nonRelatedCharacters = []
 
+        // use character.map() instead
         for (let i = 0; i < characters.length; i++) {
             let isRelated = false
             value["character_values"].map(characterValue => {
