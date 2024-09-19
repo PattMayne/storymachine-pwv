@@ -221,6 +221,22 @@ select {
     font-weight: 600;
 }
 
+.newElementButton {
+    font-weight: bold;
+    color: #111;
+    padding: 0px 4px 3px 4px;
+    border: none;
+    border-radius: 5px;
+    margin: auto;
+    text-align: center;
+    margin-top: 3px;
+}
+
+.newElementButton:hover {
+    background-color: #000;
+    color: #fa8334;
+}
+
 .orderPar {
     display: inline-block;
     border: 1px solid black;
@@ -229,6 +245,7 @@ select {
     vertical-align: top;
     color: #ae0000;
     font-weight: 600;
+    background-color: #e1e1e1;
 }
 
 #storyInfoBox {
@@ -277,10 +294,15 @@ select {
 }
 
 .newComponentButtonLeft {
-    padding: 3px 14px 0px 14px;
+    padding: 0px 4px 3px 4px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 3px;
     justify-content: left;
     margin: 0px;
     margin-right: auto;
+    margin-top: 3px;
+    color: #111;
 }
 
 .switchButtonRight {
@@ -288,12 +310,21 @@ select {
     text-align: right;
     margin: 0px;
     margin-left: auto;
+    padding: 0px 4px 3px 4px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 3px;
+    color: #111;
 }
 
 .deleteButtonMiddle {
-    padding: 5px 14px 0px 14px;
-    text-align: center;
+    color: #111;
+    padding: 0px 4px 3px 4px;
+    border: none;
+    border-radius: 5px;
     margin: auto;
+    text-align: center;
+    margin-top: 3px;
 }
 
 .switchButtonRight:hover {

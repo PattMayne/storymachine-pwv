@@ -37,22 +37,48 @@ const elements = {
 
         // create the "change order" buttons
         const bottomMenu = document.createElement("div")
-        const newComponentButtonLeft = document.createElement("div")
-        const deleteButtonMiddle = document.createElement("div")
-        const switchButtonRight = document.createElement("div")
+        const newComponentButtonLeft = document.createElement("a")
+        const deleteButtonMiddle = document.createElement("a")
+        const switchButtonRight = document.createElement("a")
 
         newComponentButtonLeft.setAttribute("class", "newComponentButtonLeft")
         newComponentButtonLeft.innerHTML = "<< new " + level
         newComponentButtonLeft.setAttribute("onclick", "newComponentLeft('" + level + "', " + storyComponent.order + ")")
+        // For accessibility, make it tabbable and make "Enter" key function as click.
+        newComponentButtonLeft.setAttribute("tabIndex", 0)
+        newComponentButtonLeft.addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                newComponentButtonLeft.click();
+            }
+        })
 
         deleteButtonMiddle.setAttribute("class", "deleteButtonMiddle")
         deleteButtonMiddle.setAttribute("onclick", "deleteComponentRequest('" + level + "', " + storyComponent.id + ")")
         deleteButtonMiddle.innerHTML = "[delete]"
 
+        // For accessibility, make it tabbable and make "Enter" key function as click.
+        deleteButtonMiddle.setAttribute("tabIndex", 0)
+        deleteButtonMiddle.addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                deleteButtonMiddle.click();
+            }
+        })
+
         switchButtonRight.setAttribute("class", "switchButtonRight")
         switchButtonRight.setAttribute("id", "switchButtonRight_" + level + "_order-" + storyComponent.order)
         switchButtonRight.innerHTML = "move >>"
         switchButtonRight.setAttribute("onclick", "shiftComponentRight('" + level + "', " + storyComponent.id + ")")
+
+        // For accessibility, make it tabbable and make "Enter" key function as click.
+        switchButtonRight.setAttribute("tabIndex", 0)
+        switchButtonRight.addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                switchButtonRight.click();
+            }
+        })
 
         bottomMenu.setAttribute("class", "cardBottomMenu")
         bottomMenu.appendChild(newComponentButtonLeft)
@@ -77,13 +103,14 @@ const elements = {
         // create the HTML elements
         const gridCell = document.createElement("div")
         const callout = document.createElement("div")
-        const cardLabel = document.createElement("h5")
+        const cardLabel = document.createElement("a")
 
         const newComponentFunctionName = "newComponent('" + level + "')"
         gridCell.setAttribute("class", "large-3 medium-4 small-6 cell")
         callout.setAttribute("class", "callout")
         cardLabel.innerText = "Create new " + level
         cardLabel.setAttribute("onclick", newComponentFunctionName)
+        cardLabel.setAttribute("class", "newElementButton")
 
         gridCell.appendChild(callout)
         callout.appendChild(cardLabel)
