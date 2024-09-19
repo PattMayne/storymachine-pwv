@@ -25,7 +25,7 @@ a {
 
 body {
     font-family: alte;
-    background-color: #333;
+    background-color: #241f31;
     color: #a67d7d;
 }
 
@@ -53,6 +53,11 @@ select {
 .callout {
     background-color: #b1a1a1;
     border: 1px solid black;
+
+    alink,
+    vlink {
+        color: #0300ae;
+    }
 }
 
 .primary {
@@ -95,19 +100,39 @@ select {
 .solidInsert {
     background-color: #e4ae39;
     color: #222222;
-    border: none;
+    border: 1px solid black;
 
     a {
         color: #4b4b4b;
     }
 
     a:hover {
-        color: #cbcbcb;
+        color: #fa8334;
+        background-color: #0300ae;
     }
 
     .button {
         color: white;
     }
+}
+
+.editbutton {
+    background-color: #111;
+    color: #f6f6f6;
+    border: 1px solid #111;
+    border-radius: 7px;
+    padding: 4px 7px 7px 7px;
+}
+
+.editbutton:hover {
+    color: rgb(10, 186, 10);
+}
+
+.editComponentButtonBox {
+    display: inline;
+    justify-content: right;
+    text-align: right;
+    float: right;
 }
 
 .blackBack {

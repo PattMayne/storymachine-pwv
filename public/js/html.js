@@ -27,7 +27,7 @@ const elements = {
                 level == levels.SCENE ? "loadScene(" :
                     level == levels.BEAT ? "loadBeat(" : ""
 
-        gridCell.setAttribute("class", "large-4 medium-4 small-6 cell")
+        gridCell.setAttribute("class", "large-3 medium-4 small-6 cell")
         callout.setAttribute("class", "callout")
         cardLabel.setAttribute("class", "cardLabel")
         cardLabel.setAttribute("onclick", loadFunctionName + storyComponent.id + ")")
@@ -80,7 +80,7 @@ const elements = {
         const cardLabel = document.createElement("h5")
 
         const newComponentFunctionName = "newComponent('" + level + "')"
-        gridCell.setAttribute("class", "large-4 medium-4 small-6 cell")
+        gridCell.setAttribute("class", "large-3 medium-4 small-6 cell")
         callout.setAttribute("class", "callout")
         cardLabel.innerText = "Create new " + level
         cardLabel.setAttribute("onclick", newComponentFunctionName)
