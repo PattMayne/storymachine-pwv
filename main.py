@@ -127,6 +127,11 @@ class Api():
 
     def create_character_value(self, character_id, value_id, aligned):
         return factory.create_character_value(character_id, value_id, aligned)
+    
+    def create_value_change(self, story_id, beat_id, value_id, magnitude, label, description, notes):
+        print("We are in python now")
+        print("story_id: " + str(story_id) + "beat_id: " + str(beat_id) + "value_id: " + str(value_id) + "magnitude: " + str(magnitude) + "label: " + str(label) + "description: " + str(description) + "notes: " + str(notes))
+        return factory.create_value_change(story_id, beat_id, value_id, magnitude, label, description, notes)
 
     # create stuff at certain order
 

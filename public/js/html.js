@@ -117,17 +117,18 @@ const elements = {
         return gridCell
     },
 
-    newValueChangeButton: (beatId, valueId) => {
+    newValueChangeButton: (beatId) => {
         // create the HTML elements
         const gridCell = document.createElement("div")
         const callout = document.createElement("div")
-        const cardLabel = document.createElement("h5")
+        const cardLabel = document.createElement("a")
 
-        const newValueChangeFunctionName = "newValueChange('" + beatId + ", " + valueId + "')"
+        const newValueChangeFunctionName = "newValueChange('" + beatId + "')"
         gridCell.setAttribute("class", "large-4 medium-4 small-6 cell")
         callout.setAttribute("class", "callout")
         cardLabel.innerText = "Create new Value Change"
         cardLabel.setAttribute("onclick", newValueChangeFunctionName)
+        cardLabel.setAttribute("class", "newElementButton")
 
         gridCell.appendChild(callout)
         callout.appendChild(cardLabel)

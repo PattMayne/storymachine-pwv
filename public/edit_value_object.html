@@ -82,7 +82,7 @@
                 <div class="callout">
                     <h3 class="red">VALUE CHANGE</h3>
                     <label for="valueChangeLabel">Label:</label>
-                    <input id="valueChangeLabel" type="text" value="Subcomponent" placeholder="Label or Name" />
+                    <input id="valueChangeLabel" type="text" placeholder="Label or Name" required />
                     <div class="grid-x grid-padding-x">
                         <div class="large-6 medium-6 small-12 cell">
                             <label for="valueChangeDescription">Description:</label>
@@ -94,17 +94,17 @@
                         </div>
                         <div class="large-6 medium-6 small-12 cell">
                             <label for="valueToChange">Value to change:</label>
-                            <select id="valueToChange">
+                            <select id="valueToChange" required>
                                 <option selected disabled>Choose a Value</option>
                             </select>
                         </div>
                         <div class="large-6 medium-6 small-12 cell">
                             <label for="valueChangeMag">Magnitude of change:</label>
-                            <input type="number" id="valueChangeMag" />
+                            <input type="number" id="valueChangeMag" required />
                         </div>
 
                     </div>
-                    <input id="submit" class="button" type="submit" onclick="submit()" />
+                    <input id="submit" class="button" type="submit" onclick="createValueChange()" />
                 </div>
 
                 <div class="callout">

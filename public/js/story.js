@@ -347,8 +347,8 @@ const editComponentLink = () => {
     return linkString
 }
 
-const newValueChange = () => {
-    location.href = "edit_value_object.html?value_object_type=" + consts.valueObjects.VALUE_CHANGE + "&story_id=" + story.id
+const newValueChange = beatId => {
+    location.href = "edit_value_object.html?value_object_type=" + consts.valueObjects.VALUE_CHANGE + "&story_id=" + story.id + "&beat_id=" + beatId
 }
 
 // Build the HTML for a div full of buttons. Each button is a link to edit a value object.

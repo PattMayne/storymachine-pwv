@@ -777,6 +777,27 @@ def create_value(story_id, label, description, notes):
     return value_id
 
 
+# creates a new value change object in the db
+def create_value_change(story_id, beat_id, value_id, magnitude, label, description, notes):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("INSERT INTO value_change(story_id, beat_id, value_id, magnitude, label, description, notes) VALUES (:story_id, :beat_id, :value_id, :magnitude, :label, :description, :notes)",
+        {
+            'story_id': story_id,
+            'beat_id': beat_id,
+            'value_id': value_id,
+            'magnitude': magnitude,
+            'label': label,
+            'description': description,
+            'notes': notes
+        })
+
+    connect.commit()
+    value_change_id = cursor.lastrowid
+    connect.close()
+    return value_change_id
+
+
 def create_character_value(character_id, value_id, aligned):
     connect = sqlite3.connect('data/stories.db')
     cursor = connect.cursor()

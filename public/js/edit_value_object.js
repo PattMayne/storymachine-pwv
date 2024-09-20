@@ -237,6 +237,45 @@ const editCharacter = () => pywebview.api.get_character_by_id(valueObjectId).the
     })
 })
 
+// Create value change object from beat_id and user-selected value object.
+const createValueChange = () => {
+
+    // TODO: VALIDATE user input.
+
+    // Gather data from user input and URL parameters
+    const urlParams = new URLSearchParams(window.location.search)
+
+    let valueChangeId = 0
+    const storyId = urlParams.get('story_id') || 0
+    const beatId = urlParams.get('beat_id') || 0
+    const valueId = document.getElementById("valueToChange").value
+    const magnitude = document.getElementById("valueChangeMag").value
+    const label = document.getElementById("valueChangeLabel").value
+    const description = document.getElementById("valueChangeDescription").value
+    const notes = document.getElementById("valueChangeNotes").value
+
+    // dev test to see data
+    const logLine = "Creating VC for value #" + valueId + " and beat #"
+        + beatId + " and notes: " + notes + " and label: " + label
+        + " and description: " + description + " and magnitude: " + magnitude
+
+    console.log(logLine)
+
+    // Send the data to python API to create value change object
+    pywebview.api.create_value_change(
+        storyId, beatId, valueId, magnitude,
+        label, description, notes
+    ).then(incomingValueChangeId => {
+
+        //create_value_change(self, story_id, beat_id, value_id, magnitude, label, description, notes)
+        valueChangeId = incomingValueChangeId
+        console.log("Value Change ID: " + incomingValueChangeId)
+    })
+
+    // change aspect to edit. Change button onclick to update.
+
+}
+
 // load location for editing
 const editLocation = () => pywebview.api.get_location_by_id(valueObjectId).then(location => {
     location_cell.style.display = ''
@@ -444,3 +483,4 @@ window.invertAlignment = invertAlignment
 window.addValueRelation = addValueRelation
 window.newValueChange = newValueChange
 window.editValueChange = editValueChange
+window.createValueChange = createValueChange
