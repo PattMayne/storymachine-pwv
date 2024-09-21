@@ -8,6 +8,22 @@
     src: url(../fonts/alte-haas-grotesk.bold.ttf);
 }
 
+
+@font-face {
+    font-family: vollkorn;
+    src: url(../fonts/Vollkorn-Regular.ttf);
+}
+
+@font-face {
+    font-family: vollkorn-bold;
+    src: url(../fonts/Vollkorn-Semibold.ttf);
+}
+
+@font-face {
+    font-family: vollkorn-italic;
+    src: url(../fonts/Vollkorn-Italic.ttf);
+}
+
 h1,
 h2,
 h3,
@@ -20,20 +36,29 @@ h6 {
 
 p,
 a {
-    font-family: alte;
+    font-family: vollkorn;
+}
+
+a:focus {
+    background-color: #000;
+    color: #fa8334;
 }
 
 body {
-    font-family: alte;
+    font-family: vollkorn;
     background-color: #241f31;
     color: #a67d7d;
+    font-size: 20px;
 }
 
 input,
 textarea,
 select {
     border: 1px solid #111111 !important;
+    font-family: vollkorn;
 }
+
+
 
 
 /*  FOUNDATION OVERRIDES   */
@@ -42,16 +67,21 @@ select {
     font-family: alte-bold;
     background-color: #000;
     color: #fff;
+    -webkit-transition: background-color 0.05s ease-out, color 0.05s ease-out;
+    transition: background-color 0.05s ease-out, color 0.05s ease-out;
 }
 
-.button:hover {
+.button:hover,
+.button:focus,
+.button.small:hover,
+.button.small:focus {
     color: #fa8334;
     background-color: #000;
 }
 
 
 .callout {
-    background-color: #b1a1a1;
+    background-color: #c9cac0;
     border: 1px solid black;
 
     alink,
@@ -65,6 +95,11 @@ select {
     border: 1px solid black;
 }
 
+.callout.primary {
+    background-color: #e4ae39;
+    color: #222222;
+    border: 1px solid black;
+}
 
 /* general style addon classes */
 
@@ -122,6 +157,8 @@ select {
     border: 1px solid #111;
     border-radius: 7px;
     padding: 4px 7px 7px 7px;
+    font-family: alte;
+    font-size: 18px;
 }
 
 .editbutton:hover {
@@ -161,7 +198,8 @@ select {
     font-weight: bold;
 }
 
-.storyTitle:hover {
+.storyTitle:hover,
+.storyTitle:focus {
     color: #ae0000;
 }
 
@@ -230,6 +268,7 @@ select {
     margin: auto;
     text-align: center;
     margin-top: 3px;
+    font-family: alte;
 }
 
 .newElementButton:hover {
@@ -281,6 +320,10 @@ select {
     color: #ae0000;
 }
 
+.componentCardNav {
+    font-size: 16px;
+}
+
 .cardBottomMenu {
     border-top: 2px solid black;
     width: 100%;
@@ -303,6 +346,7 @@ select {
     margin-right: auto;
     margin-top: 3px;
     color: #111;
+    font-family: alte;
 }
 
 .switchButtonRight {
@@ -315,6 +359,7 @@ select {
     border-radius: 5px;
     margin-top: 3px;
     color: #111;
+    font-family: alte;
 }
 
 .deleteButtonMiddle {
@@ -325,16 +370,17 @@ select {
     margin: auto;
     text-align: center;
     margin-top: 3px;
+    font-family: alte;
 }
 
 .switchButtonRight:hover {
-    background-color: blue;
-    color: #fa8334;
+    background-color: rgb(247, 247, 255);
+    color: #111;
 }
 
 .newComponentButtonLeft:hover {
-    background-color: #023436;
-    color: #fa8334;
+    background-color: rgb(247, 247, 255);
+    color: #111;
 }
 
 .deleteButtonMiddle:hover {
@@ -390,10 +436,13 @@ select {
     border-radius: 7px;
     padding: 7px 10px;
     margin-top: 0px;
+    font-family: alte;
+    font-size: 16px;
 }
 
 .cardTitleLink:hover {
     cursor: pointer;
+    color: #e1e364
 }
 
 .componentLabel {

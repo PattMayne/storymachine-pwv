@@ -9,7 +9,7 @@ Software for writing story outlines. This is specifically about visualizing valu
 * Show all changes on "edit value" screen
 * Show all changes below BEAT
 * Magnitude has limits
-* 
+* When new story unit is created, give it a number (ie. Act 2)
 
 * GRAPH SCREEN:
 * Create new page
@@ -17,4 +17,9 @@ Software for writing story outlines. This is specifically about visualizing valu
 * load level
 * display graphs
 * Change levels
-* Create new objects (beats, values, value changes, etc)
+* Create new objects (beats, values, value changes, etc) on the screen.
+
+* Load python data more smoothly on cards page
+* Load python data more smoothly on edit page
+* Load python data more smoothly on graph page
+

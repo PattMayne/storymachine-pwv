@@ -41,7 +41,7 @@ const elements = {
         const deleteButtonMiddle = document.createElement("a")
         const switchButtonRight = document.createElement("a")
 
-        newComponentButtonLeft.setAttribute("class", "newComponentButtonLeft")
+        newComponentButtonLeft.setAttribute("class", "newComponentButtonLeft componentCardNav")
         newComponentButtonLeft.innerHTML = "<< new " + level
         newComponentButtonLeft.setAttribute("onclick", "newComponentLeft('" + level + "', " + storyComponent.order + ")")
         // For accessibility, make it tabbable and make "Enter" key function as click.
@@ -53,7 +53,7 @@ const elements = {
             }
         })
 
-        deleteButtonMiddle.setAttribute("class", "deleteButtonMiddle")
+        deleteButtonMiddle.setAttribute("class", "deleteButtonMiddle componentCardNav")
         deleteButtonMiddle.setAttribute("onclick", "deleteComponentRequest('" + level + "', " + storyComponent.id + ")")
         deleteButtonMiddle.innerHTML = "[delete]"
 
@@ -66,7 +66,7 @@ const elements = {
             }
         })
 
-        switchButtonRight.setAttribute("class", "switchButtonRight")
+        switchButtonRight.setAttribute("class", "switchButtonRight componentCardNav")
         switchButtonRight.setAttribute("id", "switchButtonRight_" + level + "_order-" + storyComponent.order)
         switchButtonRight.innerHTML = "move >>"
         switchButtonRight.setAttribute("onclick", "shiftComponentRight('" + level + "', " + storyComponent.id + ")")
@@ -108,9 +108,17 @@ const elements = {
         const newComponentFunctionName = "newComponent('" + level + "')"
         gridCell.setAttribute("class", "large-3 medium-4 small-6 cell")
         callout.setAttribute("class", "callout")
+
         cardLabel.innerText = "Create new " + level
-        cardLabel.setAttribute("onclick", newComponentFunctionName)
+        cardLabel.setAttribute("tabindex", 0)
         cardLabel.setAttribute("class", "newElementButton")
+        cardLabel.setAttribute("onclick", newComponentFunctionName)
+        cardLabel.addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                cardLabel.click();
+            }
+        })
 
         gridCell.appendChild(callout)
         callout.appendChild(cardLabel)
