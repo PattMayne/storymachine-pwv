@@ -1089,14 +1089,14 @@ def get_value_changes_by_beat_id(beat_id):
     value_changes = []
 
     for record in records:
-        value_change.append({
-            'id': records[0],
-            'label': records[2],
-            'description': records[3],
-            'beat_id': records[4],
-            'value_id': records[5],
-            'magnitutde': records[6],
-            'notes': records[7]
+        value_changes.append({
+            'id': record[0],
+            'label': record[2],
+            'description': record[3],
+            'beat_id': record[4],
+            'value_id': record[5],
+            'magnitutde': record[6],
+            'notes': record[7]
         })
     connect.close()
     return value_changes

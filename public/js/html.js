@@ -99,7 +99,18 @@ const elements = {
         return gridCell
     },
 
-    newComponentButton: (level) => {
+    valueChangeCard: valueChange => {
+        const gridCell = document.createElement("div")
+        const callout = document.createElement("div")
+        gridCell.setAttribute("class", "large-3 medium-4 small-6 cell")
+        callout.setAttribute("class", "callout")
+        callout.innerText = valueChange["label"]
+        // make a link to edit the valueChange
+        gridCell.appendChild(callout)
+        return gridCell
+    },
+
+    newComponentButton: level => {
         // create the HTML elements
         const gridCell = document.createElement("div")
         const callout = document.createElement("div")

@@ -1,3 +1,5 @@
+/* sans-serif */
+
 @font-face {
     font-family: alte;
     src: url(../fonts/alte-haas-grotesk.regular.ttf);
@@ -9,20 +11,29 @@
 }
 
 
+/* serif */
+
 @font-face {
-    font-family: vollkorn;
-    src: url(../fonts/Vollkorn-Regular.ttf);
+    font-family: texgyreschola;
+    src: url(../fonts/texgyreschola-regular.otf);
 }
 
 @font-face {
-    font-family: vollkorn-bold;
-    src: url(../fonts/Vollkorn-Semibold.ttf);
+    font-family: texgyreschola-italic;
+    src: url(../fonts/texgyreschola-italic.otf);
 }
 
 @font-face {
-    font-family: vollkorn-italic;
-    src: url(../fonts/Vollkorn-Italic.ttf);
+    font-family: texgyreschola-bold;
+    src: url(../fonts/texgyreschola-bold.otf);
 }
+
+@font-face {
+    font-family: texgyreschola-bolditalic;
+    src: url(../fonts/texgyreschola-bolditalic.otf);
+}
+
+
 
 h1,
 h2,
@@ -36,7 +47,7 @@ h6 {
 
 p,
 a {
-    font-family: vollkorn;
+    font-family: texgyreschola;
 }
 
 a:focus {
@@ -45,7 +56,7 @@ a:focus {
 }
 
 body {
-    font-family: vollkorn;
+    font-family: texgyreschola;
     background-color: #241f31;
     color: #a67d7d;
     font-size: 20px;
@@ -55,10 +66,12 @@ input,
 textarea,
 select {
     border: 1px solid #111111 !important;
-    font-family: vollkorn;
+    font-family: texgyreschola;
 }
 
-
+.bold {
+    font-family: texgyreschola-bold;
+}
 
 
 /*  FOUNDATION OVERRIDES   */
