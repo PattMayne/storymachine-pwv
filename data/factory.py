@@ -841,8 +841,8 @@ def update_value_change(value_id, value_change_id, label, description, notes, ma
             'description': description,
             'notes': notes,
             'value_id': value_id,
-            'value_change_id': value_change_id,
-            'magnitude': magnitude
+            'magnitude': magnitude,
+            'id': value_change_id
         })
 
     connect.commit()

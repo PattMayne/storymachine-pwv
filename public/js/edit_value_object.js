@@ -34,6 +34,9 @@ var valueDescription, valueLabel, valueNotes
 var charFirstName, charLastName, charDescription, charNotes
 var locationName, locationDescription, locationNotes
 var valueChangeDescription, valueChangeLabel, valueChangeNotes, valueChangeMag
+var submitCharacterBtn, submitValueChangeBtn, submitLocationBtn
+
+const setValueChangeButtonText = () => submitValueChangeBtn.value = aspect == aspects.EDIT ? "Update" : "Create"
 
 const setAspect = () => {
     loadDOM()
@@ -78,6 +81,11 @@ const setAspect = () => {
     location_cell = document.getElementById("location_cell")
     char_relations_cell = document.getElementById("char_relations_cell")
 
+    submitCharacterBtn = document.getElementById("submitCharacterBtn")
+    submitValueChangeBtn = document.getElementById("submitValueChangeBtn")
+    submitLocationBtn = document.getElementById("submitLocationBtn")
+
+
     hideAllCells()
 
     setTimeout(() => {
@@ -120,6 +128,7 @@ const newLocation = () => {
     location_cell.style.display = ''
 }
 
+// Load "new value change" controls
 const newValueChange = () => {
     // We need ALL the values to choose which one to change
     pywebview.api.get_values().then(values => {
@@ -135,22 +144,64 @@ const newValueChange = () => {
         })
 
         // do this last, when everything is loaded
+        setValueChangeButtonText()
         value_change_cell.style.display = ''
     })
 }
 
+
 // load value for editing
-
 const editValueChange = () => pywebview.api.get_value_change_by_id(valueObjectId).then(valueChange => {
-
-    value_change_cell.style.display = ''
 
     valueChangeDescription.value = valueChange["description"]
     valueChangeLabel.value = valueChange["label"]
     valueChangeNotes.value = valueChange["notes"]
     valueChangeMag.value = parseInt(valueChange["magnitude"])
+
+    // reset value list for post-creation edit
+    let selectBox = document.getElementById("valueToChange")
+
+    if (!selectBox.hasChildNodes() || true) {
+        // We need ALL the values to choose which one to change
+        pywebview.api.get_values().then(values => {
+
+            // add each value to the select box
+            values.map(value => {
+                let newOption = document.createElement("option")
+                newOption.value = value["id"]
+                newOption.innerText = value["label"]
+                selectBox.appendChild(newOption)
+                // TO DO: Check to see if this beat already changed this value
+            })
+
+            value_change_cell.style.display = ''
+
+            selectBox.value = valueChange["value_id"]
+
+        })
+    }
+
+    setValueChangeButtonText()
+
     console.log("Mag: " + valueChange["magnitude"])
 })
+
+const updateValueChange = () => {
+    console.log("updating value change")
+
+    // now call the python script and actually update
+    // get the values from the page, just like in createValueChange
+
+    // Gather data from user input and URL parameters
+    const urlParams = new URLSearchParams(window.location.search)
+
+    let valueChangeId = valueObjectId
+    const valueId = document.getElementById("valueToChange").value
+    const magnitude = valueChangeMag.value
+    const label = valueChangeLabel.value
+    const description = valueChangeDescription.value
+    const notes = valueChangeNotes.value
+}
 
 
 const editValue = () => pywebview.api.get_value_by_id(valueObjectId).then(value => {
@@ -251,6 +302,14 @@ const editCharacter = () => pywebview.api.get_character_by_id(valueObjectId).the
     })
 })
 
+const submitValueChange = () => {
+    if (aspect == aspects.EDIT) {
+        updateValueChange()
+    } else if (aspect == aspects.NEW) {
+        createValueChange()
+    }
+}
+
 // Create value change object from beat_id and user-selected value object.
 const createValueChange = () => {
 
@@ -282,12 +341,13 @@ const createValueChange = () => {
     ).then(incomingValueChangeId => {
 
         //create_value_change(self, story_id, beat_id, value_id, magnitude, label, description, notes)
+        valueObjectId = incomingValueChangeId
         valueChangeId = incomingValueChangeId
         console.log("Value Change ID: " + incomingValueChangeId)
+
+        aspect = aspects.EDIT
+        setValueChangeButtonText()
     })
-
-    // change aspect to edit. Change button onclick to update.
-
 }
 
 // load location for editing
@@ -367,6 +427,8 @@ const createValueObject = () => {
             // give popup notice of success (or failure)
             // change the text of the button to "update"
         })
+    } else if (valueObjectType == valueObjects.VALUE_CHANGE) {
+        createValueChange()
     }
 
 }
@@ -417,8 +479,34 @@ const updateValueObject = () => {
             // Do something with the success
             // give popup notice of success (or failure)
         })
+    } else if (valueObjectType == valueObjects.VALUE_CHANGE) {
+        console.log("updating value change")
+
+        // now call the python script and actually update
+        // get the values from the page, just like in createValueChange
+
+
+        let valueChangeId = valueObjectId
+        const valueId = document.getElementById("valueToChange").value
+        const magnitude = valueChangeMag.value
+        const label = valueChangeLabel.value
+        const description = valueChangeDescription.value
+        const notes = valueChangeNotes.value
+
+
+        pywebview.api.update_value_change(valueId, valueObjectId, label, description, notes, magnitude).then(success => {
+            if (success) {
+                console.log("SAVED")
+            } else {
+                console.log("NOT SAVED")
+            }
+            // Do something with the success
+            // give popup notice of success (or failure)
+        })
     }
 }
+
+
 
 // add a character_value to the database
 const addCharacterRelation = () => {
@@ -498,3 +586,4 @@ window.addValueRelation = addValueRelation
 window.newValueChange = newValueChange
 window.editValueChange = editValueChange
 window.createValueChange = createValueChange
+window.submitValueChange = submitValueChange

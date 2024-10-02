@@ -168,8 +168,11 @@ class Api():
         return factory.update_beat(id, label, description)
     
     def update_value(self, id, label, description, notes):
-        print("UPDATING A VALUE NOW")
         return factory.update_value(id, label, description, notes)
+
+    def update_value_change(self, value_id, value_change_id, label, description, notes, magnitude):
+        print("UPDATING A VALUE CHANGE NOW")
+        return factory.update_value_change(value_id, value_change_id, label, description, notes, magnitude)
 
     def update_character(self, id, first_name, last_name, description, notes):
         return factory.update_character(id, first_name, last_name, description, notes)
