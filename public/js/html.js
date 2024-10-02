@@ -103,13 +103,20 @@ const elements = {
         return gridCell
     },
 
-    valueChangeCard: valueChange => {
+    valueChangeCard: (valueChange, storyId) => {
         const gridCell = document.createElement("div")
         const callout = document.createElement("div")
+        const link = document.createElement("a")
         gridCell.setAttribute("class", "large-3 medium-4 small-6 cell")
         callout.setAttribute("class", "callout")
-        callout.innerText = valueChange["label"]
-        // make a link to edit the valueChange
+        link.setAttribute(
+            "href",
+            "edit_value_object.html?edit=true&value_object_type=value_change&value_object_id=" +
+            valueChange["id"] +
+            "&story_id=" +
+            storyId)
+        link.innerText = valueChange["label"]
+        callout.appendChild(link)
         gridCell.appendChild(callout)
         return gridCell
     },

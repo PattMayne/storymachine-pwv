@@ -33,6 +33,7 @@ var value_cell, value_change_cell, character_cell, location_cell, char_relations
 var valueDescription, valueLabel, valueNotes
 var charFirstName, charLastName, charDescription, charNotes
 var locationName, locationDescription, locationNotes
+var valueChangeDescription, valueChangeLabel, valueChangeNotes, valueChangeMag
 
 const setAspect = () => {
     loadDOM()
@@ -59,8 +60,12 @@ const setAspect = () => {
 
     valueDescription = document.getElementById("valueDescription")
     valueLabel = document.getElementById("valueLabel")
-    charDescription = document.getElementById("charDescription")
     valueNotes = document.getElementById("valueNotes")
+
+    valueChangeDescription = document.getElementById("valueChangeDescription")
+    valueChangeLabel = document.getElementById("valueChangeLabel")
+    valueChangeNotes = document.getElementById("valueChangeNotes")
+    valueChangeMag = document.getElementById("valueChangeMag")
 
     charFirstName = document.getElementById("charFirstName")
     charLastName = document.getElementById("charLastName")
@@ -100,7 +105,7 @@ const setAspect = () => {
 
         }
         hideLoading()
-    }, 300)
+    }, 400)
 }
 
 const newValue = () => {
@@ -136,7 +141,16 @@ const newValueChange = () => {
 
 // load value for editing
 
-const editValueChange = () => value_change_cell.style.display = ''
+const editValueChange = () => pywebview.api.get_value_change_by_id(valueObjectId).then(valueChange => {
+
+    value_change_cell.style.display = ''
+
+    valueChangeDescription.value = valueChange["description"]
+    valueChangeLabel.value = valueChange["label"]
+    valueChangeNotes.value = valueChange["notes"]
+    valueChangeMag.value = parseInt(valueChange["magnitude"])
+    console.log("Mag: " + valueChange["magnitude"])
+})
 
 
 const editValue = () => pywebview.api.get_value_by_id(valueObjectId).then(value => {
@@ -249,10 +263,10 @@ const createValueChange = () => {
     const storyId = urlParams.get('story_id') || 0
     const beatId = urlParams.get('beat_id') || 0
     const valueId = document.getElementById("valueToChange").value
-    const magnitude = document.getElementById("valueChangeMag").value
-    const label = document.getElementById("valueChangeLabel").value
-    const description = document.getElementById("valueChangeDescription").value
-    const notes = document.getElementById("valueChangeNotes").value
+    const magnitude = valueChangeMag.value
+    const label = valueChangeLabel.value
+    const description = valueChangeDescription.value
+    const notes = valueChangeNotes.value
 
     // dev test to see data
     const logLine = "Creating VC for value #" + valueId + " and beat #"

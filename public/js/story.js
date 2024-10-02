@@ -309,7 +309,7 @@ const loadBeat = beatId => {
             const callout = document.createElement("div")
             callout.setAttribute("class", "callout")
             callout.innerText = valueChange["label"]
-            cardsContainer.appendChild(html.elements.valueChangeCard(valueChange))
+            cardsContainer.appendChild(html.elements.valueChangeCard(valueChange, story.id))
         })
         cardsContainer.appendChild(html.elements.newValueChangeButton(beatId))
     })

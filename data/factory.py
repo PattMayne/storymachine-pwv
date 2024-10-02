@@ -1095,7 +1095,7 @@ def get_value_changes_by_beat_id(beat_id):
             'description': record[3],
             'beat_id': record[4],
             'value_id': record[5],
-            'magnitutde': record[6],
+            'magnitude': record[6],
             'notes': record[7]
         })
     connect.close()
@@ -1115,7 +1115,7 @@ def get_value_change_by_id(id):
         'description': records[0][3],
         'beat_id': records[0][4],
         'value_id': records[0][5],
-        'magnitutde': records[0][6],
+        'magnitude': records[0][6],
         'notes': records[0][7]
     }
     connect.close()
