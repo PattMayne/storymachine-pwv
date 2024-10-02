@@ -182,26 +182,7 @@ const editValueChange = () => pywebview.api.get_value_change_by_id(valueObjectId
     }
 
     setValueChangeButtonText()
-
-    console.log("Mag: " + valueChange["magnitude"])
 })
-
-const updateValueChange = () => {
-    console.log("updating value change")
-
-    // now call the python script and actually update
-    // get the values from the page, just like in createValueChange
-
-    // Gather data from user input and URL parameters
-    const urlParams = new URLSearchParams(window.location.search)
-
-    let valueChangeId = valueObjectId
-    const valueId = document.getElementById("valueToChange").value
-    const magnitude = valueChangeMag.value
-    const label = valueChangeLabel.value
-    const description = valueChangeDescription.value
-    const notes = valueChangeNotes.value
-}
 
 
 const editValue = () => pywebview.api.get_value_by_id(valueObjectId).then(value => {
@@ -302,53 +283,6 @@ const editCharacter = () => pywebview.api.get_character_by_id(valueObjectId).the
     })
 })
 
-const submitValueChange = () => {
-    if (aspect == aspects.EDIT) {
-        updateValueChange()
-    } else if (aspect == aspects.NEW) {
-        createValueChange()
-    }
-}
-
-// Create value change object from beat_id and user-selected value object.
-const createValueChange = () => {
-
-    // TODO: VALIDATE user input.
-
-    // Gather data from user input and URL parameters
-    const urlParams = new URLSearchParams(window.location.search)
-
-    let valueChangeId = 0
-    const storyId = urlParams.get('story_id') || 0
-    const beatId = urlParams.get('beat_id') || 0
-    const valueId = document.getElementById("valueToChange").value
-    const magnitude = valueChangeMag.value
-    const label = valueChangeLabel.value
-    const description = valueChangeDescription.value
-    const notes = valueChangeNotes.value
-
-    // dev test to see data
-    const logLine = "Creating VC for value #" + valueId + " and beat #"
-        + beatId + " and notes: " + notes + " and label: " + label
-        + " and description: " + description + " and magnitude: " + magnitude
-
-    console.log(logLine)
-
-    // Send the data to python API to create value change object
-    pywebview.api.create_value_change(
-        storyId, beatId, valueId, magnitude,
-        label, description, notes
-    ).then(incomingValueChangeId => {
-
-        //create_value_change(self, story_id, beat_id, value_id, magnitude, label, description, notes)
-        valueObjectId = incomingValueChangeId
-        valueChangeId = incomingValueChangeId
-        console.log("Value Change ID: " + incomingValueChangeId)
-
-        aspect = aspects.EDIT
-        setValueChangeButtonText()
-    })
-}
 
 // load location for editing
 const editLocation = () => pywebview.api.get_location_by_id(valueObjectId).then(location => {
@@ -428,7 +362,39 @@ const createValueObject = () => {
             // change the text of the button to "update"
         })
     } else if (valueObjectType == valueObjects.VALUE_CHANGE) {
-        createValueChange()
+        // Gather data from user input and URL parameters
+        const urlParams = new URLSearchParams(window.location.search)
+
+        let valueChangeId = 0
+        const storyId = urlParams.get('story_id') || 0
+        const beatId = urlParams.get('beat_id') || 0
+        const valueId = document.getElementById("valueToChange").value
+        const magnitude = valueChangeMag.value
+        const label = valueChangeLabel.value
+        const description = valueChangeDescription.value
+        const notes = valueChangeNotes.value
+
+        // dev test to see data
+        const logLine = "Creating VC for value #" + valueId + " and beat #"
+            + beatId + " and notes: " + notes + " and label: " + label
+            + " and description: " + description + " and magnitude: " + magnitude
+
+        console.log(logLine)
+
+        // Send the data to python API to create value change object
+        pywebview.api.create_value_change(
+            storyId, beatId, valueId, magnitude,
+            label, description, notes
+        ).then(incomingValueChangeId => {
+
+            //create_value_change(self, story_id, beat_id, value_id, magnitude, label, description, notes)
+            valueObjectId = incomingValueChangeId
+            valueChangeId = incomingValueChangeId
+            console.log("Value Change ID: " + incomingValueChangeId)
+
+            aspect = aspects.EDIT
+            setValueChangeButtonText()
+        })
     }
 
 }
@@ -585,5 +551,3 @@ window.invertAlignment = invertAlignment
 window.addValueRelation = addValueRelation
 window.newValueChange = newValueChange
 window.editValueChange = editValueChange
-window.createValueChange = createValueChange
-window.submitValueChange = submitValueChange
