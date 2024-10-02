@@ -832,6 +832,24 @@ def update_value(value_id, label, description, notes):
     return True
 
 
+def update_value_change(value_id, value_change_id, label, description, notes, magnitude):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("UPDATE value_change SET label=:label, description=:description, notes=:notes, magnitude=:magnitude, value_id=:value_id WHERE id=:id",
+        {
+            'label': label,
+            'description': description,
+            'notes': notes,
+            'value_id': value_id,
+            'value_change_id': value_change_id,
+            'magnitude': magnitude
+        })
+
+    connect.commit()
+    connect.close()
+    return True
+
+
 def update_character(char_id, first_name, last_name, description, notes):
     connect = sqlite3.connect('data/stories.db')
     cursor = connect.cursor()
