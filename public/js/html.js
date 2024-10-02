@@ -1,6 +1,17 @@
 import * as helpers from 'helpers'
 import * as consts from 'consts'
 
+// Construct & return name of function to load component
+const loadFunctionName = (level, componentId) => {
+
+    const firstPart = level == levels.ACT ? "loadAct(" :
+        level == levels.CHAPTER ? "loadChapter(" :
+            level == levels.SCENE ? "loadScene(" :
+                level == levels.BEAT ? "loadBeat(" : ""
+
+    return firstPart + String(componentId) + ")"
+}
+
 const elements = {
     // STORY.HTML
 
@@ -20,17 +31,10 @@ const elements = {
         const cardLabelContainer = document.createElement("div")
         const orderPar = document.createElement("h5")
 
-
-        // Get name of loading function (card has link to its story component)
-        const loadFunctionName = level == levels.ACT ? "loadAct(" :
-            level == levels.CHAPTER ? "loadChapter(" :
-                level == levels.SCENE ? "loadScene(" :
-                    level == levels.BEAT ? "loadBeat(" : ""
-
         gridCell.setAttribute("class", "large-3 medium-4 small-6 cell")
         callout.setAttribute("class", "callout")
         cardLabel.setAttribute("class", "cardLabel")
-        cardLabel.setAttribute("onclick", loadFunctionName + storyComponent.id + ")")
+        cardLabel.setAttribute("onclick", loadFunctionName(level, storyComponent.id))
 
         cardLabelContainer.setAttribute("class", "cardLabelContainer")
         cardLabelContainer.appendChild(cardLabel)
