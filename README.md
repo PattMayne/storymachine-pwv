@@ -6,6 +6,7 @@ Software for writing story outlines. This is specifically about visualizing valu
 **TO DO:**
 
 * CARDS SCREENS:
+* send in latest URL to edit value object screen, for return.
 * Show all changes on "edit value" screen
 * Magnitude has limits
 * When new story unit is created, give it a number (ie. Act 2)
