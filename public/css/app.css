@@ -14,24 +14,15 @@
 /* serif */
 
 @font-face {
-    font-family: texgyreschola;
-    src: url(../fonts/texgyreschola-regular.otf);
+    font-family: roboto-slab-bold;
+    src: url(../fonts/RobotoSlab-Bold.ttf);
 }
 
 @font-face {
-    font-family: texgyreschola-italic;
-    src: url(../fonts/texgyreschola-italic.otf);
+    font-family: roboto-slab;
+    src: url(../fonts/RobotoSlab-Regular.ttf);
 }
 
-@font-face {
-    font-family: texgyreschola-bold;
-    src: url(../fonts/texgyreschola-bold.otf);
-}
-
-@font-face {
-    font-family: texgyreschola-bolditalic;
-    src: url(../fonts/texgyreschola-bolditalic.otf);
-}
 
 
 
@@ -47,7 +38,7 @@ h6 {
 
 p,
 a {
-    font-family: texgyreschola;
+    font-family: roboto-slab;
 }
 
 a:focus {
@@ -56,8 +47,8 @@ a:focus {
 }
 
 body {
-    font-family: texgyreschola;
-    background-color: #241f31;
+    font-family: roboto-slab;
+    background-color: #252525;
     color: #a67d7d;
     font-size: 20px;
 }
@@ -66,11 +57,12 @@ input,
 textarea,
 select {
     border: 1px solid #111111 !important;
-    font-family: texgyreschola;
+    font-family: roboto-slab;
 }
 
 .bold {
-    font-family: texgyreschola-bold;
+    font-family: roboto-slab;
+    font-style: oblique;
 }
 
 
@@ -78,10 +70,15 @@ select {
 
 .button {
     font-family: alte-bold;
-    background-color: #000;
+    background-color: #111;
     color: #fff;
     -webkit-transition: background-color 0.05s ease-out, color 0.05s ease-out;
     transition: background-color 0.05s ease-out, color 0.05s ease-out;
+}
+
+.white_button {
+    background-color: #ebebeb;
+    color: #111;
 }
 
 .button:hover,
@@ -104,13 +101,13 @@ select {
 }
 
 .primary {
-    background-color: #ffffff;
+    background-color: #fff;
     border: 1px solid black;
 }
 
 .callout.primary {
     background-color: #e4ae39;
-    color: #222222;
+    color: #222;
     border: 1px solid black;
 }
 
@@ -417,8 +414,12 @@ select {
 }
 
 .deleteButtonMiddle:hover {
-    background-color: red;
-    color: black;
+    background-color: rgb(196, 0, 0);
+    color: white;
+}
+
+.align_right {
+    text-align: right;
 }
 
 #loadingOverlay {

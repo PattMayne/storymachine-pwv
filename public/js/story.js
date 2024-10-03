@@ -313,8 +313,6 @@ const loadBeat = beatId => {
         })
         cardsContainer.appendChild(html.elements.newValueChangeButton(beatId))
     })
-
-    //cardsContainer.innerHTML = "SHOW VALUE CHANGE CARDS HERE"
 }
 
 // build a link to the "edit_component.html" page

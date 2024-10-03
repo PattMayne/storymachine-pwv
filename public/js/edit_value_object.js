@@ -11,11 +11,16 @@ const aspects = {
     NEW: 'new'
 }
 
+const RELOAD = "reload"
+
+var postNotifyURL = ""
+
 var level = null
 
 var labelElement
 var descriptionElement
 var pageTitleElement
+
 
 var valueObjectType = null
 var valueObjectId = null
@@ -180,9 +185,7 @@ const editValueChange = () => pywebview.api.get_value_change_by_id(valueObjectId
             })
 
             value_change_cell.style.display = ''
-
             selectBox.value = valueChange["value_id"]
-
         })
     }
 
@@ -243,13 +246,17 @@ const editValue = () => pywebview.api.get_value_by_id(valueObjectId).then(value 
 // load character for editing
 const editCharacter = () => pywebview.api.get_character_by_id(valueObjectId).then(character => {
     character_cell.style.display = ''
-    console.log(character)
 
     charDescription.value = character["description"]
     charFirstName.value = character["first_name"]
     charLastName.value = character["last_name"]
     charNotes.value = character["notes"]
 
+    openValueRelationsCell(character)
+
+})
+
+const openValueRelationsCell = character => {
     // We need ALL the values for the "character relationships" panel.
     pywebview.api.get_values().then(values => {
         value_relations_cell.style.display = ''
@@ -286,14 +293,12 @@ const editCharacter = () => pywebview.api.get_character_by_id(valueObjectId).the
             relatedValuesBox.appendChild(html.elements.characterValueItemValue(value))
         })
     })
-})
+}
 
 
 // load location for editing
 const editLocation = () => pywebview.api.get_location_by_id(valueObjectId).then(location => {
     location_cell.style.display = ''
-    console.log(location)
-
     locationDescription.value = location["description"]
     locationName.value = location["name"]
     locationNotes.value = location["notes"]
@@ -323,9 +328,10 @@ const createValueObject = () => {
                 // Change the aspect to EDIT, set the ID
                 valueObjectId = newValueId
                 changeAspect(aspects.EDIT)
-                location.href = "edit_value_object.html?value_object_type=" + valueObjectType
+                postNotifyURL = "edit_value_object.html?value_object_type=" + valueObjectType
                     + "&value_object_id=" + newValueId
                     + "&edit=true" + "&story_id=" + storyId
+                openNotification("Value Created")
             } else {
                 // TODO: Give notice of failure
             }
@@ -341,13 +347,13 @@ const createValueObject = () => {
                 // Change the aspect to EDIT, set the ID
                 valueObjectId = newCharId
                 changeAspect(aspects.EDIT)
-
-                location.href = "edit_value_object.html?value_object_type=" + valueObjectType
+                postNotifyURL = "edit_value_object.html?value_object_type=" + valueObjectType
                     + "&value_object_id=" + newCharId
                     + "&edit=true" + "&story_id=" + storyId
 
+                openNotification("Character created")
             } else {
-                // TODO: report failure
+                openNotification("ERROR: Character NOT created")
             }
         })
     } else if (valueObjectType == valueObjects.LOCATION) {
@@ -395,6 +401,7 @@ const createValueObject = () => {
         })
     }
 }
+
 
 const changeAspect = newAspect => {
     // set the aspect
@@ -468,8 +475,8 @@ const addCharacterRelation = () => {
     // pywebview add character_value
     pywebview.api.create_character_value(characterIdToAdd, valueObjectId, aligned).then(success => {
         if (success) {
-            location.reload()
-            // show popup msg somehow
+            postNotifyURL = RELOAD
+            openNotification("Character Relation Added")
         } else {
             openNotification('ERROR: Relation NOT SAVED')
         }
@@ -483,8 +490,8 @@ const addValueRelation = () => {
     // pywebview add character_value
     pywebview.api.create_character_value(valueObjectId, valueIdToAdd, aligned).then(success => {
         if (success) {
-            location.reload()
-            // show popup msg somehow
+            postNotifyURL = RELOAD
+            openNotification("Value Relation Added")
         } else {
             openNotification('ERROR: Relation NOT SAVED')
         }
@@ -504,6 +511,14 @@ const openNotification = notificationText => {
 const closeNotification = () => {
     notificationWrapper.style.display = "none"
     notificationCallout.style.display = "none"
+
+    if (!!postNotifyURL) {
+        if (postNotifyURL === RELOAD) {
+            location.reload()
+        } else {
+            location.href = postNotifyURL
+        }
+    }
 }
 
 
