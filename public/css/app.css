@@ -320,7 +320,6 @@ select {
 /* popup notifications */
 
 .notificationWrapper {
-    display: none;
     z-index: 999;
     position: fixed;
     top: 0;
@@ -331,7 +330,6 @@ select {
 }
 
 .notificationCallout {
-    display: none;
     position: fixed;
     top: 50%;
     left: 50%;

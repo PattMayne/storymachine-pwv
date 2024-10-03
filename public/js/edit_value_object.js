@@ -45,7 +45,7 @@ const setAspect = () => {
 
     // discover the purpose of this visit
     const urlParams = new URLSearchParams(window.location.search)
-    aspect = !!urlParams.get('edit') ? aspects.EDIT : aspects.NEW
+    changeAspect(!!urlParams.get('edit') ? aspects.EDIT : aspects.NEW)
     storyId = urlParams.get('story_id') || 0
     actId = urlParams.get('act_id') || 0
 
@@ -322,11 +322,10 @@ const createValueObject = () => {
             if (!!newValueId) {
                 // Change the aspect to EDIT, set the ID
                 valueObjectId = newValueId
-                aspect = aspects.EDIT
+                changeAspect(aspects.EDIT)
                 location.href = "edit_value_object.html?value_object_type=" + valueObjectType
                     + "&value_object_id=" + newValueId
                     + "&edit=true" + "&story_id=" + storyId
-                // TODO: change text of button to "update"
             } else {
                 // TODO: Give notice of failure
             }
@@ -341,13 +340,12 @@ const createValueObject = () => {
             if (!!newCharId) {
                 // Change the aspect to EDIT, set the ID
                 valueObjectId = newCharId
-                aspect = aspects.EDIT
+                changeAspect(aspects.EDIT)
 
                 location.href = "edit_value_object.html?value_object_type=" + valueObjectType
                     + "&value_object_id=" + newCharId
                     + "&edit=true" + "&story_id=" + storyId
 
-                // TODO: change the text of the button to "update"
             } else {
                 // TODO: report failure
             }
@@ -359,12 +357,14 @@ const createValueObject = () => {
         const notes = locationNotes.value
 
         pywebview.api.create_location(storyId, name, description, notes).then(newLocationId => {
-            // Change the aspect to EDIT, set the ID
-            valueObjectId = newLocationId
-            aspect = aspects.EDIT
-
-            // give popup notice of success (or failure)
-            // change the text of the button to "update"
+            if (!!newLocationId && newLocationId > 0) {
+                // Change the aspect to EDIT, set the ID
+                valueObjectId = newLocationId
+                changeAspect(aspects.EDIT)
+                openNotification("Location created.")
+            } else {
+                openNotification("ERROR: Location NOT created.")
+            }
         })
     } else if (valueObjectType == valueObjects.VALUE_CHANGE) {
         // Gather data from user input and URL parameters
@@ -379,30 +379,34 @@ const createValueObject = () => {
         const description = valueChangeDescription.value
         const notes = valueChangeNotes.value
 
-        // dev test to see data
-        const logLine = "Creating VC for value #" + valueId + " and beat #"
-            + beatId + " and notes: " + notes + " and label: " + label
-            + " and description: " + description + " and magnitude: " + magnitude
-
-        console.log(logLine)
-
         // Send the data to python API to create value change object
         pywebview.api.create_value_change(
             storyId, beatId, valueId, magnitude,
             label, description, notes
         ).then(incomingValueChangeId => {
-
-            //create_value_change(self, story_id, beat_id, value_id, magnitude, label, description, notes)
-            valueObjectId = incomingValueChangeId
-            valueChangeId = incomingValueChangeId
-            console.log("Value Change ID: " + incomingValueChangeId)
-
-            aspect = aspects.EDIT
-            setValueChangeButtonText()
-            openNotification("Value Change " + incomingValueChangeId + " created.")
+            if (!!incomingValueChangeId && incomingValueChangeId > 0) {
+                valueObjectId = incomingValueChangeId
+                valueChangeId = incomingValueChangeId
+                openNotification("Value Change " + incomingValueChangeId + " created.")
+                changeAspect(aspects.EDIT)
+            } else {
+                openNotification("ERROR: Value Change NOT created.")
+            }
         })
     }
+}
 
+const changeAspect = newAspect => {
+    // set the aspect
+    aspect = newAspect === aspects.EDIT ?
+        aspects.EDIT : newAspect === aspects.NEW ?
+            aspects.NEW : aspect
+
+    // set button text for all submit buttons
+    const buttons = document.getElementsByClassName("submit")
+    for (let i = 0; i < buttons.length; i++) {
+        buttons[i].value = aspect == aspects.EDIT ? "Update" : aspect == aspects.NEW ? "Create" : "ERROR"
+    }
 }
 
 // find out which value object type we're using, and update that object.
@@ -413,13 +417,9 @@ const updateValueObject = () => {
         const notes = valueNotes.value
 
         pywebview.api.update_value(valueObjectId, label, description, notes).then(success => {
-            if (success) {
-                console.log("SAVED")
-            } else {
-                console.log("NOT SAVED")
-            }
-            // Do something with the success
-            // give popup notice of success (or failure)
+            changeAspect(aspects.EDIT)
+            const msg = !!success ? "Value updated." : "ERROR: Value NOT UPDATED."
+            openNotification(msg)
         })
     } else if (valueObjectType == valueObjects.CHARACTER) {
         const firstName = charFirstName.value
@@ -428,13 +428,9 @@ const updateValueObject = () => {
         const notes = charNotes.value
 
         pywebview.api.update_character(valueObjectId, firstName, lastName, description, notes).then(success => {
-            if (success) {
-                console.log("SAVED")
-            } else {
-                console.log("NOT SAVED")
-            }
-            // Do something with the success
-            // give popup notice of success (or failure)
+            changeAspect(aspects.EDIT)
+            const msg = !!success ? "Character updated." : "ERROR: Character NOT UPDATED."
+            openNotification(msg)
         })
     } else if (valueObjectType == valueObjects.LOCATION) {
         console.log("creating a location")
@@ -443,21 +439,11 @@ const updateValueObject = () => {
         const notes = locationNotes.value
 
         pywebview.api.update_location(valueObjectId, name, description, notes).then(success => {
-            if (success) {
-                console.log("SAVED")
-            } else {
-                console.log("NOT SAVED")
-            }
-            // Do something with the success
-            // give popup notice of success (or failure)
+            changeAspect(aspects.EDIT)
+            const msg = !!success ? "Location updated." : "ERROR: Location NOT UPDATED."
+            openNotification(msg)
         })
     } else if (valueObjectType == valueObjects.VALUE_CHANGE) {
-        console.log("updating value change")
-
-        // now call the python script and actually update
-        // get the values from the page, just like in createValueChange
-
-
         let valueChangeId = valueObjectId
         const valueId = document.getElementById("valueToChange").value
         const magnitude = valueChangeMag.value
@@ -465,17 +451,10 @@ const updateValueObject = () => {
         const description = valueChangeDescription.value
         const notes = valueChangeNotes.value
 
-
         pywebview.api.update_value_change(valueId, valueObjectId, label, description, notes, magnitude).then(success => {
-            if (success) {
-                console.log("SAVED")
-                openNotification("Value Change updated.")
-            } else {
-                console.log("NOT SAVED")
-                openNotification("Value Change NOT UPDATED.")
-            }
-            // Do something with the success
-            // give popup notice of success (or failure)
+            changeAspect(aspects.EDIT)
+            const msg = !!success ? "Value Change updated." : "ERROR: Value Change NOT UPDATED."
+            openNotification(msg)
         })
     }
 }
@@ -490,11 +469,10 @@ const addCharacterRelation = () => {
     pywebview.api.create_character_value(characterIdToAdd, valueObjectId, aligned).then(success => {
         if (success) {
             location.reload()
+            // show popup msg somehow
         } else {
-            console.log("RELATION NOT SAVED")
+            openNotification('ERROR: Relation NOT SAVED')
         }
-        // Do something with the success
-        // give popup notice of success (or failure)
     })
 }
 
@@ -506,20 +484,21 @@ const addValueRelation = () => {
     pywebview.api.create_character_value(valueObjectId, valueIdToAdd, aligned).then(success => {
         if (success) {
             location.reload()
+            // show popup msg somehow
         } else {
-            console.log("RELATION NOT SAVED")
+            openNotification('ERROR: Relation NOT SAVED')
         }
-        // Do something with the success
-        // give popup notice of success (or failure)
     })
 }
 
 // open(set)/close popup notificaiton
 
 const openNotification = notificationText => {
+    console.log("Opened notification?")
     notificationWrapper.style.display = ""
     notificationCallout.style.display = ""
     notificationParagraph.innerText = notificationText
+    console.log("Opened notification finished?")
 }
 
 const closeNotification = () => {
@@ -565,6 +544,8 @@ const hideAllCells = () => {
     location_cell.style.display = "none"
     char_relations_cell.style.display = "none"
     value_relations_cell.style.display = "none"
+    notificationWrapper.style.display = "none"
+    notificationCallout.style.display = "none"
 }
 
 window.addEventListener('load', () => setAspect())
