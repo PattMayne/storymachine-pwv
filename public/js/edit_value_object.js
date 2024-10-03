@@ -35,6 +35,7 @@ var charFirstName, charLastName, charDescription, charNotes
 var locationName, locationDescription, locationNotes
 var valueChangeDescription, valueChangeLabel, valueChangeNotes, valueChangeMag
 var submitCharacterBtn, submitValueChangeBtn, submitLocationBtn
+var notificationWrapper, notificationCallout, notificationParagraph
 
 const setValueChangeButtonText = () => submitValueChangeBtn.value = aspect == aspects.EDIT ? "Update" : "Create"
 
@@ -84,6 +85,10 @@ const setAspect = () => {
     submitCharacterBtn = document.getElementById("submitCharacterBtn")
     submitValueChangeBtn = document.getElementById("submitValueChangeBtn")
     submitLocationBtn = document.getElementById("submitLocationBtn")
+
+    notificationWrapper = document.getElementById("notif-wrap-1")
+    notificationCallout = document.getElementById("notif-call-1")
+    notificationParagraph = document.getElementById("notif-text-1")
 
 
     hideAllCells()
@@ -394,6 +399,7 @@ const createValueObject = () => {
 
             aspect = aspects.EDIT
             setValueChangeButtonText()
+            openNotification("Value Change " + incomingValueChangeId + " created.")
         })
     }
 
@@ -463,8 +469,10 @@ const updateValueObject = () => {
         pywebview.api.update_value_change(valueId, valueObjectId, label, description, notes, magnitude).then(success => {
             if (success) {
                 console.log("SAVED")
+                openNotification("Value Change updated.")
             } else {
                 console.log("NOT SAVED")
+                openNotification("Value Change NOT UPDATED.")
             }
             // Do something with the success
             // give popup notice of success (or failure)
@@ -505,6 +513,22 @@ const addValueRelation = () => {
         // give popup notice of success (or failure)
     })
 }
+
+// open(set)/close popup notificaiton
+
+const openNotification = notificationText => {
+    notificationWrapper.style.display = ""
+    notificationCallout.style.display = ""
+    notificationParagraph.innerText = notificationText
+}
+
+const closeNotification = () => {
+    notificationWrapper.style.display = "none"
+    notificationCallout.style.display = "none"
+}
+
+
+// Loading screen
 
 const loadDOM = () => {
     // overlay elements
@@ -551,3 +575,5 @@ window.invertAlignment = invertAlignment
 window.addValueRelation = addValueRelation
 window.newValueChange = newValueChange
 window.editValueChange = editValueChange
+window.openNotification = openNotification
+window.closeNotification = closeNotification
