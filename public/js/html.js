@@ -4,12 +4,14 @@ import * as consts from 'consts'
 // Construct & return name of function to load component
 const loadFunctionName = (level, componentId) => {
 
-    const firstPart = level == levels.ACT ? "loadAct(" :
-        level == levels.CHAPTER ? "loadChapter(" :
-            level == levels.SCENE ? "loadScene(" :
-                level == levels.BEAT ? "loadBeat(" : ""
+    // let wholePart = level == levels.ACT ? "loadAct(" :
+    //     level == levels.CHAPTER ? "loadChapter(" :
+    //         level == levels.SCENE ? "loadScene(" :
+    //             level == levels.BEAT ? "loadBeat(" : ""
 
-    return firstPart + String(componentId) + ")"
+    // wholePart += String(componentId) + ")"
+
+    return "loadComponent(\"" + level + "\", " + String(componentId) + ")"
 }
 
 const elements = {

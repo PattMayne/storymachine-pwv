@@ -10,6 +10,7 @@ var storyIdLink, levelLabel, cardsContainer, story, actInfoBox, actIdLink, chapt
 var editStoryLink, editActLink, editChapterLink, editSceneLink, editBeatLink, storyDescription, actDescription, chapterDescription, sceneDescription, beatDescription, descriptionButton
 var confirmatioOverlay, confirmText, confirmButtonYes, loadingOverlay, loadingText, loadingInterval
 var newValueButton, newLocationButton, newCharacterButton
+var otherObjsBtnsCell
 var loadingTimer = 1
 var currentAct = null
 var currentChapter = null
@@ -432,6 +433,9 @@ const loadDOM = storyId => {
     newLocationButton = document.getElementById("new_location_button")
     newCharacterButton = document.getElementById("new_character_button")
 
+    // Buttons to show  all [component type] for [current component]
+    otherObjsBtnsCell = document.getElementById("otherObjsBtnsCell")
+
     storyDescription.style.visibility = "visible"
 }
 
@@ -509,6 +513,11 @@ const loadStory = loadLevel => {
     pyviewLoaded = true
 }
 
+/**
+ * To create new Value Objects we must load the form (html page) but also
+ * provide a link to return to this page in its current state.
+ * Info about building the link will be contained in query strings.
+ */
 const setNewValueButtonLinks = () => {
     const currentComponentId = getCurrentComponent().id
 
@@ -597,11 +606,112 @@ const printAllCurrent = () => {
 
 window.addEventListener('pywebviewready', loadStory())
 
+// Only for loading AFTER page load, from user input
+const loadComponent = (loadLevel, loadId) => {
+    loadId = parseInt(loadId)
+    loadLevel == levels.ACT && loadAct(loadId) ||
+        loadLevel == levels.CHAPTER && loadChapter(loadId) ||
+        loadLevel == levels.SCENE && loadScene(loadId) ||
+        loadLevel == levels.BEAT && loadBeat(loadId) || ""
+
+    // now load the "show all x for y" buttons
+    showAllComponentsForLevelBtns(loadLevel, loadId)
+}
+
+const showAllComponentsForLevelBtns = (loadLevel, loadId) => {
+
+    while (otherObjsBtnsCell.hasChildNodes()) {
+        otherObjsBtnsCell.removeChild(otherObjsBtnsCell.firstChild);
+    }
+
+    // Show label
+    if (loadLevel != levels.BEAT) {
+        const showAllLabel = document.createElement("h4")
+        showAllLabel.innerText = "Show All: "
+        otherObjsBtnsCell.appendChild(showAllLabel)
+    }
+
+    // IF BEAT DO NOTHING
+
+    // IF SCENE show all beats
+
+    // IF CHAPTER show all beats & scenes
+
+    // IF ACT show all beats & scenes & chapters
+
+    // IF STORY show all beats & scenes & chapters & acts
+
+    // DUMB BUTTONS CREATED
+    // NOW I MUST give them LINKS or FUNCTIONS to actually load the cards.
+    // And also PARENT objects to load their place in the stack.
+
+    // MOVE BUTTON CREATION TO html.js
+
+    if (loadLevel == levels.SCENE) {
+        const beatButton = document.createElement("a")
+        beatButton.setAttribute("class", "button small white_button")
+        beatButton.innerText = "BEATS"
+
+        otherObjsBtnsCell.appendChild(beatButton)
+    } else if (loadLevel == levels.CHAPTER) {
+
+        const beatButton = document.createElement("a")
+        beatButton.setAttribute("class", "button small white_button")
+        beatButton.innerText = "BEATS"
+
+        const sceneButton = document.createElement("a")
+        sceneButton.setAttribute("class", "button small white_button")
+        sceneButton.innerText = "SCENES"
+
+        otherObjsBtnsCell.appendChild(beatButton)
+        otherObjsBtnsCell.appendChild(sceneButton)
+    } else if (loadLevel == levels.ACT) {
+
+        const beatButton = document.createElement("a")
+        beatButton.setAttribute("class", "button small white_button")
+        beatButton.innerText = "BEATS"
+
+        const sceneButton = document.createElement("a")
+        sceneButton.setAttribute("class", "button small white_button")
+        sceneButton.innerText = "SCENES"
+
+        const chapterButton = document.createElement("a")
+        chapterButton.setAttribute("class", "button small white_button")
+        chapterButton.innerText = "CHAPTERS"
+
+        otherObjsBtnsCell.appendChild(beatButton)
+        otherObjsBtnsCell.appendChild(sceneButton)
+        otherObjsBtnsCell.appendChild(chapterButton)
+    } else if (loadLevel == levels.STORY) {
+
+        const beatButton = document.createElement("a")
+        beatButton.setAttribute("class", "button small white_button")
+        beatButton.innerText = "BEATS"
+
+        const sceneButton = document.createElement("a")
+        sceneButton.setAttribute("class", "button small white_button")
+        sceneButton.innerText = "SCENES"
+
+        const chapterButton = document.createElement("a")
+        chapterButton.setAttribute("class", "button small white_button")
+        chapterButton.innerText = "CHAPTERS"
+
+        const actButton = document.createElement("a")
+        actButton.setAttribute("class", "button small white_button")
+        actButton.innerText = "ACTS"
+
+        otherObjsBtnsCell.appendChild(beatButton)
+        otherObjsBtnsCell.appendChild(sceneButton)
+        otherObjsBtnsCell.appendChild(chapterButton)
+        otherObjsBtnsCell.appendChild(actButton)
+    }
+
+
+
+}
+
 // Make certain functions available to the WINDOW so that they can be called from JS
-window.loadBeat = loadBeat
-window.loadScene = loadScene
-window.loadAct = loadAct
-window.loadChapter = loadChapter
+window.loadComponent = loadComponent
 window.levels = levels
 window.newComponent = newComponent
 window.editStory = editStory

@@ -50,7 +50,7 @@ body {
     font-family: roboto-slab;
     background-color: #252525;
     color: #a67d7d;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 input,
@@ -169,7 +169,7 @@ select {
     border-radius: 7px;
     padding: 4px 7px 7px 7px;
     font-family: alte;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .editbutton:hover {
@@ -186,6 +186,10 @@ select {
 .blackBack {
     background-color: #000;
     color: #fff;
+}
+
+#otherObjsBtnsCell {
+    text-align: right;
 }
 
 .storyTitleCardBox {
@@ -352,7 +356,8 @@ select {
 }
 
 .componentCardNav {
-    font-size: 16px;
+    font-size: 14px;
+    font-family: alte-bold;
 }
 
 .cardBottomMenu {

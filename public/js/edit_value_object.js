@@ -28,7 +28,6 @@ var valueObjectType = null
 var valueObjectId = null
 var aspect = null
 var storyId = null
-var actId = null
 
 // overlays
 var loadingOverlay, loadingText, loadingInterval
@@ -74,7 +73,6 @@ const setAspect = () => {
     const urlParams = new URLSearchParams(window.location.search)
     changeAspect(!!urlParams.get('edit') ? aspects.EDIT : aspects.NEW)
     storyId = urlParams.get('story_id') || 0
-    actId = urlParams.get('act_id') || 0
 
     returnLevel = urlParams.get('return_level') || 0
     returnId = urlParams.get('return_id') || 0
