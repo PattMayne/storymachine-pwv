@@ -93,6 +93,7 @@ select {
 .callout {
     background-color: #c9cac0;
     border: 1px solid black;
+    color: black;
 
     alink,
     vlink {

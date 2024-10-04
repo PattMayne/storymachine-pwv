@@ -21,6 +21,8 @@ var labelElement
 var descriptionElement
 var pageTitleElement
 
+var returnLevel, returnId, returnBeatId, returnActId, returnSceneId, returnChapterId
+
 
 var valueObjectType = null
 var valueObjectId = null
@@ -44,6 +46,26 @@ var notificationWrapper, notificationCallout, notificationParagraph
 
 const setValueChangeButtonText = () => submitValueChangeBtn.value = aspect == aspects.EDIT ? "Update" : "Create"
 
+const returnURL = () => {
+    let returnString = "story.html?story_id=" + storyId
+
+
+    if (!!returnId && !!returnLevel) {
+        returnString += "&level=" + returnLevel +
+            "&" + returnLevel + "_id=" + returnId
+
+        // so story.html can load all the intervening levels
+        !!returnActId && (returnString += "&act_id=" + returnActId)
+        !!returnChapterId && (returnString += "&chapter_id=" + returnChapterId)
+        !!returnSceneId && (returnString += "&scene_id=" + returnSceneId)
+        !!returnBeatId && (returnString += "&beat_id=" + returnBeatId)
+    }
+    return returnString
+}
+
+//const goBack = () => console.log("returnString:" + returnURL())
+const goBack = () => location.href = returnURL()
+
 const setAspect = () => {
     loadDOM()
     showLoading()
@@ -54,9 +76,15 @@ const setAspect = () => {
     storyId = urlParams.get('story_id') || 0
     actId = urlParams.get('act_id') || 0
 
+    returnLevel = urlParams.get('return_level') || 0
+    returnId = urlParams.get('return_id') || 0
+    returnActId = urlParams.get('return_act_id') || 0
+    returnChapterId = urlParams.get('return_chapter_id') || 0
+    returnSceneId = urlParams.get('return_scene_id') || 0
+    returnBeatId = urlParams.get('return_beat_id') || 0
+
     valueObjectType = urlParams.get('value_object_type') || 0
     valueObjectId = urlParams.get('value_object_id') || 0
-
 
     labelElement = document.getElementById("label")
     descriptionElement = document.getElementById("description")
@@ -94,7 +122,6 @@ const setAspect = () => {
     notificationWrapper = document.getElementById("notif-wrap-1")
     notificationCallout = document.getElementById("notif-call-1")
     notificationParagraph = document.getElementById("notif-text-1")
-
 
     hideAllCells()
 
@@ -573,3 +600,4 @@ window.newValueChange = newValueChange
 window.editValueChange = editValueChange
 window.openNotification = openNotification
 window.closeNotification = closeNotification
+window.goBack = goBack
