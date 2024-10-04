@@ -105,7 +105,7 @@ const elements = {
         return gridCell
     },
 
-    valueChangeCard: (valueChange, storyId) => {
+    valueChangeCard: (valueChange, storyId, componentChainLinkAddendum) => {
         const gridCell = document.createElement("div")
         const callout = document.createElement("div")
         const link = document.createElement("a")
@@ -114,12 +114,11 @@ const elements = {
         link.setAttribute(
             "href",
             "edit_value_object.html?edit=true&value_object_type=value_change&value_object_id=" +
-            valueChange["id"] +
-            "&story_id=" +
-            storyId)
+            valueChange["id"] + "&story_id=" + storyId + componentChainLinkAddendum)
         link.innerText = valueChange["label"]
         callout.appendChild(link)
         gridCell.appendChild(callout)
+        console.log("ADDENDUM: " + componentChainLinkAddendum)
         return gridCell
     },
 
@@ -167,33 +166,37 @@ const elements = {
         return gridCell
     },
 
-    valueButton: (storyId, valueId, label) => {
+    valueButton: (storyId, valueId, label, componentChainLinkAddendum) => {
         const button = document.createElement("a")
         button.setAttribute("class", "button small listButton")
         button.innerText = label
         button.setAttribute(
             "href",
-            "edit_value_object.html?edit=true&value_object_type=value&value_object_id=" + valueId + "&story_id=" + storyId)
+            "edit_value_object.html?edit=true&value_object_type=value&value_object_id=" +
+            valueId + "&story_id=" + storyId + componentChainLinkAddendum)
+
         return button
     },
 
-    locationButton: (storyId, locationId, name) => {
+    locationButton: (storyId, locationId, name, componentChainLinkAddendum) => {
         const button = document.createElement("a")
         button.setAttribute("class", "button small listButton")
         button.innerText = name
         button.setAttribute(
             "href",
-            "edit_value_object.html?edit=true&value_object_type=location&value_object_id=" + locationId + "&story_id=" + storyId)
+            "edit_value_object.html?edit=true&value_object_type=location&value_object_id=" +
+            locationId + "&story_id=" + storyId + componentChainLinkAddendum)
         return button
     },
 
-    characterButton: (storyId, characterId, name) => {
+    characterButton: (storyId, characterId, name, componentChainLinkAddendum) => {
         const button = document.createElement("a")
         button.setAttribute("class", "button small listButton")
         button.innerText = name
         button.setAttribute(
             "href",
-            "edit_value_object.html?edit=true&value_object_type=character&value_object_id=" + characterId + "&story_id=" + storyId)
+            "edit_value_object.html?edit=true&value_object_type=character&value_object_id=" +
+            characterId + "&story_id=" + storyId + componentChainLinkAddendum)
         return button
     },
 

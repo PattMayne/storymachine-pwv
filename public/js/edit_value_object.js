@@ -48,7 +48,6 @@ const setValueChangeButtonText = () => submitValueChangeBtn.value = aspect == as
 const returnURL = () => {
     let returnString = "story.html?story_id=" + storyId
 
-
     if (!!returnId && !!returnLevel) {
         returnString += "&level=" + returnLevel +
             "&" + returnLevel + "_id=" + returnId
@@ -62,7 +61,7 @@ const returnURL = () => {
     return returnString
 }
 
-//const goBack = () => console.log("returnString:" + returnURL())
+// const goBack = () => console.log("returnString:" + returnURL())
 const goBack = () => location.href = returnURL()
 
 const setAspect = () => {
@@ -278,7 +277,6 @@ const editCharacter = () => pywebview.api.get_character_by_id(valueObjectId).the
     charNotes.value = character["notes"]
 
     openValueRelationsCell(character)
-
 })
 
 const openValueRelationsCell = character => {
@@ -490,7 +488,6 @@ const updateValueObject = () => {
         })
     }
 }
-
 
 
 // add a character_value to the database

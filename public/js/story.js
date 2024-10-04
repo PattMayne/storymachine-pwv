@@ -314,7 +314,10 @@ const loadBeat = beatId => {
             const callout = document.createElement("div")
             callout.setAttribute("class", "callout")
             callout.innerText = valueChange["label"]
-            cardsContainer.appendChild(html.elements.valueChangeCard(valueChange, story.id))
+            cardsContainer.appendChild(html.elements.valueChangeCard(
+                valueChange,
+                story.id,
+                getComponentChainLinkAddendum(true)))
         })
         cardsContainer.appendChild(html.elements.newValueChangeButton(beatId))
         setNewValueButtonLinks()
@@ -354,8 +357,7 @@ const editComponentLink = () => {
 // Move to the "create value change" screen (and provide data for a link to return)
 const newValueChange = beatId => location.href = "edit_value_object.html?value_object_type=" +
     consts.valueObjects.VALUE_CHANGE + "&story_id=" + story.id + "&beat_id=" + beatId +
-    "&return_level=" + level + "&return_id=" +
-    getCurrentComponent().id + getComponentChainLinkAddendum()
+    getComponentChainLinkAddendum(true)
 
 // Build the HTML for a div full of buttons. Each button is a link to edit a value object.
 const loadExistingValues = storyId => {
@@ -367,32 +369,43 @@ const loadExistingValues = storyId => {
 
     // remove existing links (html elements) and add them again
     while (valuesListBox.hasChildNodes()) {
-        valuesListBox.removeChild(valuesListBox.firstChild);
+        valuesListBox.removeChild(valuesListBox.firstChild)
     }
 
     while (locationsListBox.hasChildNodes()) {
-        locationsListBox.removeChild(locationsListBox.firstChild);
+        locationsListBox.removeChild(locationsListBox.firstChild)
     }
 
     while (charactersListBox.hasChildNodes()) {
-        charactersListBox.removeChild(charactersListBox.firstChild);
+        charactersListBox.removeChild(charactersListBox.firstChild)
     }
 
 
     // Loop through VALUEs and append "edit" link to DIV
     story.values.map(value => {
-        valuesListBox.appendChild(html.elements.valueButton(storyId, value["id"], value["label"]))
+        valuesListBox.appendChild(html.elements.valueButton(
+            storyId,
+            value["id"],
+            value["label"],
+            getComponentChainLinkAddendum(true)))
     })
 
     // Loop through LOCATIONs and append "edit" link to DIV
     story.locations.map(location => {
-        locationsListBox.appendChild(html.elements.locationButton(storyId, location["id"], location["name"]))
+        locationsListBox.appendChild(html.elements.locationButton(
+            storyId,
+            location["id"],
+            location["name"],
+            getComponentChainLinkAddendum(true)))
     })
 
     // Loop through CHARACTERs and append "edit" link to DIV
     story.characters.map(character => {
         const concat_name = character["first_name"] + " " + character["last_name"]
-        charactersListBox.appendChild(html.elements.characterButton(storyId, character["id"], concat_name))
+        charactersListBox.appendChild(html.elements.characterButton(
+            storyId, character["id"],
+            concat_name,
+            getComponentChainLinkAddendum(true)))
     })
 }
 
@@ -496,6 +509,7 @@ const loadStory = loadLevel => {
 
             // regardless of how loadLevel was set, load that level.
             setValuesToCurrentLevel(loadLevel)
+            loadExistingValues(story.id)
             hideLoading()
             showAllComponentsForLevelBtns(loadLevel, loadId)
         })
@@ -547,25 +561,22 @@ const loadParentComponents = (beatId, sceneId, chapterId, actId) => {
 const setNewValueButtonLinks = () => {
     const currentComponentId = getCurrentComponent().id
 
-    let loadStringAddendum = getComponentChainLinkAddendum()
+    let loadStringAddendum = getComponentChainLinkAddendum(true)
 
     // Set the NEW ITEM links for all value object types
     newValueButton.setAttribute("href",
         "edit_value_object.html?value_object_type=value&story_id=" +
-        story.id + "&return_level=" + level + "&return_id=" +
-        currentComponentId + loadStringAddendum)
+        story.id + loadStringAddendum)
     newLocationButton.setAttribute("href",
         "edit_value_object.html?value_object_type=location&story_id=" +
-        story.id + "&return_level=" + level + "&return_id=" +
-        currentComponentId + loadStringAddendum)
+        story.id + loadStringAddendum)
     newCharacterButton.setAttribute("href",
         "edit_value_object.html?value_object_type=character&story_id=" +
-        story.id + "&return_level=" + level + "&return_id=" +
-        currentComponentId + loadStringAddendum)
+        story.id + loadStringAddendum)
 }
 
-const getComponentChainLinkAddendum = () => {
-    let loadStringAddendum = ""
+const getComponentChainLinkAddendum = includePrefix => {
+    let loadStringAddendum = !!includePrefix ? getComponentChainLinkPrefix() : ""
 
     if (level == levels.ACT || level == levels.CHAPTER || level == levels.SCENE || level == levels.BEAT) {
         loadStringAddendum += "&return_act_id=" + currentAct.id
@@ -583,8 +594,14 @@ const getComponentChainLinkAddendum = () => {
         loadStringAddendum += "&return_beat_id=" + currentBeat.id
     }
 
+    console.log(loadStringAddendum)
+
     return loadStringAddendum
 }
+
+const getComponentChainLinkPrefix = () =>
+    "&return_level=" + level + "&return_id=" + getCurrentComponent().id
+
 
 const getActById = actId => story.acts.filter(act => act.id == actId)[0]
 const getChapterById = chapterId => currentAct.chapters.filter(chapter => chapter.id == chapterId)[0]
@@ -648,6 +665,8 @@ const loadComponent = (loadLevel, loadId) => {
 
     // now load the "show all x for y" buttons
     showAllComponentsForLevelBtns(loadLevel, loadId)
+    setValuesToCurrentLevel(loadLevel)
+    loadExistingValues(story.id)
 }
 
 const showAllComponentsForLevelBtns = (loadLevel, loadId) => {
