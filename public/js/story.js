@@ -474,6 +474,7 @@ const loadStory = loadLevel => {
             console.log("STORY: " + JSON.stringify(story))
 
             loadExistingValues(storyId)
+            let loadId = storyId
 
             if (loadLevel != levels.STORY) {
 
@@ -486,26 +487,31 @@ const loadStory = loadLevel => {
                 if (!!actIdParam) {
                     currentAct = getActById(actIdParam)
                     loadAct(actIdParam)
+                    loadId = actIdParam
                 }
 
                 if (!!chapterIdParam) {
                     currentChapter = getChapterById(chapterIdParam)
                     loadChapter(chapterIdParam)
+                    loadId = chapterIdParam
                 }
 
                 if (!!sceneIdParam) {
                     currentScene = getSceneById(sceneIdParam)
                     loadScene(sceneIdParam)
+                    loadId = sceneIdParam
                 }
 
                 if (!!beatIdParam) {
                     currentBeat = getBeatById(beatIdParam)
                     loadBeat(beatIdParam)
+                    loadId = beatIdParam
                 }
             }
 
             // regardless of how loadLevel was set, load that level.
             loadToCurrentLevel(loadLevel)
+            showAllComponentsForLevelBtns(loadLevel, loadId)
             hideLoading()
         })
         // choose loading time
@@ -642,8 +648,8 @@ const showAllComponentsForLevelBtns = (loadLevel, loadId) => {
     // IF STORY show all beats & scenes & chapters & acts
 
     // DUMB BUTTONS CREATED
-    // NOW I MUST give them LINKS or FUNCTIONS to actually load the cards.
-    // And also PARENT objects to load their place in the stack.
+    // NOW I MUST give them FUNCTIONS to actually load the cards.
+    // And also PARENT object ids to load THEIR place in the stack.
 
     // MOVE BUTTON CREATION TO html.js
 
@@ -705,9 +711,6 @@ const showAllComponentsForLevelBtns = (loadLevel, loadId) => {
         otherObjsBtnsCell.appendChild(chapterButton)
         otherObjsBtnsCell.appendChild(actButton)
     }
-
-
-
 }
 
 // Make certain functions available to the WINDOW so that they can be called from JS
