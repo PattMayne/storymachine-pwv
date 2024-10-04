@@ -182,7 +182,7 @@ const changeLevel = (newLevel) => {
 }
 
 // Should only be used BY the "loadStory" function
-const loadToCurrentLevel = loadLevel => {
+const setValuesToCurrentLevel = loadLevel => {
     switch (loadLevel) {
         case levels.BEAT:
             currentAct = story.acts.filter(act => act.id == currentAct.id)[0]
@@ -309,6 +309,7 @@ const loadBeat = beatId => {
     // edit them on this screen? no, that would be crazy
 
     pywebview.api.get_value_changes_by_beat_id(beatId).then(valueChanges => {
+        cardsContainer.innerHTML = ""
         valueChanges.map(valueChange => {
             const callout = document.createElement("div")
             callout.setAttribute("class", "callout")
@@ -350,9 +351,11 @@ const editComponentLink = () => {
     return linkString
 }
 
-const newValueChange = beatId => {
-    location.href = "edit_value_object.html?value_object_type=" + consts.valueObjects.VALUE_CHANGE + "&story_id=" + story.id + "&beat_id=" + beatId
-}
+// Move to the "create value change" screen (and provide data for a link to return)
+const newValueChange = beatId => location.href = "edit_value_object.html?value_object_type=" +
+    consts.valueObjects.VALUE_CHANGE + "&story_id=" + story.id + "&beat_id=" + beatId +
+    "&return_level=" + level + "&return_id=" +
+    getCurrentComponent().id + getComponentChainLinkAddendum()
 
 // Build the HTML for a div full of buttons. Each button is a link to edit a value object.
 const loadExistingValues = storyId => {
@@ -484,39 +487,56 @@ const loadStory = loadLevel => {
                 const beatIdParam = urlParams.get('beat_id')
 
                 // load parent data until we reach current level
-                if (!!actIdParam) {
-                    currentAct = getActById(actIdParam)
-                    loadAct(actIdParam)
-                    loadId = actIdParam
-                }
-
-                if (!!chapterIdParam) {
-                    currentChapter = getChapterById(chapterIdParam)
-                    loadChapter(chapterIdParam)
-                    loadId = chapterIdParam
-                }
-
-                if (!!sceneIdParam) {
-                    currentScene = getSceneById(sceneIdParam)
-                    loadScene(sceneIdParam)
-                    loadId = sceneIdParam
-                }
-
-                if (!!beatIdParam) {
-                    currentBeat = getBeatById(beatIdParam)
-                    loadBeat(beatIdParam)
-                    loadId = beatIdParam
-                }
+                loadId = loadParentComponents(
+                    urlParams.get('beat_id'),
+                    urlParams.get('scene_id'),
+                    urlParams.get('chapter_id'),
+                    urlParams.get('act_id'))
             }
 
             // regardless of how loadLevel was set, load that level.
-            loadToCurrentLevel(loadLevel)
-            showAllComponentsForLevelBtns(loadLevel, loadId)
+            setValuesToCurrentLevel(loadLevel)
             hideLoading()
+            showAllComponentsForLevelBtns(loadLevel, loadId)
         })
         // choose loading time
     }, pyviewLoaded ? 10 : 500)
     pyviewLoaded = true
+}
+
+/**
+ * load parent data until we reach current level
+ * return id of component to load
+ */
+const loadParentComponents = (beatId, sceneId, chapterId, actId) => {
+
+    let loadId = 0
+
+    if (!!actId) {
+        currentAct = getActById(actId)
+        loadAct(actId)
+        loadId = actId
+    }
+
+    if (!!chapterId) {
+        currentChapter = getChapterById(chapterId)
+        loadChapter(chapterId)
+        loadId = chapterId
+    }
+
+    if (!!sceneId) {
+        currentScene = getSceneById(sceneId)
+        loadScene(sceneId)
+        loadId = sceneId
+    }
+
+    if (!!beatId) {
+        currentBeat = getBeatById(beatId)
+        loadBeat(beatId)
+        loadId = beatId
+    }
+
+    return loadId
 }
 
 /**
@@ -527,6 +547,24 @@ const loadStory = loadLevel => {
 const setNewValueButtonLinks = () => {
     const currentComponentId = getCurrentComponent().id
 
+    let loadStringAddendum = getComponentChainLinkAddendum()
+
+    // Set the NEW ITEM links for all value object types
+    newValueButton.setAttribute("href",
+        "edit_value_object.html?value_object_type=value&story_id=" +
+        story.id + "&return_level=" + level + "&return_id=" +
+        currentComponentId + loadStringAddendum)
+    newLocationButton.setAttribute("href",
+        "edit_value_object.html?value_object_type=location&story_id=" +
+        story.id + "&return_level=" + level + "&return_id=" +
+        currentComponentId + loadStringAddendum)
+    newCharacterButton.setAttribute("href",
+        "edit_value_object.html?value_object_type=character&story_id=" +
+        story.id + "&return_level=" + level + "&return_id=" +
+        currentComponentId + loadStringAddendum)
+}
+
+const getComponentChainLinkAddendum = () => {
     let loadStringAddendum = ""
 
     if (level == levels.ACT || level == levels.CHAPTER || level == levels.SCENE || level == levels.BEAT) {
@@ -545,19 +583,7 @@ const setNewValueButtonLinks = () => {
         loadStringAddendum += "&return_beat_id=" + currentBeat.id
     }
 
-    // Set the NEW ITEM links for all value object types
-    newValueButton.setAttribute("href",
-        "edit_value_object.html?value_object_type=value&story_id=" +
-        story.id + "&return_level=" + level + "&return_id=" +
-        currentComponentId + loadStringAddendum)
-    newLocationButton.setAttribute("href",
-        "edit_value_object.html?value_object_type=location&story_id=" +
-        story.id + "&return_level=" + level + "&return_id=" +
-        currentComponentId + loadStringAddendum)
-    newCharacterButton.setAttribute("href",
-        "edit_value_object.html?value_object_type=character&story_id=" +
-        story.id + "&return_level=" + level + "&return_id=" +
-        currentComponentId + loadStringAddendum)
+    return loadStringAddendum
 }
 
 const getActById = actId => story.acts.filter(act => act.id == actId)[0]
