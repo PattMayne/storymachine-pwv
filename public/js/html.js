@@ -2,17 +2,7 @@ import * as helpers from 'helpers'
 import * as consts from 'consts'
 
 // Construct & return name of function to load component
-const loadFunctionName = (level, componentId) => {
-
-    // let wholePart = level == levels.ACT ? "loadAct(" :
-    //     level == levels.CHAPTER ? "loadChapter(" :
-    //         level == levels.SCENE ? "loadScene(" :
-    //             level == levels.BEAT ? "loadBeat(" : ""
-
-    // wholePart += String(componentId) + ")"
-
-    return "loadComponent(\"" + level + "\", " + String(componentId) + ")"
-}
+const loadFunctionName = (level, componentId) => "loadComponent(\"" + level + "\", " + String(componentId) + ")"
 
 const elements = {
     // STORY.HTML
@@ -175,6 +165,15 @@ const elements = {
             "edit_value_object.html?edit=true&value_object_type=value&value_object_id=" +
             valueId + "&story_id=" + storyId + componentChainLinkAddendum)
 
+        return button
+    },
+
+    showAllComponentsButton: (level) => {
+        const onclickFunctionName = "showAllComponents(\"" + level + "\")"
+        const button = document.createElement("a")
+        button.setAttribute("class", "button small white_button")
+        button.setAttribute("onclick", onclickFunctionName)
+        button.innerText = level.toUpperCase() + "S"
         return button
     },
 

@@ -494,11 +494,6 @@ const loadStory = loadLevel => {
 
             if (loadLevel != levels.STORY) {
 
-                const actIdParam = urlParams.get('act_id')
-                const chapterIdParam = urlParams.get('chapter_id')
-                const sceneIdParam = urlParams.get('scene_id')
-                const beatIdParam = urlParams.get('beat_id')
-
                 // load parent data until we reach current level
                 loadId = loadParentComponents(
                     urlParams.get('beat_id'),
@@ -511,7 +506,8 @@ const loadStory = loadLevel => {
             setValuesToCurrentLevel(loadLevel)
             loadExistingValues(story.id)
             hideLoading()
-            showAllComponentsForLevelBtns(loadLevel, loadId)
+            showAllComponentsForLevelBtns(loadLevel)
+            setNewValueButtonLinks()
         })
         // choose loading time
     }, pyviewLoaded ? 10 : 500)
@@ -664,12 +660,12 @@ const loadComponent = (loadLevel, loadId) => {
         loadLevel == levels.BEAT && loadBeat(loadId) || ""
 
     // now load the "show all x for y" buttons
-    showAllComponentsForLevelBtns(loadLevel, loadId)
+    showAllComponentsForLevelBtns(loadLevel)
     setValuesToCurrentLevel(loadLevel)
     loadExistingValues(story.id)
 }
 
-const showAllComponentsForLevelBtns = (loadLevel, loadId) => {
+const showAllComponentsForLevelBtns = (loadLevel,) => {
 
     while (otherObjsBtnsCell.hasChildNodes()) {
         otherObjsBtnsCell.removeChild(otherObjsBtnsCell.firstChild);
@@ -699,62 +695,19 @@ const showAllComponentsForLevelBtns = (loadLevel, loadId) => {
     // MOVE BUTTON CREATION TO html.js
 
     if (loadLevel == levels.SCENE) {
-        const beatButton = document.createElement("a")
-        beatButton.setAttribute("class", "button small white_button")
-        beatButton.innerText = "BEATS"
-
-        otherObjsBtnsCell.appendChild(beatButton)
+        otherObjsBtnsCell.appendChild(html.elements.showAllComponentsButton(levels.BEAT))
     } else if (loadLevel == levels.CHAPTER) {
-
-        const beatButton = document.createElement("a")
-        beatButton.setAttribute("class", "button small white_button")
-        beatButton.innerText = "BEATS"
-
-        const sceneButton = document.createElement("a")
-        sceneButton.setAttribute("class", "button small white_button")
-        sceneButton.innerText = "SCENES"
-
-        otherObjsBtnsCell.appendChild(beatButton)
-        otherObjsBtnsCell.appendChild(sceneButton)
+        otherObjsBtnsCell.appendChild(html.elements.showAllComponentsButton(levels.BEAT))
+        otherObjsBtnsCell.appendChild(html.elements.showAllComponentsButton(levels.SCENE))
     } else if (loadLevel == levels.ACT) {
-
-        const beatButton = document.createElement("a")
-        beatButton.setAttribute("class", "button small white_button")
-        beatButton.innerText = "BEATS"
-
-        const sceneButton = document.createElement("a")
-        sceneButton.setAttribute("class", "button small white_button")
-        sceneButton.innerText = "SCENES"
-
-        const chapterButton = document.createElement("a")
-        chapterButton.setAttribute("class", "button small white_button")
-        chapterButton.innerText = "CHAPTERS"
-
-        otherObjsBtnsCell.appendChild(beatButton)
-        otherObjsBtnsCell.appendChild(sceneButton)
-        otherObjsBtnsCell.appendChild(chapterButton)
+        otherObjsBtnsCell.appendChild(html.elements.showAllComponentsButton(levels.BEAT))
+        otherObjsBtnsCell.appendChild(html.elements.showAllComponentsButton(levels.SCENE))
+        otherObjsBtnsCell.appendChild(html.elements.showAllComponentsButton(levels.CHAPTER))
     } else if (loadLevel == levels.STORY) {
-
-        const beatButton = document.createElement("a")
-        beatButton.setAttribute("class", "button small white_button")
-        beatButton.innerText = "BEATS"
-
-        const sceneButton = document.createElement("a")
-        sceneButton.setAttribute("class", "button small white_button")
-        sceneButton.innerText = "SCENES"
-
-        const chapterButton = document.createElement("a")
-        chapterButton.setAttribute("class", "button small white_button")
-        chapterButton.innerText = "CHAPTERS"
-
-        const actButton = document.createElement("a")
-        actButton.setAttribute("class", "button small white_button")
-        actButton.innerText = "ACTS"
-
-        otherObjsBtnsCell.appendChild(beatButton)
-        otherObjsBtnsCell.appendChild(sceneButton)
-        otherObjsBtnsCell.appendChild(chapterButton)
-        otherObjsBtnsCell.appendChild(actButton)
+        otherObjsBtnsCell.appendChild(html.elements.showAllComponentsButton(levels.BEAT))
+        otherObjsBtnsCell.appendChild(html.elements.showAllComponentsButton(levels.SCENE))
+        otherObjsBtnsCell.appendChild(html.elements.showAllComponentsButton(levels.CHAPTER))
+        otherObjsBtnsCell.appendChild(html.elements.showAllComponentsButton(levels.ACT))
     }
 }
 
