@@ -254,7 +254,7 @@ const loadAct = actId => {
     editActLink.setAttribute("href", editComponentLink())
     actDescription.innerHTML = currentAct.description
     // make the cards (HTML elements) and add them to the page
-    const listLength = chapters.length
+    const listLength = currentAct.chapters.length
     currentAct.chapters.map((chapter, index) => cardsContainer.appendChild(html.elements.card(
         chapter,
         consts.getChildLevel(level),
@@ -273,8 +273,8 @@ const loadChapter = chapterId => {
     editChapterLink.setAttribute("href", editComponentLink())
     chapterDescription.innerHTML = currentChapter.description
     // make the cards (HTML elements) and add them to the page
-    const listLength = scenes.length
-    currentChapter.scenes.map(scene, index => cardsContainer.appendChild(html.elements.card(
+    const listLength = currentChapter.scenes.length
+    currentChapter.scenes.map((scene, index) => cardsContainer.appendChild(html.elements.card(
         scene,
         consts.getChildLevel(level),
         !!(index == listLength - 1)))
@@ -292,7 +292,7 @@ const loadScene = sceneId => {
     editSceneLink.setAttribute("href", editComponentLink())
     sceneDescription.innerHTML = currentScene.description
 
-    const listLength = beats.length
+    const listLength = currentScene.beats.length
     currentScene.beats.map((beat, index) => cardsContainer.appendChild(html.elements.card(
         beat,
         consts.getChildLevel(level),
@@ -751,6 +751,30 @@ const showAllComponents = (levelToShow) => {
                     // display the requested component cards
                     // store the id from parent components as we cycle through
 
+                    if (levelToShow == levels.BEAT) {
+                        // cycle through scenes, print labels, cycle through beats and print them
+                        for (let k = 0; k < act.chapters.length; k++) {
+                            const chapter = act.chapters[k]
+                            cardsContainer.appendChild(html.elements.interLevelLabel(chapter))
+
+                            for (let m = 0; m < chapter.scenes.length; m++) {
+                                const scene = chapter.scenes[m]
+                                cardsContainer.appendChild(html.elements.interLevelLabel(scene))
+
+                                const listLength = scene.beats.length;
+                                scene.beats.map((beat, index) => cardsContainer.appendChild(html.elements.card(
+                                    beat,
+                                    consts.getChildLevel(level),
+                                    !!(index == listLength - 1))))
+
+                            }
+                        }
+                    } else if (levelToShow == levels.SCENE) {
+                        // cycle through scenes and print them
+                    } else if (levelToShow == levels.CHAPTER) {
+                        // load it the normal way again.
+                    }
+
                     break
                 }
             }
@@ -767,11 +791,7 @@ const showAllComponents = (levelToShow) => {
                         // NOW do the ACTUAL WORK of printing the requested component cardss
                         // from WITHIN the callingComponent
 
-                        if (levelToShow == levels.BEAT) {
-                            // cycle through scenes, print labels, cycle through beats and print them
-                        } else if (levelToShow == levels.SCENE) {
-                            // cycle through scenes and print them
-                        }
+
 
                         break
                     }

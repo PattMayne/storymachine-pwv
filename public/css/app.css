@@ -76,10 +76,6 @@ select {
     transition: background-color 0.05s ease-out, color 0.05s ease-out;
 }
 
-.white_button {
-    background-color: #ebebeb;
-    color: #111;
-}
 
 .button:hover,
 .button:focus,
@@ -481,9 +477,9 @@ select {
     height: 30vh;
 }
 
-.white_button {
-    background-color: white;
-    color: black;
+.whiteButton {
+    background-color: #ebebeb;
+    color: #111;
     border: none;
     padding: 7px 9px 7px 9px;
 }

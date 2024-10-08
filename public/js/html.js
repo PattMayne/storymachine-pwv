@@ -176,7 +176,7 @@ const elements = {
     showAllComponentsButton: (level) => {
         const onclickFunctionName = "showAllComponents(\"" + level + "\")"
         const button = document.createElement("a")
-        button.setAttribute("class", "button small white_button")
+        button.setAttribute("class", "button small whiteButton")
         button.setAttribute("onclick", onclickFunctionName)
         button.innerText = level.toUpperCase() + "S"
         return button
@@ -265,6 +265,15 @@ const elements = {
         console.log("doing a container")
 
         return container
+    },
+
+    interLevelLabel: storyComponent => {
+        const cell = document.createElement("div")
+        const label = document.createElement("h3")
+        cell.setAttribute("class", "large-12 cell")
+        label.innerText = storyComponent.label
+        cell.appendChild(label)
+        return cell
     },
 
     // INIT.HTML 
