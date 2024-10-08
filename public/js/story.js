@@ -304,6 +304,7 @@ const loadScene = sceneId => {
 // Beats do not have child components, but we will list value changes instead
 const loadBeat = beatId => {
     changeLevel(levels.BEAT)
+    setCurrentComponents(beatId, levels.BEAT)
     // get the BEAT object from the SCENE object // build HTML string // display everything.
     currentBeat = currentScene.beats.filter(beat => beat.id == beatId)[0]
     beatIdLink.innerHTML = currentBeat.label
@@ -328,6 +329,53 @@ const loadBeat = beatId => {
         setNewValueButtonLinks()
     })
 }
+
+/**
+ * When loading a new component, we must make its parent components available in their variables.
+ * @param {int} newComponentId 
+ * @param {consts.levels String} componentLevel 
+ */
+const setCurrentComponents = (newComponentId, componentLevel) => {
+
+    if (componentLevel == levels.BEAT) {
+        story.acts.map(act => act.chapters.map(chapter => chapter.scenes.map(scene => scene.beats.map(beat => {
+            if (beat.id == newComponentId) {
+                currentBeat = beat
+                currentScene = scene
+                currentChapter = chapter
+                currentAct = act
+            }
+        }))))
+    } else if (componentLevel == levels.SCENE) {
+        story.acts.map(act => act.chapters.map(chapter => chapter.scenes.map(scene => {
+            if (scene.id == newComponentId) {
+                currentBeat = null
+                currentScene = scene
+                currentChapter = chapter
+                currentAct = act
+            }
+        })))
+    } else if (componentLevel == levels.CHAPTER) {
+        story.acts.map(act => act.chapters.map(chapter => {
+            if (chapter.id == newComponentId) {
+                currentBeat = null
+                currentScene = null
+                currentChapter = chapter
+                currentAct = act
+            }
+        }))
+    } else if (componentLevel == levels.ACT) {
+        story.acts.map(act => {
+            if (act.id == newComponentId) {
+                currentBeat = null
+                currentScene = null
+                currentChapter = null
+                currentAct = act
+            }
+        })
+    }
+}
+
 
 // build a link to the "edit_component.html" page
 // with querystring data to specify what must be edited, and where to return.
@@ -753,22 +801,17 @@ const showAllComponents = (levelToShow) => {
 
                     if (levelToShow == levels.BEAT) {
                         // cycle through scenes, print labels, cycle through beats and print them
-                        for (let k = 0; k < act.chapters.length; k++) {
-                            const chapter = act.chapters[k]
+                        act.chapters.map(chapter => {
                             cardsContainer.appendChild(html.elements.interLevelLabel(chapter))
-
-                            for (let m = 0; m < chapter.scenes.length; m++) {
-                                const scene = chapter.scenes[m]
+                            chapter.scenes.map(scene => {
                                 cardsContainer.appendChild(html.elements.interLevelLabel(scene))
-
                                 const listLength = scene.beats.length;
                                 scene.beats.map((beat, index) => cardsContainer.appendChild(html.elements.card(
                                     beat,
-                                    consts.getChildLevel(level),
+                                    levels.BEAT,
                                     !!(index == listLength - 1))))
-
-                            }
-                        }
+                            })
+                        })
                     } else if (levelToShow == levels.SCENE) {
                         // cycle through scenes and print them
                     } else if (levelToShow == levels.CHAPTER) {
