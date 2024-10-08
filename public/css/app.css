@@ -398,6 +398,24 @@ select {
     font-family: alte;
 }
 
+.nullButtonRight {
+    padding: 5px 14px 0px 14px;
+    text-align: right;
+    margin: 0px;
+    margin-left: auto;
+    padding: 0px 4px 3px 4px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 3px;
+    color: transparent;
+    font-family: alte;
+}
+
+.nullButtonRight:hover {
+    cursor: default;
+    color: transparent;
+}
+
 .deleteButtonMiddle {
     color: #111;
     padding: 0px 4px 3px 4px;

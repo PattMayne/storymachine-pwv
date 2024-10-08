@@ -181,6 +181,7 @@ const changeLevel = (newLevel) => {
     showInfoBoxes()
 }
 
+// Sets/loads current story components into their variables.
 // Should only be used BY the "loadStory" function
 const setValuesToCurrentLevel = loadLevel => {
     switch (loadLevel) {
@@ -207,11 +208,12 @@ const setValuesToCurrentLevel = loadLevel => {
             loadAct(currentAct.id)
             break;
         case levels.STORY:
-            story.acts.map(act => cardsContainer.appendChild(
+            let actsLength = story.acts.length
+            story.acts.map((act, index) => cardsContainer.appendChild(
                 html.elements.card(
                     act,
                     consts.getChildLevel(level),
-                    levels
+                    !!(index == actsLength - 1)
                 )))
             cardsContainer.appendChild(html.elements.newComponentButton(consts.getChildLevel(level)))
             storyDescription.innerHTML = story.description
@@ -237,7 +239,7 @@ const newComponent = newComponentLevel => {
             pywebview.api.create_act(currentComponentId).then(actId => loadStory(level))
             break;
         default:
-            console.log("didn't match any case.")
+            console.error("didn't match any case.")
     }
 }
 
@@ -248,14 +250,15 @@ const loadAct = actId => {
     // get the ACT object from the STORY object // make cards // display everything.
     currentAct = story.acts.filter(act => act.id == actId)[0]
     actIdLink.innerHTML = currentAct.label
-    actIdLink.addEventListener("click", () => loadAct(currentAct.id))
+    actIdLink.addEventListener("click", () => loadComponent(levels.ACT, currentAct.id))
     editActLink.setAttribute("href", editComponentLink())
     actDescription.innerHTML = currentAct.description
     // make the cards (HTML elements) and add them to the page
-    currentAct.chapters.map(chapter => cardsContainer.appendChild(html.elements.card(
+    const listLength = chapters.length
+    currentAct.chapters.map((chapter, index) => cardsContainer.appendChild(html.elements.card(
         chapter,
         consts.getChildLevel(level),
-        levels))
+        !!(index == listLength - 1)))
     )
     cardsContainer.appendChild(html.elements.newComponentButton(consts.getChildLevel(level)))
     setNewValueButtonLinks()
@@ -266,14 +269,15 @@ const loadChapter = chapterId => {
     // get the CHAPTER object from the ACT object // make cards // display everything.
     currentChapter = currentAct.chapters.filter(chapter => chapter.id == chapterId)[0]
     chapterIdLink.innerHTML = currentChapter.label
-    chapterIdLink.addEventListener("click", () => loadChapter(currentChapter.id))
+    chapterIdLink.addEventListener("click", () => loadComponent(levels.CHAPTER, currentChapter.id))
     editChapterLink.setAttribute("href", editComponentLink())
     chapterDescription.innerHTML = currentChapter.description
     // make the cards (HTML elements) and add them to the page
-    currentChapter.scenes.map(scene => cardsContainer.appendChild(html.elements.card(
+    const listLength = scenes.length
+    currentChapter.scenes.map(scene, index => cardsContainer.appendChild(html.elements.card(
         scene,
         consts.getChildLevel(level),
-        levels))
+        !!(index == listLength - 1)))
     )
     cardsContainer.appendChild(html.elements.newComponentButton(consts.getChildLevel(level)))
     setNewValueButtonLinks()
@@ -284,14 +288,15 @@ const loadScene = sceneId => {
     // get the SCENE object from the CHAPTER object // build HTML string // display everything.
     currentScene = currentChapter.scenes.filter(scene => scene.id == sceneId)[0]
     sceneIdLink.innerHTML = currentScene.label
-    sceneIdLink.addEventListener("click", () => loadScene(currentScene.id))
+    sceneIdLink.addEventListener("click", () => loadComponent(levels.SCENE, currentScene.id))
     editSceneLink.setAttribute("href", editComponentLink())
     sceneDescription.innerHTML = currentScene.description
 
-    currentScene.beats.map(beat => cardsContainer.appendChild(html.elements.card(
+    const listLength = beats.length
+    currentScene.beats.map((beat, index) => cardsContainer.appendChild(html.elements.card(
         beat,
         consts.getChildLevel(level),
-        levels)))
+        !!(index == listLength - 1))))
     cardsContainer.appendChild(html.elements.newComponentButton(consts.getChildLevel(level)))
     setNewValueButtonLinks()
 }
@@ -487,7 +492,7 @@ const loadStory = loadLevel => {
             storyIdLink.innerHTML = !!story?.label ? story.label : "NOT LOADED"
             levelLabel.innerHTML = consts.getChildLevel(level).toUpperCase() + "S"
 
-            console.log("STORY: " + JSON.stringify(story))
+            //console.log("STORY: " + JSON.stringify(story))
 
             loadExistingValues(storyId)
             let loadId = storyId
@@ -673,7 +678,7 @@ const showAllComponentsForLevelBtns = (loadLevel,) => {
 
     // Show label
     if (loadLevel != levels.BEAT) {
-        const showAllLabel = document.createElement("h4")
+        const showAllLabel = document.createElement("h6")
         showAllLabel.innerText = "Show All: "
         otherObjsBtnsCell.appendChild(showAllLabel)
     }
@@ -711,6 +716,74 @@ const showAllComponentsForLevelBtns = (loadLevel,) => {
     }
 }
 
+// Show all records of component type, for the current loaded component
+const showAllComponents = (levelToShow) => {
+    const callingLevel = level
+    const callingId = getCurrentComponent().id
+    let callingComponent = null
+
+
+    // refresh story
+    pywebview.api.get_story_by_id(story.id).then(incomingStory => {
+        console.log("got the story fresh")
+
+        story = incomingStory
+
+        // clear the container
+        cardsContainer.innerHTML = ""
+        levelLabel.innerHTML = levelToShow.toUpperCase() + "S"
+
+        // get the callingComponent from the fresh story
+
+        if (callingLevel == levels.STORY) {
+
+            callingComponent = incomingStory
+
+
+        } else if (callingLevel == levels.ACT) {
+
+            for (let i = 0; i < incomingStory.acts.length; i++) {
+                const act = incomingStory.acts[i]
+                if (act.id == callingId) {
+                    callingComponent = act
+                    console.log("Found the act")
+
+                    // display the requested component cards
+                    // store the id from parent components as we cycle through
+
+                    break
+                }
+            }
+
+        } else if (callingLevel == levels.CHAPTER) {
+
+            for (let i = 0; i < incomingStory.acts.length; i++) {
+                for (let k = 0; k < incomingStory.acts[i].chapters.length; k++) {
+                    const chapter = incomingStory.acts[i].chapters[k]
+                    if (chapter.id == callingId) {
+                        callingComponent = chapter
+                        console.log("Found the chapter")
+
+                        // NOW do the ACTUAL WORK of printing the requested component cardss
+                        // from WITHIN the callingComponent
+
+                        if (levelToShow == levels.BEAT) {
+                            // cycle through scenes, print labels, cycle through beats and print them
+                        } else if (levelToShow == levels.SCENE) {
+                            // cycle through scenes and print them
+                        }
+
+                        break
+                    }
+                }
+            }
+        }
+
+        // get calling component (current component) from story
+        // for each child component,  print label, then check THEIR child components, until we reach levelToShow, and show
+    })
+}
+
 // Make certain functions available to the WINDOW so that they can be called from JS
 window.loadComponent = loadComponent
 window.levels = levels
@@ -723,3 +796,4 @@ window.cancelRequest = cancelRequest
 window.deleteComponent = deleteComponent
 window.toggleDescription = toggleDescription
 window.newValueChange = newValueChange
+window.showAllComponents = showAllComponents

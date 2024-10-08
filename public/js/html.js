@@ -14,7 +14,7 @@ const elements = {
     },
 
     // Story components (acts, chapters, scenes, beats) are listed on these cards.
-    card: (storyComponent, level, levels) => {
+    card: (storyComponent, level, isLast) => {
         // create the HTML elements
         const gridCell = document.createElement("div")
         const callout = document.createElement("div")
@@ -62,19 +62,24 @@ const elements = {
             }
         })
 
-        switchButtonRight.setAttribute("class", "switchButtonRight componentCardNav")
         switchButtonRight.setAttribute("id", "switchButtonRight_" + level + "_order-" + storyComponent.order)
         switchButtonRight.innerHTML = "move >>"
-        switchButtonRight.setAttribute("onclick", "shiftComponentRight('" + level + "', " + storyComponent.id + ")")
 
-        // For accessibility, make it tabbable and make "Enter" key function as click.
-        switchButtonRight.setAttribute("tabIndex", 0)
-        switchButtonRight.addEventListener("keypress", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                switchButtonRight.click();
-            }
-        })
+        // Don't put the "move right" button on the last card.
+        if (!isLast) {
+            switchButtonRight.setAttribute("class", "switchButtonRight componentCardNav")
+            switchButtonRight.setAttribute("onclick", "shiftComponentRight('" + level + "', " + storyComponent.id + ")")
+            // For accessibility, make it tabbable and make "Enter" key function as click.
+            switchButtonRight.setAttribute("tabIndex", 0)
+            switchButtonRight.addEventListener("keypress", function (event) {
+                if (event.key === "Enter" && !isLast) {
+                    event.preventDefault();
+                    switchButtonRight.click();
+                }
+            })
+        } else {
+            switchButtonRight.setAttribute("class", "nullButtonRight")
+        }
 
         bottomMenu.setAttribute("class", "cardBottomMenu")
         bottomMenu.appendChild(newComponentButtonLeft)
