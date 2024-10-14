@@ -158,6 +158,15 @@ select {
     }
 }
 
+.interLevelLabel {
+    display: inline-block;
+}
+
+.interLevelLabel:hover {
+    cursor: pointer;
+    color: #111;
+}
+
 .editbutton {
     background-color: #111;
     color: #f6f6f6;

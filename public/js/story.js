@@ -774,7 +774,7 @@ const loadComponent = (loadLevel, loadId) => {
     loadExistingValues(story.id)
 }
 
-const showAllComponentsForLevelBtns = (loadLevel,) => {
+const showAllComponentsForLevelBtns = (loadLevel) => {
 
     while (otherObjsBtnsCell.hasChildNodes()) {
         otherObjsBtnsCell.removeChild(otherObjsBtnsCell.firstChild);
@@ -800,8 +800,6 @@ const showAllComponentsForLevelBtns = (loadLevel,) => {
     // DUMB BUTTONS CREATED
     // NOW I MUST give them FUNCTIONS to actually load the cards.
     // And also PARENT object ids to load THEIR place in the stack.
-
-    // MOVE BUTTON CREATION TO html.js
 
     if (loadLevel == levels.SCENE) {
         otherObjsBtnsCell.appendChild(html.elements.showAllComponentsButton(levels.BEAT))
@@ -856,9 +854,9 @@ const showAllComponents = (levelToShow) => {
                     if (levelToShow == levels.BEAT) {
                         // cycle through scenes, print labels, cycle through beats and print them
                         act.chapters.map(chapter => {
-                            cardsContainer.appendChild(html.elements.interLevelLabel(chapter))
+                            cardsContainer.appendChild(html.elements.interLevelLabel(chapter, levels.CHAPTER))
                             chapter.scenes.map(scene => {
-                                cardsContainer.appendChild(html.elements.interLevelLabel(scene))
+                                cardsContainer.appendChild(html.elements.interLevelLabel(scene, levels.SCENE))
                                 const listLength = scene.beats.length;
                                 scene.beats.map((beat, index) => cardsContainer.appendChild(html.elements.card(
                                     beat,

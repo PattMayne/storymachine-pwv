@@ -271,11 +271,17 @@ const elements = {
         return container
     },
 
-    interLevelLabel: storyComponent => {
+    interLevelLabel: (storyComponent, level) => {
         const cell = document.createElement("div")
         const label = document.createElement("h3")
         cell.setAttribute("class", "large-12 cell")
         label.innerText = storyComponent.label
+
+        if (!!level) {
+            label.setAttribute("onclick", "loadComponent(\"" + level + "\", " + storyComponent.id + ")")
+            label.setAttribute("class", "interLevelLabel")
+        }
+
         cell.appendChild(label)
         return cell
     },
