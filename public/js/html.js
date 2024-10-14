@@ -14,7 +14,7 @@ const elements = {
     },
 
     // Story components (acts, chapters, scenes, beats) are listed on these cards.
-    card: (storyComponent, level, isLast) => {
+    card: (storyComponent, level, isLast, skipNav) => {
         // create the HTML elements
         const gridCell = document.createElement("div")
         const callout = document.createElement("div")
@@ -31,60 +31,64 @@ const elements = {
         cardLabelContainer.setAttribute("class", "cardLabelContainer")
         cardLabelContainer.appendChild(cardLabel)
 
-        // create the "change order" buttons
+        // create this now so we can use it after the 'if' block.
         const bottomMenu = document.createElement("div")
-        const newComponentButtonLeft = document.createElement("a")
-        const deleteButtonMiddle = document.createElement("a")
-        const switchButtonRight = document.createElement("a")
 
-        newComponentButtonLeft.setAttribute("class", "newComponentButtonLeft componentCardNav")
-        newComponentButtonLeft.innerHTML = "<< new " + level
-        newComponentButtonLeft.setAttribute("onclick", "newComponentLeft('" + level + "', " + storyComponent.order + ")")
-        // For accessibility, make it tabbable and make "Enter" key function as click.
-        newComponentButtonLeft.setAttribute("tabIndex", 0)
-        newComponentButtonLeft.addEventListener("keypress", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                newComponentButtonLeft.click();
-            }
-        })
+        if (!skipNav) {
+            // create the "change order" buttons
+            const newComponentButtonLeft = document.createElement("a")
+            const deleteButtonMiddle = document.createElement("a")
+            const switchButtonRight = document.createElement("a")
 
-        deleteButtonMiddle.setAttribute("class", "deleteButtonMiddle componentCardNav")
-        deleteButtonMiddle.setAttribute("onclick", "deleteComponentRequest('" + level + "', " + storyComponent.id + ")")
-        deleteButtonMiddle.innerHTML = "[delete]"
-
-        // For accessibility, make it tabbable and make "Enter" key function as click.
-        deleteButtonMiddle.setAttribute("tabIndex", 0)
-        deleteButtonMiddle.addEventListener("keypress", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                deleteButtonMiddle.click();
-            }
-        })
-
-        switchButtonRight.setAttribute("id", "switchButtonRight_" + level + "_order-" + storyComponent.order)
-        switchButtonRight.innerHTML = "move >>"
-
-        // Don't put the "move right" button on the last card.
-        if (!isLast) {
-            switchButtonRight.setAttribute("class", "switchButtonRight componentCardNav")
-            switchButtonRight.setAttribute("onclick", "shiftComponentRight('" + level + "', " + storyComponent.id + ")")
+            newComponentButtonLeft.setAttribute("class", "newComponentButtonLeft componentCardNav")
+            newComponentButtonLeft.innerHTML = "<< new " + level
+            newComponentButtonLeft.setAttribute("onclick", "newComponentLeft('" + level + "', " + storyComponent.order + ")")
             // For accessibility, make it tabbable and make "Enter" key function as click.
-            switchButtonRight.setAttribute("tabIndex", 0)
-            switchButtonRight.addEventListener("keypress", function (event) {
-                if (event.key === "Enter" && !isLast) {
+            newComponentButtonLeft.setAttribute("tabIndex", 0)
+            newComponentButtonLeft.addEventListener("keypress", function (event) {
+                if (event.key === "Enter") {
                     event.preventDefault();
-                    switchButtonRight.click();
+                    newComponentButtonLeft.click();
                 }
             })
-        } else {
-            switchButtonRight.setAttribute("class", "nullButtonRight")
-        }
 
-        bottomMenu.setAttribute("class", "cardBottomMenu")
-        bottomMenu.appendChild(newComponentButtonLeft)
-        bottomMenu.appendChild(deleteButtonMiddle)
-        bottomMenu.appendChild(switchButtonRight)
+            deleteButtonMiddle.setAttribute("class", "deleteButtonMiddle componentCardNav")
+            deleteButtonMiddle.setAttribute("onclick", "deleteComponentRequest('" + level + "', " + storyComponent.id + ")")
+            deleteButtonMiddle.innerHTML = "[delete]"
+
+            // For accessibility, make it tabbable and make "Enter" key function as click.
+            deleteButtonMiddle.setAttribute("tabIndex", 0)
+            deleteButtonMiddle.addEventListener("keypress", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    deleteButtonMiddle.click();
+                }
+            })
+
+            switchButtonRight.setAttribute("id", "switchButtonRight_" + level + "_order-" + storyComponent.order)
+            switchButtonRight.innerHTML = "move >>"
+
+            // Don't put the "move right" button on the last card.
+            if (!isLast) {
+                switchButtonRight.setAttribute("class", "switchButtonRight componentCardNav")
+                switchButtonRight.setAttribute("onclick", "shiftComponentRight('" + level + "', " + storyComponent.id + ")")
+                // For accessibility, make it tabbable and make "Enter" key function as click.
+                switchButtonRight.setAttribute("tabIndex", 0)
+                switchButtonRight.addEventListener("keypress", function (event) {
+                    if (event.key === "Enter" && !isLast) {
+                        event.preventDefault();
+                        switchButtonRight.click();
+                    }
+                })
+            } else {
+                switchButtonRight.setAttribute("class", "nullButtonRight")
+            }
+
+            bottomMenu.setAttribute("class", "cardBottomMenu")
+            bottomMenu.appendChild(newComponentButtonLeft)
+            bottomMenu.appendChild(deleteButtonMiddle)
+            bottomMenu.appendChild(switchButtonRight)
+        }
 
         orderPar.setAttribute("class", "orderPar")
         orderPar.innerText = storyComponent.order
@@ -95,7 +99,7 @@ const elements = {
         callout.appendChild(orderPar)
         callout.appendChild(cardLabelContainer)
         callout.appendChild(cardDescription)
-        callout.appendChild(bottomMenu)
+        !skipNav && callout.appendChild(bottomMenu)
         gridCell.appendChild(callout)
         return gridCell
     },

@@ -315,8 +315,6 @@ const loadAct = actId => {
             chapter,
             consts.getChildLevel(level),
             !!(index == listLength - 1)))
-        console.log("label: " + chapter["label"])
-        console.log("relative order: " + chapter["order"])
     })
     cardsContainer.appendChild(html.elements.newComponentButton(consts.getChildLevel(level)))
     setNewValueButtonLinks()
@@ -865,7 +863,8 @@ const showAllComponents = (levelToShow) => {
                                 scene.beats.map((beat, index) => cardsContainer.appendChild(html.elements.card(
                                     beat,
                                     levels.BEAT,
-                                    !!(index == listLength - 1))))
+                                    !!(index == listLength - 1),
+                                    true)))
                             })
                         })
                     } else if (levelToShow == levels.SCENE) {
