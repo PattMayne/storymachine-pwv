@@ -244,12 +244,14 @@ const setValuesToCurrentLevel = loadLevel => {
             currentAct = story.acts.filter(act => act.id == currentAct.id)[0]
             currentChapter = currentAct.chapters.filter(chapter => chapter.id == currentChapter.id)[0]
             currentScene = currentChapter.scenes.filter(scene => scene.id == currentScene.id)[0]
+            console.log("currentChapter: " + currentChapter)
             currentBeat = currentScene.beats.filter(beat => beat.id == currentBeat.id)[0]
             loadBeat(currentBeat.id)
             break;
         case levels.SCENE:
             currentAct = story.acts.filter(act => act.id == currentAct.id)[0]
             currentChapter = currentAct.chapters.filter(chapter => chapter.id == currentChapter.id)[0]
+            console.log("currentChapter: " + currentChapter)
             currentScene = currentChapter.scenes.filter(scene => scene.id == currentScene.id)[0]
             loadScene(currentScene.id)
             break;
@@ -303,7 +305,7 @@ const newComponent = newComponentLevel => {
 const loadAct = actId => {
     changeLevel(levels.ACT)
     // get the ACT object from the STORY object // make cards // display everything.
-    currentAct = story.acts.filter(act => act.id == actId)[0]
+    currentAct = getComponent(levels.ACT, actId)
     actIdLink.innerHTML = currentAct.label
     actIdLink.addEventListener("click", () => loadComponent(levels.ACT, currentAct.id))
     editActLink.setAttribute("href", editComponentLink())
@@ -322,8 +324,9 @@ const loadAct = actId => {
 
 const loadChapter = chapterId => {
     changeLevel(levels.CHAPTER)
-    // get the CHAPTER object from the ACT object // make cards // display everything.
-    currentChapter = currentAct.chapters.filter(chapter => chapter.id == chapterId)[0]
+    // get the CHAPTER object // load the parent components // make cards // display everything.
+    currentChapter = getComponent(levels.CHAPTER, chapterId)
+    currentAct = getParentComponent(levels.CHAPTER, currentChapter.id)
     chapterIdLink.innerHTML = currentChapter.label
     chapterIdLink.addEventListener("click", () => loadComponent(levels.CHAPTER, currentChapter.id))
     editChapterLink.setAttribute("href", editComponentLink())
@@ -341,8 +344,10 @@ const loadChapter = chapterId => {
 
 const loadScene = sceneId => {
     changeLevel(levels.SCENE)
-    // get the SCENE object from the CHAPTER object // build HTML string // display everything.
-    currentScene = currentChapter.scenes.filter(scene => scene.id == sceneId)[0]
+    // get the SCENE object // load the parent components // build HTML string // display everything.
+    currentScene = getComponent(levels.SCENE, sceneId)
+    currentChapter = getParentComponent(levels.SCENE, sceneId)
+    currentAct = getParentComponent(levels.CHAPTER, currentChapter.id)
     sceneIdLink.innerHTML = currentScene.label
     sceneIdLink.addEventListener("click", () => loadComponent(levels.SCENE, currentScene.id))
     editSceneLink.setAttribute("href", editComponentLink())
@@ -362,7 +367,10 @@ const loadBeat = beatId => {
     changeLevel(levels.BEAT)
     setCurrentComponents(beatId, levels.BEAT)
     // get the BEAT object from the SCENE object // build HTML string // display everything.
-    currentBeat = currentScene.beats.filter(beat => beat.id == beatId)[0]
+    currentBeat = getComponent(levels.BEAT, beatId)
+    currentScene = getParentComponent(levels.BEAT, beatId)
+    currentChapter = getParentComponent(levels.SCENE, currentScene.id)
+    currentAct = getParentComponent(levels.CHAPTER, currentChapter.id)
     beatIdLink.innerHTML = currentBeat.label
     editBeatLink.setAttribute("href", editComponentLink())
     beatDescription.innerHTML = currentBeat.description
@@ -818,7 +826,7 @@ const showAllComponentsForLevelBtns = (loadLevel) => {
     }
 }
 
-// Show all records of component type, for the current loaded component
+// Show all records of specified component level, for the current loaded component
 const showAllComponents = (levelToShow) => {
     const callingLevel = level
     const callingId = getCurrentComponent().id
@@ -852,12 +860,12 @@ const showAllComponents = (levelToShow) => {
                     // store the id from parent components as we cycle through
 
                     if (levelToShow == levels.BEAT) {
-                        // cycle through scenes, print labels, cycle through beats and print them
+                        // cycle through chapters & scenes, print labels, cycle through beats and print them
                         act.chapters.map(chapter => {
                             cardsContainer.appendChild(html.elements.interLevelLabel(chapter, levels.CHAPTER))
                             chapter.scenes.map(scene => {
                                 cardsContainer.appendChild(html.elements.interLevelLabel(scene, levels.SCENE))
-                                const listLength = scene.beats.length;
+                                const listLength = scene.beats.length
                                 scene.beats.map((beat, index) => cardsContainer.appendChild(html.elements.card(
                                     beat,
                                     levels.BEAT,
@@ -866,7 +874,16 @@ const showAllComponents = (levelToShow) => {
                             })
                         })
                     } else if (levelToShow == levels.SCENE) {
-                        // cycle through scenes and print them
+                        // cycle through chapters, then scenes and print them
+                        act.chapters.map(chapter => {
+                            cardsContainer.appendChild(html.elements.interLevelLabel(chapter, levels.CHAPTER))
+                            const listLength = chapter.scenes.length
+                            chapter.scenes.map((scene, index) => cardsContainer.appendChild(html.elements.card(
+                                scene,
+                                levels.SCENE,
+                                !!(index == listLength - 1),
+                                true)))
+                        })
                     } else if (levelToShow == levels.CHAPTER) {
                         // load it the normal way again.
                     }
@@ -900,6 +917,54 @@ const showAllComponents = (levelToShow) => {
     })
 }
 
+const getAllComponentsOfLevel = levelToGet => {
+    const allActs = story.acts
+    if (levelToGet == levels.ACT) {
+        return allActs
+    }
+
+    const allChapters = []
+    allActs.map(act => act.chapters.map(chapter => allChapters.push(chapter)))
+    if (levelToGet == levels.CHAPTER) {
+        return allChapters
+    }
+
+    const allScenes = []
+    allChapters.map(chapter => chapter.scenes.map(scene => allScenes.push(scene)))
+    if (levelToGet == levels.SCENE) {
+        return allScenes
+    }
+
+    const allBeats = []
+    allScenes.map(scene => scene.beats.map(beat => allBeats.push(beat)))
+    if (levelToGet == levels.BEAT) {
+        return allBeats
+    }
+
+    return []
+}
+
+const getComponent = (levelToGet, id) => {
+    if (levelToGet == levels.ACT) {
+        for (let i = 0; i < story.acts.length; i++) {
+            if (story.acts[i].id == id) {
+                return story.acts[i]
+            }
+        }
+        return null
+    }
+    const allPossibleParents = getAllComponentsOfLevel(consts.getParentLevel(levelToGet))
+    const childComponentsString = levelToGet + "s"
+    for (let i = 0; i < allPossibleParents.length; i++) {
+        const possibleParent = allPossibleParents[i]
+        for (let k = 0; k < possibleParent[childComponentsString].length; k++) {
+            if (possibleParent[childComponentsString][k].id == id) {
+                return possibleParent[childComponentsString][k]
+            }
+        }
+    }
+}
+
 // Make certain functions available to the WINDOW so that they can be called from JS
 window.loadComponent = loadComponent
 window.levels = levels
@@ -913,3 +978,5 @@ window.deleteComponent = deleteComponent
 window.toggleDescription = toggleDescription
 window.newValueChange = newValueChange
 window.showAllComponents = showAllComponents
+window.getAllComponentsOfLevel = getAllComponentsOfLevel
+window.getComponent = getComponent
