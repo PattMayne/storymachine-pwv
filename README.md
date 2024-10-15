@@ -6,15 +6,12 @@ Software for writing story outlines. This is specifically about visualizing valu
 **TO DO:**
 
 * CARDS SCREENS:
-* Show all changes on "edit value" screen
+* Show all value_changes on "edit value" screen
 * Magnitude has limits
 * When new story unit is created, give it a number (ie. Act 2)
 * Incorporate undo functionality in the text inputs.
 * * May have to save content in a collection every time the content changes.
 * * * Detect ctl-z and access version history
-* Show all [any component]s for every loaded component.
-* ORDER is not being set properly when we create new components
-* * Fix the error, but also make a function to check and correct order (make them consecutive).
 
 * GRAPH SCREEN:
 * Create new page

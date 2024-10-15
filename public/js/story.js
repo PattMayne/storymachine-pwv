@@ -366,7 +366,7 @@ const loadScene = sceneId => {
 const loadBeat = beatId => {
     changeLevel(levels.BEAT)
     setCurrentComponents(beatId, levels.BEAT)
-    // get the BEAT object from the SCENE object // build HTML string // display everything.
+    // get the BEAT object // load parent components // build HTML string // display everything.
     currentBeat = getComponent(levels.BEAT, beatId)
     currentScene = getParentComponent(levels.BEAT, beatId)
     currentChapter = getParentComponent(levels.SCENE, currentScene.id)
@@ -782,36 +782,29 @@ const loadComponent = (loadLevel, loadId) => {
     loadExistingValues(story.id)
 }
 
+/**
+ * For any level (above scene), user should be able to view ALL objects from ANY level below.
+ * ex. on story or act you should be able to see a list of all beat objects, without
+ * having to drill down to each scene.
+ * This function creates those buttons, for either level.
+ * @param {String} loadLevel 
+ */
 const showAllComponentsForLevelBtns = (loadLevel) => {
 
+    // First clear any existing buttons
     while (otherObjsBtnsCell.hasChildNodes()) {
         otherObjsBtnsCell.removeChild(otherObjsBtnsCell.firstChild);
     }
 
-    // Show label
+    // Show label of component we're showing
     if (loadLevel != levels.BEAT) {
         const showAllLabel = document.createElement("h6")
         showAllLabel.innerText = "Show All: "
         otherObjsBtnsCell.appendChild(showAllLabel)
     }
 
-    // IF BEAT DO NOTHING
-
-    // IF SCENE show all beats
-
-    // IF CHAPTER show all beats & scenes
-
-    // IF ACT show all beats & scenes & chapters
-
-    // IF STORY show all beats & scenes & chapters & acts
-
-    // DUMB BUTTONS CREATED
-    // NOW I MUST give them FUNCTIONS to actually load the cards.
-    // And also PARENT object ids to load THEIR place in the stack.
-
-    if (loadLevel == levels.SCENE) {
-        otherObjsBtnsCell.appendChild(html.elements.showAllComponentsButton(levels.BEAT))
-    } else if (loadLevel == levels.CHAPTER) {
+    // Add the actual buttons to the container
+    if (loadLevel == levels.CHAPTER) {
         otherObjsBtnsCell.appendChild(html.elements.showAllComponentsButton(levels.BEAT))
         otherObjsBtnsCell.appendChild(html.elements.showAllComponentsButton(levels.SCENE))
     } else if (loadLevel == levels.ACT) {
@@ -835,7 +828,7 @@ const showAllComponents = (levelToShow) => {
 
     // refresh story
     pywebview.api.get_story_by_id(story.id).then(incomingStory => {
-        // console.log("got the story fresh")
+        // This is a LONG function... break it up!
 
         story = incomingStory
 
@@ -848,13 +841,60 @@ const showAllComponents = (levelToShow) => {
         if (callingLevel == levels.STORY) {
             callingComponent = incomingStory
 
+            if (levelToShow == levels.BEAT) {
+                // cycle through acts & chapters & scenes, print labels, cycle through beats and print them
+                story.acts.map(act => {
+                    cardsContainer.appendChild(html.elements.interLevelLabel(act, levels.ACT))
+                    act.chapters.map(chapter => {
+                        cardsContainer.appendChild(html.elements.interLevelLabel(chapter, levels.CHAPTER))
+                        chapter.scenes.map(scene => {
+                            cardsContainer.appendChild(html.elements.interLevelLabel(scene, levels.SCENE))
+                            const listLength = scene.beats.length
+                            scene.beats.map((beat, index) => cardsContainer.appendChild(html.elements.card(
+                                beat,
+                                levels.BEAT,
+                                !!(index == listLength - 1),
+                                true)))
+                        })
+                    })
+                })
+
+            } else if (levelToShow == levels.SCENE) {
+                // cycle through chapters, then scenes and print them
+                story.acts.map(act => {
+                    cardsContainer.appendChild(html.elements.interLevelLabel(act, levels.ACT))
+                    act.chapters.map(chapter => {
+                        cardsContainer.appendChild(html.elements.interLevelLabel(chapter, levels.CHAPTER))
+                        const listLength = chapter.scenes.length
+                        chapter.scenes.map((scene, index) => cardsContainer.appendChild(html.elements.card(
+                            scene,
+                            levels.SCENE,
+                            !!(index == listLength - 1),
+                            true)))
+                    })
+                })
+
+            } else if (levelToShow == levels.CHAPTER) {
+                story.acts.map(act => {
+                    cardsContainer.appendChild(html.elements.interLevelLabel(act, levels.ACT))
+                    const listLength = act.chapters.length
+                    act.chapters.map((chapter, index) => cardsContainer.appendChild(html.elements.card(
+                        chapter,
+                        levels.CHAPTER,
+                        !!(index == listLength - 1),
+                        true)))
+                })
+            } else if (levelToShow == levels.ACT) {
+                loadStory(levels.STORY)
+            }
+
+
         } else if (callingLevel == levels.ACT) {
 
-            for (let i = 0; i < incomingStory.acts.length; i++) {
-                const act = incomingStory.acts[i]
+            for (let i = 0; i < story.acts.length; i++) {
+                const act = story.acts[i]
                 if (act.id == callingId) {
                     callingComponent = act
-                    // console.log("Found the act")
 
                     // display the requested component cards
                     // store the id from parent components as we cycle through
@@ -885,7 +925,7 @@ const showAllComponents = (levelToShow) => {
                                 true)))
                         })
                     } else if (levelToShow == levels.CHAPTER) {
-                        // load it the normal way again.
+                        loadAct(callingId)
                     }
 
                     break
@@ -899,12 +939,23 @@ const showAllComponents = (levelToShow) => {
                     const chapter = incomingStory.acts[i].chapters[k]
                     if (chapter.id == callingId) {
                         callingComponent = chapter
-                        // console.log("Found the chapter")
 
-                        // NOW do the ACTUAL WORK of printing the requested component cardss
+                        // NOW do the ACTUAL WORK of printing the requested component cards
                         // from WITHIN the callingComponent
 
-
+                        if (levelToShow == levels.BEAT) {
+                            chapter.scenes.map(scene => {
+                                cardsContainer.appendChild(html.elements.interLevelLabel(scene, levels.SCENE))
+                                const listLength = scene.beats.length
+                                scene.beats.map((beat, index) => cardsContainer.appendChild(html.elements.card(
+                                    beat,
+                                    levels.BEAT,
+                                    !!(index == listLength - 1),
+                                    true)))
+                            })
+                        } else if (levelToShow == levels.SCENE) {
+                            loadChapter(callingId)
+                        }
 
                         break
                     }
