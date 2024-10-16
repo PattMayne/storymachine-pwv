@@ -521,6 +521,11 @@ const updateValueObject = () => {
         const label = valueLabel.value
         const notes = valueNotes.value
 
+        if (!label) {
+            openNotification("Please enter label")
+            return
+        }
+
         pywebview.api.update_value(valueObjectId, label, description, notes).then(success => {
             changeAspect(aspects.EDIT)
             const msg = !!success ? "Value updated." : "ERROR: Value NOT UPDATED."
@@ -532,6 +537,11 @@ const updateValueObject = () => {
         const description = charDescription.value
         const notes = charNotes.value
 
+        if (!firstName) {
+            openNotification("Please enter first name")
+            return
+        }
+
         pywebview.api.update_character(valueObjectId, firstName, lastName, description, notes).then(success => {
             changeAspect(aspects.EDIT)
             const msg = !!success ? "Character updated." : "ERROR: Character NOT UPDATED."
@@ -542,6 +552,11 @@ const updateValueObject = () => {
         const name = locationName.value
         const description = locationDescription.value
         const notes = locationNotes.value
+
+        if (!name) {
+            openNotification("Please enter name")
+            return
+        }
 
         pywebview.api.update_location(valueObjectId, name, description, notes).then(success => {
             changeAspect(aspects.EDIT)
@@ -555,6 +570,17 @@ const updateValueObject = () => {
         const label = valueChangeLabel.value
         const description = valueChangeDescription.value
         const notes = valueChangeNotes.value
+
+        if (!valueId || !magnitude || !label) {
+            openNotification("Please enter a value to change, a non-zero magnitude of change, AND a label.")
+            return
+        } else if (!beatId) {
+            openNotification("ERROR: missing ID for the BEAT for this value change.")
+            return
+        } else if (!storyId) {
+            openNotification("ERROR: missing ID for the STORY for this value change.")
+            return
+        }
 
         pywebview.api.update_value_change(valueId, valueObjectId, label, description, notes, magnitude).then(success => {
             changeAspect(aspects.EDIT)
