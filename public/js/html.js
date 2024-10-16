@@ -5,7 +5,7 @@ import * as consts from 'consts'
 const loadFunctionName = (level, componentId) => "loadComponent(\"" + level + "\", " + String(componentId) + ")"
 
 const elements = {
-    // STORY.HTML
+    // CARDS.HTML
 
     gridX: () => {
         const div = document.createElement("div")
@@ -297,7 +297,7 @@ const elements = {
         const li = document.createElement("li")
         const anchor = document.createElement("a")
         anchor.setAttribute("class", "storiesListItem, button")
-        anchor.setAttribute("href", "story.html?story_id=" + story.id)
+        anchor.setAttribute("href", "cards.html?story_id=" + story.id)
         li.appendChild(anchor)
         anchor.innerText = story.label
         return li

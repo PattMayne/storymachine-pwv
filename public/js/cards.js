@@ -553,7 +553,7 @@ const loadDOM = storyId => {
     beatDescription = document.getElementById("beatDescription")
     descriptionButton = document.getElementById("descriptionButton")
 
-    storyIdLink.setAttribute("href", "story.html?story_id=" + storyId)
+    storyIdLink.setAttribute("href", "cards.html?story_id=" + storyId)
     // overlay elements
     confirmatioOverlay = document.getElementById("confirmatioOverlay")
     confirmText = document.getElementById("confirmText")

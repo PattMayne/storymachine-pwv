@@ -14,7 +14,7 @@ const loadPanel = () => {
 
 }
 
-const createBaseStory = () => pywebview.api.get_base_story().then(baseStory => window.location = "story.html?story_id=" + baseStory.id)
+const createBaseStory = () => pywebview.api.get_base_story().then(baseStory => window.location = "cards.html?story_id=" + baseStory.id)
 
 // user input functions
 

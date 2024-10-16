@@ -210,7 +210,7 @@ class Api():
     def open_story_window(self):
         global current_story_id
         current_story_id = 1
-        story_window = webview.create_window('story', 'public/story.html', js_api=Api(), width=1200, height=800)
+        story_window = webview.create_window('cards', 'public/cards.html', js_api=Api(), width=1200, height=800)
 
     # delete stuff
 
@@ -244,7 +244,7 @@ for i, thisScreen in enumerate(webview.screens):
     screen = thisScreen
 
 init_window = webview.create_window('storymachine', 'public/init.html', js_api=Api(), width=1600, height=1200)
-# story_window = webview.create_window('story', 'public/story.html', js_api=Api())
+# story_window = webview.create_window('cards', 'public/cards.html', js_api=Api())
 
 # init_window.confirm_close = True
 webview.start(main_function, init_window, gui='gtk', debug=True)

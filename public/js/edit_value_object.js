@@ -46,13 +46,13 @@ var notificationWrapper, notificationCallout, notificationParagraph
 const setValueChangeButtonText = () => submitValueChangeBtn.value = aspect == aspects.EDIT ? "Update" : "Create"
 
 const returnURL = () => {
-    let returnString = "story.html?story_id=" + storyId
+    let returnString = "cards.html?story_id=" + storyId
 
     if (!!returnId && !!returnLevel) {
         returnString += "&level=" + returnLevel +
             "&" + returnLevel + "_id=" + returnId
 
-        // so story.html can load all the intervening levels
+        // so cards.html can load all the intervening levels
         !!returnActId && (returnString += "&act_id=" + returnActId)
         !!returnChapterId && (returnString += "&chapter_id=" + returnChapterId)
         !!returnSceneId && (returnString += "&scene_id=" + returnSceneId)

@@ -44,7 +44,7 @@ const submit = () => aspect == aspects.EDIT ? updateStory() : createStory()
 const createStory = () => {
     const label = labelElement.value
     const description = descriptionElement.value
-    pywebview.api.create_empty_story(label, description).then(newStoryId => window.location = "story.html?story_id=" + newStoryId)
+    pywebview.api.create_empty_story(label, description).then(newStoryId => window.location = "cards.html?story_id=" + newStoryId)
 }
 
 const updateStory = () => {
@@ -52,7 +52,7 @@ const updateStory = () => {
     const description = descriptionElement.value
     pywebview.api.update_story(story.id, label, description).then(success => {
         if (success) {
-            window.location = "story.html?story_id=" + story.id
+            window.location = "cards.html?story_id=" + story.id
         } else {
             console.log('failed to update story')
             alert("ERROR")

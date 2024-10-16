@@ -73,7 +73,7 @@ const createComponent = () => {
     // MAYBE REMOVE... maybe we only ever edit these subcomponents
     const label = labelElement.value
     const description = descriptionElement.value
-    pywebview.api.create_empty_story(label, description).then(newStoryId => window.location = "story.html?story_id=" + newStoryId)
+    pywebview.api.create_empty_story(label, description).then(newStoryId => window.location = "cards.html?story_id=" + newStoryId)
 }
 
 // find out which component we're using, and update that component.
@@ -85,7 +85,7 @@ const updateComponent = () => {
         pywebview.api.update_act(actId, label, description).then(success => {
             if (success) {
                 window.location =
-                    "story.html?story_id=" + storyId +
+                    "cards.html?story_id=" + storyId +
                     "&act_id=" + actId +
                     "&level=" + level
             } else {
@@ -97,7 +97,7 @@ const updateComponent = () => {
         pywebview.api.update_chapter(chapterId, label, description).then(success => {
             if (success) {
                 window.location =
-                    "story.html?story_id=" + storyId +
+                    "cards.html?story_id=" + storyId +
                     "&act_id=" + actId +
                     "&chapter_id=" +
                     chapterId +
@@ -111,7 +111,7 @@ const updateComponent = () => {
         pywebview.api.update_scene(sceneId, label, description).then(success => {
             if (success) {
                 window.location =
-                    "story.html?story_id=" + storyId +
+                    "cards.html?story_id=" + storyId +
                     "&act_id=" + actId +
                     "&chapter_id=" + chapterId +
                     "&scene_id=" + sceneId +
@@ -125,7 +125,7 @@ const updateComponent = () => {
         pywebview.api.update_beat(beatId, label, description).then(success => {
             if (success) {
                 window.location =
-                    "story.html?story_id=" + storyId +
+                    "cards.html?story_id=" + storyId +
                     "&act_id=" + actId +
                     "&chapter_id=" + chapterId +
                     "&scene_id=" + sceneId +
