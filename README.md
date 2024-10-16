@@ -8,10 +8,10 @@ Software for writing story outlines. This is specifically about visualizing valu
 * CARDS SCREENS:
 * Show all value_changes on "edit value" screen
 * Magnitude has limits
-* When new story unit is created, give it a number (ie. Act 2)
 * Incorporate undo functionality in the text inputs.
 * * May have to save content in a collection every time the content changes.
 * * * Detect ctl-z and access version history
+* Rename story.html to cards.html
 
 * GRAPH SCREEN:
 * Create new page
@@ -19,9 +19,14 @@ Software for writing story outlines. This is specifically about visualizing valu
 * load level
 * display graphs
 * Change levels
-* Create new objects (beats, values, value changes, etc) on the screen.
+* Create new objects (beats, values, value changes, etc) with modals on the screen.
+* Edit components with modals on the screen
+* Reloading at that point will be MUCH easier than the cards screen
 
 * Load python data more smoothly on cards page
 * Load python data more smoothly on edit page
 * Load python data more smoothly on graph page
 
+* Create a write-up / help / explanation document
+* * Include advice such as "always rename your new components to something descriptive"
+* * * "The automatic name includes its database ID to make it unique, but it should be renamed to something meaningful."

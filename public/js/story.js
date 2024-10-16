@@ -278,7 +278,7 @@ const setValuesToCurrentLevel = loadLevel => {
     }
 }
 
-
+// Create a new component of the given type
 const newComponent = newComponentLevel => {
     const currentComponentId = getCurrentComponent().id
     // trigger the python script

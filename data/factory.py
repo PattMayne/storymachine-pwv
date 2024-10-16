@@ -167,6 +167,16 @@ def create_new_beat(scene_id, order=0):
 
     connect.commit()
     beat_id = cursor.lastrowid
+
+    # now add the ID to the beat's label (so each beat label is probably unique)
+    new_label = "beat." + str(beat_id)
+    cursor.execute("UPDATE beat SET label=:label WHERE id=:id",
+        {
+            'label': new_label,
+            'id': beat_id
+        })
+    connect.commit()
+
     connect.close()
     return beat_id
 
@@ -189,6 +199,16 @@ def create_new_scene(chapter_id, order=0):
 
     connect.commit()
     scene_id = cursor.lastrowid
+
+    # now add the ID to the scene's label (so each label is probably unique)
+    new_label = "scene." + str(scene_id)
+    cursor.execute("UPDATE scene SET label=:label WHERE id=:id",
+        {
+            'label': new_label,
+            'id': scene_id
+        })
+    connect.commit()
+
     connect.close()
     return scene_id
 
@@ -211,6 +231,16 @@ def create_new_chapter(act_id, order=0):
 
     connect.commit()
     chapter_id = cursor.lastrowid
+
+    # now add the ID to the scene's label (so each label is probably unique)
+    new_label = "chapter." + str(chapter_id)
+    cursor.execute("UPDATE chapter SET label=:label WHERE id=:id",
+        {
+            'label': new_label,
+            'id': chapter_id
+        })
+    connect.commit()
+
     connect.close()
     return chapter_id
 
@@ -234,6 +264,16 @@ def create_new_act(story_id, order=0):
 
     connect.commit()
     act_id = cursor.lastrowid
+
+    # now add the ID to the scene's label (so each label is probably unique)
+    new_label = "act." + str(act_id)
+    cursor.execute("UPDATE act SET label=:label WHERE id=:id",
+        {
+            'label': new_label,
+            'id': act_id
+        })
+    connect.commit()
+
     connect.close()
     return act_id
 
