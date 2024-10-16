@@ -12,6 +12,7 @@ Software for writing story outlines. This is specifically about visualizing valu
 * * May have to save content in a collection every time the content changes.
 * * * Detect ctl-z and access version history
 * Rename story.html to cards.html
+* Delete value objects
 
 * GRAPH SCREEN:
 * Create new page

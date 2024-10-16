@@ -86,7 +86,7 @@ const setAspect = () => {
     labelElement = document.getElementById("label")
     descriptionElement = document.getElementById("description")
     pageTitleElement = document.getElementById("pageTitle")
-    pageTitleElement.innerHTML = "Edit " + valueObjectType
+    pageTitleElement.innerHTML = (aspect == aspects.EDIT ? "Edit " : "New ") + valueObjectType
 
     locationName = document.getElementById("locationName")
     locationDescription = document.getElementById("locationDescription")
@@ -355,6 +355,9 @@ const createValueObject = () => {
                     + "&value_object_id=" + newValueId
                     + "&edit=true" + "&story_id=" + storyId
                 openNotification("Value Created")
+                if (!!pageTitleElement) {
+                    pageTitleElement.innerHTML = "Edit " + valueObjectType
+                }
             } else {
                 // TODO: Give notice of failure
             }
@@ -375,6 +378,9 @@ const createValueObject = () => {
                     + "&edit=true" + "&story_id=" + storyId
 
                 openNotification("Character created")
+                if (!!pageTitleElement) {
+                    pageTitleElement.innerHTML = "Edit " + valueObjectType
+                }
             } else {
                 openNotification("ERROR: Character NOT created")
             }
@@ -391,6 +397,9 @@ const createValueObject = () => {
                 valueObjectId = newLocationId
                 changeAspect(aspects.EDIT)
                 openNotification("Location created.")
+                if (!!pageTitleElement) {
+                    pageTitleElement.innerHTML = "Edit " + valueObjectType
+                }
             } else {
                 openNotification("ERROR: Location NOT created.")
             }
@@ -418,6 +427,9 @@ const createValueObject = () => {
                 valueChangeId = incomingValueChangeId
                 openNotification("Value Change " + incomingValueChangeId + " created.")
                 changeAspect(aspects.EDIT)
+                if (!!pageTitleElement) {
+                    pageTitleElement.innerHTML = "Edit " + valueObjectType
+                }
             } else {
                 openNotification("ERROR: Value Change NOT created.")
             }
