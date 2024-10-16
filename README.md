@@ -14,6 +14,26 @@ Software for writing story outlines. This is specifically about visualizing valu
 * Value changes MUST have a value to change, and a magnitude
 * * Check first in frontend, then check again in backend.
 
+VALUE:
+valueLabel
+
+
+CHARACTER:
+charFirstName
+charLastName
+
+
+LOCATION:
+locationName
+
+
+VALUE CHANGE:
+valueChangeLabel
+valueToChange
+valueChangeMag
+
+
+
 * GRAPH SCREEN:
 * Create new page
 * load story

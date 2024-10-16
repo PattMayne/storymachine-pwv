@@ -372,10 +372,17 @@ const invertAlignment = characterValueId => pywebview.api.switch_character_value
 
 // Find out which value object type we're using, and create one
 const createValueObject = () => {
+    // VALUE object
     if (valueObjectType == valueObjects.VALUE) {
         const description = valueDescription.value
         const label = valueLabel.value
         const notes = valueNotes.value
+
+        if (!label) {
+            valueLabel.focus()
+            openNotification("Please enter a name or label")
+            return
+        }
 
         pywebview.api.create_value(storyId, label, description, notes).then(newValueId => {
             if (!!newValueId) {
@@ -387,17 +394,24 @@ const createValueObject = () => {
                     + "&edit=true" + "&story_id=" + storyId
                 openNotification("Value Created")
                 if (!!pageTitleElement) {
-                    pageTitleElement.innerHTML = "Edit " + capitalizeAndStripUnderscores(valueObjectType)
+                    pageTitleElement.innerHTML = "EDIT " + capitalizeAndStripUnderscores(valueObjectType)
                 }
             } else {
                 // TODO: Give notice of failure
             }
         })
     } else if (valueObjectType == valueObjects.CHARACTER) {
+        // CHARACTER object
         const firstName = charFirstName.value
         const lastName = charLastName.value
         const description = charDescription.value
         const notes = charNotes.value
+
+        if (!firstName) {
+            charFirstName.focus()
+            openNotification("Please enter first name")
+            return
+        }
 
         pywebview.api.create_character(storyId, firstName, lastName, description, notes).then(newCharId => {
             if (!!newCharId) {
@@ -410,17 +424,23 @@ const createValueObject = () => {
 
                 openNotification("Character created")
                 if (!!pageTitleElement) {
-                    pageTitleElement.innerHTML = "Edit " + capitalizeAndStripUnderscores(valueObjectType)
+                    pageTitleElement.innerHTML = "EDIT " + capitalizeAndStripUnderscores(valueObjectType)
                 }
             } else {
                 openNotification("ERROR: Character NOT created")
             }
         })
     } else if (valueObjectType == valueObjects.LOCATION) {
-        console.log("creating a location")
+        // LOCATION object
         const name = locationName.value
         const description = locationDescription.value
         const notes = locationNotes.value
+
+        if (!name) {
+            locationName.focus()
+            openNotification("Please enter location name")
+            return
+        }
 
         pywebview.api.create_location(storyId, name, description, notes).then(newLocationId => {
             if (!!newLocationId && newLocationId > 0) {
@@ -429,13 +449,14 @@ const createValueObject = () => {
                 changeAspect(aspects.EDIT)
                 openNotification("Location created.")
                 if (!!pageTitleElement) {
-                    pageTitleElement.innerHTML = "Edit " + capitalizeAndStripUnderscores(valueObjectType)
+                    pageTitleElement.innerHTML = "EDIT " + capitalizeAndStripUnderscores(valueObjectType)
                 }
             } else {
                 openNotification("ERROR: Location NOT created.")
             }
         })
     } else if (valueObjectType == valueObjects.VALUE_CHANGE) {
+        // VALUE CHANGE object
         // Gather data from user input and URL parameters
         const urlParams = new URLSearchParams(window.location.search)
 
@@ -448,6 +469,17 @@ const createValueObject = () => {
         const description = valueChangeDescription.value
         const notes = valueChangeNotes.value
 
+        if (!valueId || !magnitude || !label) {
+            openNotification("Please enter a value to change, a non-zero magnitude of change, AND a label.")
+            return
+        } else if (!beatId) {
+            openNotification("ERROR: missing ID for the BEAT for this value change.")
+            return
+        } else if (!storyId) {
+            openNotification("ERROR: missing ID for the STORY for this value change.")
+            return
+        }
+
         // Send the data to python API to create value change object
         pywebview.api.create_value_change(
             storyId, beatId, valueId, magnitude,
@@ -459,7 +491,7 @@ const createValueObject = () => {
                 openNotification("Value Change " + incomingValueChangeId + " created.")
                 changeAspect(aspects.EDIT)
                 if (!!pageTitleElement) {
-                    pageTitleElement.innerHTML = "Edit " + capitalizeAndStripUnderscores(valueObjectType)
+                    pageTitleElement.innerHTML = "EDIT " + capitalizeAndStripUnderscores(valueObjectType)
                 }
             } else {
                 openNotification("ERROR: Value Change NOT created.")
