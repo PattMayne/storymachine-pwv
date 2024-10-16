@@ -23,7 +23,6 @@ var pageTitleElement
 
 var returnLevel, returnId, returnBeatId, returnActId, returnSceneId, returnChapterId
 
-
 var valueObjectType = null
 var valueObjectId = null
 var aspect = null
@@ -42,9 +41,12 @@ var locationName, locationDescription, locationNotes
 var valueChangeDescription, valueChangeLabel, valueChangeNotes, valueChangeMag
 var submitCharacterBtn, submitValueChangeBtn, submitLocationBtn
 var notificationWrapper, notificationCallout, notificationParagraph
+var valueChangesGrid
 
 const setValueChangeButtonText = () => submitValueChangeBtn.value = aspect == aspects.EDIT ? "Update" : "Create"
 
+// create the string for the URL of the location/page to return to upon clicking the "back" button
+// Info must have been sent in on page load
 const returnURL = () => {
     let returnString = "cards.html?story_id=" + storyId
 
@@ -64,6 +66,8 @@ const returnURL = () => {
 // const goBack = () => console.log("returnString:" + returnURL())
 const goBack = () => location.href = returnURL()
 
+
+// EDIT and CREATE are the two aspects of this page.
 const setAspect = () => {
     loadDOM()
     showLoading()
@@ -86,7 +90,7 @@ const setAspect = () => {
     labelElement = document.getElementById("label")
     descriptionElement = document.getElementById("description")
     pageTitleElement = document.getElementById("pageTitle")
-    pageTitleElement.innerHTML = (aspect == aspects.EDIT ? "Edit " : "New ") + valueObjectType
+    pageTitleElement.innerHTML = (aspect == aspects.EDIT ? "EDIT " : "NEW ") + capitalizeAndStripUnderscores(valueObjectType)
 
     locationName = document.getElementById("locationName")
     locationDescription = document.getElementById("locationDescription")
@@ -115,6 +119,8 @@ const setAspect = () => {
     submitCharacterBtn = document.getElementById("submitCharacterBtn")
     submitValueChangeBtn = document.getElementById("submitValueChangeBtn")
     submitLocationBtn = document.getElementById("submitLocationBtn")
+
+    valueChangesGrid = document.getElementById("value_changes_grid")
 
     notificationWrapper = document.getElementById("notif-wrap-1")
     notificationCallout = document.getElementById("notif-call-1")
@@ -150,14 +156,17 @@ const setAspect = () => {
     }, 400)
 }
 
+// unhide the cell
 const newValue = () => {
     value_cell.style.display = ''
 }
 
+// unhide the cell
 const newCharacter = () => {
     character_cell.style.display = ''
 }
 
+// unhide the cell
 const newLocation = () => {
     location_cell.style.display = ''
 }
@@ -264,6 +273,28 @@ const editValue = () => pywebview.api.get_value_by_id(valueObjectId).then(value 
         relatedCharacters.map(character => {
             relatedCharsBox.appendChild(html.elements.characterValueItemCharacter(character))
         })
+
+        // Populate the "value changes" container
+        pywebview.api.get_value_changes_by_value_id(valueObjectId).then(valueChanges => {
+            valueChanges.map(valueChange => {
+                const valueChangeCell = document.createElement("div")
+                const valueChangeCallout = document.createElement("div")
+                const valueChangeTitle = document.createElement("h6")
+                const valueChangeMagnitude = document.createElement("p")
+
+                valueChangeTitle.innerText = valueChange.label
+                valueChangeMagnitude.innerText = "Magnitude: " + valueChange.magnitude
+
+                valueChangeCell.setAttribute("class", "large-3 medium-3 small-2 cell")
+                valueChangeCallout.setAttribute("class", "callout")
+
+                valueChangeCallout.appendChild(valueChangeTitle)
+                valueChangeCallout.appendChild(valueChangeMagnitude)
+
+                valueChangeCell.appendChild(valueChangeCallout)
+                valueChangesGrid.appendChild(valueChangeCell)
+            })
+        })
     })
 })
 
@@ -356,7 +387,7 @@ const createValueObject = () => {
                     + "&edit=true" + "&story_id=" + storyId
                 openNotification("Value Created")
                 if (!!pageTitleElement) {
-                    pageTitleElement.innerHTML = "Edit " + valueObjectType
+                    pageTitleElement.innerHTML = "Edit " + capitalizeAndStripUnderscores(valueObjectType)
                 }
             } else {
                 // TODO: Give notice of failure
@@ -379,7 +410,7 @@ const createValueObject = () => {
 
                 openNotification("Character created")
                 if (!!pageTitleElement) {
-                    pageTitleElement.innerHTML = "Edit " + valueObjectType
+                    pageTitleElement.innerHTML = "Edit " + capitalizeAndStripUnderscores(valueObjectType)
                 }
             } else {
                 openNotification("ERROR: Character NOT created")
@@ -398,7 +429,7 @@ const createValueObject = () => {
                 changeAspect(aspects.EDIT)
                 openNotification("Location created.")
                 if (!!pageTitleElement) {
-                    pageTitleElement.innerHTML = "Edit " + valueObjectType
+                    pageTitleElement.innerHTML = "Edit " + capitalizeAndStripUnderscores(valueObjectType)
                 }
             } else {
                 openNotification("ERROR: Location NOT created.")
@@ -428,7 +459,7 @@ const createValueObject = () => {
                 openNotification("Value Change " + incomingValueChangeId + " created.")
                 changeAspect(aspects.EDIT)
                 if (!!pageTitleElement) {
-                    pageTitleElement.innerHTML = "Edit " + valueObjectType
+                    pageTitleElement.innerHTML = "Edit " + capitalizeAndStripUnderscores(valueObjectType)
                 }
             } else {
                 openNotification("ERROR: Value Change NOT created.")
@@ -596,6 +627,8 @@ const hideAllCells = () => {
     notificationWrapper.style.display = "none"
     notificationCallout.style.display = "none"
 }
+
+const capitalizeAndStripUnderscores = (incomingText) => String(incomingText).replace("_", " ").toUpperCase()
 
 window.addEventListener('load', () => setAspect())
 window.submit = submit

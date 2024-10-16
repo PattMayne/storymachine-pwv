@@ -96,6 +96,9 @@ class Api():
     def get_value_changes_by_beat_id(self, beat_id):
         return factory.get_value_changes_by_beat_id(beat_id)
 
+    def get_value_changes_by_value_id(self, value_id):
+        return factory.get_value_changes_by_value_id(value_id)
+
     def get_value_changes(self, id):
         return factory.get_value_changes(id)
 

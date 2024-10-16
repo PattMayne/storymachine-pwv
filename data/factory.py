@@ -1162,6 +1162,30 @@ def get_value_changes_by_beat_id(beat_id):
     return value_changes
 
 
+def get_value_changes_by_value_id(value_id):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+    cursor.execute("SELECT * FROM value_change WHERE value_id=:value_id", {
+        'value_id': value_id
+    })
+
+    records = cursor.fetchall()
+    value_changes = []
+
+    for record in records:
+        value_changes.append({
+            'id': record[0],
+            'label': record[2],
+            'description': record[3],
+            'beat_id': record[4],
+            'value_id': record[5],
+            'magnitude': record[6],
+            'notes': record[7]
+        })
+    connect.close()
+    return value_changes
+
+
 def get_value_change_by_id(id):
     connect = sqlite3.connect('data/stories.db')
     cursor = connect.cursor()

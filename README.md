@@ -6,15 +6,13 @@ Software for writing story outlines. This is specifically about visualizing valu
 **TO DO:**
 
 * CARDS SCREENS:
-* Show all value_changes on "edit value" screen
 * Magnitude has limits
-* * Check first in frontend, then check again in backend.
 * Incorporate undo functionality in the text inputs.
 * * May have to save content in a collection every time the content changes.
 * * * Detect ctl-z and access version history
-* Rename story.html to cards.html
 * Delete value objects
 * Value changes MUST have a value to change, and a magnitude
+* * Check first in frontend, then check again in backend.
 
 * GRAPH SCREEN:
 * Create new page
