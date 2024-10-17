@@ -230,8 +230,16 @@ class Api():
         factory.delete_act(act_id, True)
     
     def delete_character_value(self, character_value_id):
-        print("deleting character_value " + str(character_value_id))
         return factory.delete_character_value(character_value_id)
+
+    def delete_location(self, location_id):
+        return factory.delete_location(location_id)
+
+    def delete_character(self, character_id):
+        return factory.delete_character(character_id)
+
+    def delete_value(self, value_id):
+        return factory.delete_value(value_id)
 
 
 def main_function(window):

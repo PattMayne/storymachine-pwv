@@ -11,27 +11,7 @@ Software for writing story outlines. This is specifically about visualizing valu
 * * May have to save content in a collection every time the content changes.
 * * * Detect ctl-z and access version history
 * Delete value objects
-* Value changes MUST have a value to change, and a magnitude
-* * Check first in frontend, then check again in backend.
-
-VALUE:
-valueLabel
-
-
-CHARACTER:
-charFirstName
-charLastName
-
-
-LOCATION:
-locationName
-
-
-VALUE CHANGE:
-valueChangeLabel
-valueToChange
-valueChangeMag
-
+* Style "edit story" and "new custom story" page.
 
 
 * GRAPH SCREEN:

@@ -44,6 +44,7 @@ var notificationWrapper, notificationCallout, notificationParagraph
 var valueChangesGrid
 
 const setValueChangeButtonText = () => submitValueChangeBtn.value = aspect == aspects.EDIT ? "Update" : "Create"
+var deleteValueButton, deleteValueChangeButton, deleteCharacterButton, deleteLocationButton
 
 // create the string for the URL of the location/page to return to upon clicking the "back" button
 // Info must have been sent in on page load
@@ -142,6 +143,10 @@ const setAspect = () => {
                     valueObjectType == valueObjects.CHARACTER ? editCharacter() :
                         valueObjectType == valueObjects.LOCATION ? editLocation() : null
 
+            deleteValueButton.style.display = ""
+            deleteValueChangeButton.style.display = ""
+            deleteCharacterButton.style.display = ""
+            deleteLocationButton.style.display = ""
         } else {
             console.log("we are NOT editing")
             console.log("valueObjectType: " + valueObjectType)
@@ -150,6 +155,11 @@ const setAspect = () => {
                 valueObjectType == valueObjects.VALUE_CHANGE ? newValueChange() :
                     valueObjectType == valueObjects.CHARACTER ? newCharacter() :
                         valueObjectType == valueObjects.LOCATION ? newLocation() : null
+
+            deleteValueButton.style.display = "none"
+            deleteValueChangeButton.style.display = "none"
+            deleteCharacterButton.style.display = "none"
+            deleteLocationButton.style.display = "none"
 
         }
         hideLoading()
@@ -512,6 +522,13 @@ const changeAspect = newAspect => {
     for (let i = 0; i < buttons.length; i++) {
         buttons[i].value = aspect == aspects.EDIT ? "Update" : aspect == aspects.NEW ? "Create" : "ERROR"
     }
+
+    const buttonDisplay = newAspect == aspects.EDIT ? "" : "none"
+
+    deleteValueButton.style.display = buttonDisplay
+    deleteValueChangeButton.style.display = buttonDisplay
+    deleteCharacterButton.style.display = buttonDisplay
+    deleteLocationButton.style.display = buttonDisplay
 }
 
 // find out which value object type we're using, and update that object.
@@ -644,6 +661,58 @@ const closeNotification = () => {
     }
 }
 
+// Delete value objects
+
+const deleteLocation = () => {
+    if (valueObjectType == valueObjects.LOCATION) {
+        pywebview.api.delete_location(valueObjectId).then(rowsDeleted => {
+            if (rowsDeleted > 0) {
+                changeAspect(aspects.NEW)
+                openNotification("Location deleted")
+                goBack()
+                // Make "goBack" happen AFTER clicking OK on notification
+            }
+        })
+    }
+}
+
+
+const deleteValue = () => {
+    if (valueObjectType == valueObjects.VALUE) {
+        pywebview.api.delete_value(valueObjectId).then(rowsDeleted => {
+            if (rowsDeleted > 0) {
+                openNotification("Value deleted")
+                goBack()
+                // Make "goBack" happen AFTER clicking OK on notification
+            }
+        })
+    }
+}
+
+const deleteValueChange = () => {
+    if (valueObjectType == valueObjects.VALUE_CHANGE) {
+        pywebview.api.delete_value_change(valueObjectId).then(rowsDeleted => {
+            if (rowsDeleted > 0) {
+                openNotification("Value Change deleted")
+                goBack()
+                // Make "goBack" happen AFTER clicking OK on notification
+            }
+        })
+    }
+}
+
+const deleteCharacter = () => {
+    if (valueObjectType == valueObjects.CHARACTER) {
+        pywebview.api.delete_character(valueObjectId).then(rowsDeleted => {
+            if (rowsDeleted > 0) {
+                openNotification("Value Character")
+                goBack()
+                // Make "goBack" happen AFTER clicking OK on notification
+            }
+        })
+    }
+}
+
 
 // Loading screen
 
@@ -651,6 +720,12 @@ const loadDOM = () => {
     // overlay elements
     loadingOverlay = document.getElementById("loadingOverlay")
     loadingText = document.getElementById("loadingText")
+
+    // delete buttons
+    deleteValueButton = document.getElementById("deleteValueButton")
+    deleteValueChangeButton = document.getElementById("deleteValueChangeButton")
+    deleteCharacterButton = document.getElementById("deleteCharacterButton")
+    deleteLocationButton = document.getElementById("deleteLocationButton")
 }
 
 const showLoading = () => {
@@ -684,6 +759,10 @@ const hideAllCells = () => {
     value_relations_cell.style.display = "none"
     notificationWrapper.style.display = "none"
     notificationCallout.style.display = "none"
+    deleteValueButton.style.display = "none"
+    deleteValueChangeButton.style.display = "none"
+    deleteCharacterButton.style.display = "none"
+    deleteLocationButton.style.display = "none"
 }
 
 const capitalizeAndStripUnderscores = (incomingText) => String(incomingText).replace("_", " ").toUpperCase()
@@ -699,3 +778,7 @@ window.editValueChange = editValueChange
 window.openNotification = openNotification
 window.closeNotification = closeNotification
 window.goBack = goBack
+window.deleteLocation = deleteLocation
+window.deleteValue = deleteValue
+window.deleteValueChange = deleteValueChange
+window.deleteCharacter = deleteCharacter

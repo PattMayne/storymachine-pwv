@@ -1209,11 +1209,11 @@ def get_value_change_by_id(id):
 # DELETE value objects
 
 
+# returns number of rows deleted
 def delete_character_value(character_value_id):
     connect = sqlite3.connect('data/stories.db')
     cursor = connect.cursor()
 
-    # delete any chapters belonging to this act (get the chapters, loop through, call the delete function)
     cursor.execute("DELETE FROM character_value WHERE id = :character_value_id",
         {
             'character_value_id': character_value_id
@@ -1222,10 +1222,81 @@ def delete_character_value(character_value_id):
     rowcount = cursor.rowcount
     connect.commit()
     connect.close()
-
-    print("Deleted " + str(rowcount))
-
+    #print("Deleted " + str(rowcount))
     return rowcount
+
+
+# returns number of rows deleted
+def delete_location(location_id):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+
+    cursor.execute("DELETE FROM location WHERE id = :location_id",
+        {
+            'location_id': location_id
+        })
+
+    rowcount = cursor.rowcount
+    connect.commit()
+    connect.close()
+    # print("Deleted " + str(rowcount) + "location(s)")
+    return rowcount
+
+
+# returns the number of characters deleted
+def delete_character(character_id):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+
+    # first delete all character-value relations
+
+    cursor.execute("DELETE FROM character_value WHERE character_id = :character_id",
+        {
+            'character_id': character_id
+        })
+    
+    connect.commit()
+
+    # now delete the character
+    cursor.execute("DELETE FROM character WHERE id = :character_id",
+        {
+            'character_id': character_id
+        })
+
+    rowcount = cursor.rowcount
+    connect.commit()
+    connect.close()
+    #print("Deleted " + str(rowcount) + "character(s)")
+    return rowcount   
+
+
+# returns the number of values deleted
+def delete_value(value_id):
+    connect = sqlite3.connect('data/stories.db')
+    cursor = connect.cursor()
+
+    # first delete all character-value relations
+
+    cursor.execute("DELETE FROM character_value WHERE value_id = :value_id",
+        {
+            'value_id': value_id
+        })
+    
+    connect.commit()
+
+    # now delete the character
+    cursor.execute("DELETE FROM value WHERE id = :value_id",
+        {
+            'value_id': value_id
+        })
+
+    rowcount = cursor.rowcount
+    connect.commit()
+    connect.close()
+
+    #print("Deleted " + str(rowcount) + "value(s)")
+
+    return rowcount  
 
 
 
