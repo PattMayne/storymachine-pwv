@@ -645,7 +645,6 @@ const openNotification = notificationText => {
     notificationWrapper.style.display = ""
     notificationCallout.style.display = ""
     notificationParagraph.innerText = notificationText
-    console.log("Opened notification finished?")
 }
 
 const closeNotification = () => {
@@ -667,10 +666,8 @@ const deleteLocation = () => {
     if (valueObjectType == valueObjects.LOCATION) {
         pywebview.api.delete_location(valueObjectId).then(rowsDeleted => {
             if (rowsDeleted > 0) {
-                changeAspect(aspects.NEW)
+                postNotifyURL = returnURL()
                 openNotification("Location deleted")
-                goBack()
-                // Make "goBack" happen AFTER clicking OK on notification
             }
         })
     }
@@ -681,9 +678,8 @@ const deleteValue = () => {
     if (valueObjectType == valueObjects.VALUE) {
         pywebview.api.delete_value(valueObjectId).then(rowsDeleted => {
             if (rowsDeleted > 0) {
+                postNotifyURL = returnURL()
                 openNotification("Value deleted")
-                goBack()
-                // Make "goBack" happen AFTER clicking OK on notification
             }
         })
     }
@@ -693,9 +689,8 @@ const deleteValueChange = () => {
     if (valueObjectType == valueObjects.VALUE_CHANGE) {
         pywebview.api.delete_value_change(valueObjectId).then(rowsDeleted => {
             if (rowsDeleted > 0) {
+                postNotifyURL = returnURL()
                 openNotification("Value Change deleted")
-                goBack()
-                // Make "goBack" happen AFTER clicking OK on notification
             }
         })
     }
@@ -705,9 +700,8 @@ const deleteCharacter = () => {
     if (valueObjectType == valueObjects.CHARACTER) {
         pywebview.api.delete_character(valueObjectId).then(rowsDeleted => {
             if (rowsDeleted > 0) {
-                openNotification("Value Character")
-                goBack()
-                // Make "goBack" happen AFTER clicking OK on notification
+                postNotifyURL = returnURL()
+                openNotification("Character deleted")
             }
         })
     }
