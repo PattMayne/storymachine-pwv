@@ -64,7 +64,7 @@ const returnURL = () => {
     return returnString
 }
 
-// const goBack = () => console.log("returnString:" + returnURL())
+
 const goBack = () => location.href = returnURL()
 
 

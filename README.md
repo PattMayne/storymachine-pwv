@@ -10,8 +10,8 @@ Software for writing story outlines. This is specifically about visualizing valu
 * Incorporate undo functionality in the text inputs.
 * * May have to save content in a collection every time the content changes.
 * * * Detect ctl-z and access version history
-* Delete value objects
-* Style "edit story" and "new custom story" page.
+* "back" button on edit_subcomponent
+* "styling on edit_subcomponent
 
 
 * GRAPH SCREEN:
