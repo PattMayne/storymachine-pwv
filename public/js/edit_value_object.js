@@ -187,7 +187,7 @@ const newLocation = () => {
 // Load "new value change" controls
 const newValueChange = () => {
     // We need ALL the values to choose which one to change
-    pywebview.api.get_values().then(values => {
+    pywebview.api.get_values(storyId).then(values => {
         let selectBox = document.getElementById("valueToChange")
 
         // add each value to the select box
@@ -219,7 +219,7 @@ const editValueChange = () => pywebview.api.get_value_change_by_id(valueObjectId
 
     if (!selectBox.hasChildNodes() || true) {
         // We need ALL the values to choose which one to change
-        pywebview.api.get_values().then(values => {
+        pywebview.api.get_values(storyId).then(values => {
 
             // add each value to the select box
             values.map(value => {
@@ -251,7 +251,7 @@ const editValue = () => pywebview.api.get_value_by_id(valueObjectId).then(value 
     valueNotes.value = value["notes"]
 
     // We need ALL the characters for the "character relationships" panel.
-    pywebview.api.get_characters().then(characters => {
+    pywebview.api.get_characters(storyId).then(characters => {
         char_relations_cell.style.display = ''
         let selectBox = document.getElementById("charactersToRelate")
         let relatedCharsBox = document.getElementById("relatedCharactersBox")
@@ -325,7 +325,7 @@ const editCharacter = () => pywebview.api.get_character_by_id(valueObjectId).the
 
 const openValueRelationsCell = character => {
     // We need ALL the values for the "character relationships" panel.
-    pywebview.api.get_values().then(values => {
+    pywebview.api.get_values(storyId).then(values => {
         value_relations_cell.style.display = ''
         let selectBox = document.getElementById("valuesToRelate")
         let relatedValuesBox = document.getElementById("relatedValuesBox")
@@ -616,32 +616,42 @@ const updateValueObject = () => {
 
 // add a character_value to the database
 const addCharacterRelation = () => {
-    let characterIdToAdd = charactersToRelate.value
+    let characterIdToAdd = parseInt(charactersToRelate.value)
     let aligned = document.getElementById("aligned").checked
     // pywebview add character_value
-    pywebview.api.create_character_value(characterIdToAdd, valueObjectId, aligned).then(success => {
-        if (success) {
-            postNotifyURL = RELOAD
-            openNotification("Character Relation Added")
-        } else {
-            openNotification('ERROR: Relation NOT SAVED')
-        }
-    })
+    if (!!characterIdToAdd) {
+        pywebview.api.create_character_value(characterIdToAdd, valueObjectId, aligned).then(success => {
+            if (success) {
+                postNotifyURL = RELOAD
+                openNotification("Character Relation Added")
+            } else {
+                openNotification('ERROR: Relation NOT SAVED')
+            }
+        })
+    } else {
+        openNotification("Please make a selection")
+    }
 }
 
 // add a character_value to the database
 const addValueRelation = () => {
-    let valueIdToAdd = valuesToRelate.value
+    let valueIdToAdd = parseInt(valuesToRelate.value)
     let aligned = document.getElementById("aligned_v").checked
+    console.log("VALUE ID: " + valueIdToAdd)
     // pywebview add character_value
-    pywebview.api.create_character_value(valueObjectId, valueIdToAdd, aligned).then(success => {
-        if (success) {
-            postNotifyURL = RELOAD
-            openNotification("Value Relation Added")
-        } else {
-            openNotification('ERROR: Relation NOT SAVED')
-        }
-    })
+    if (!!valueIdToAdd) {
+        pywebview.api.create_character_value(valueObjectId, valueIdToAdd, aligned).then(success => {
+            if (success) {
+                postNotifyURL = RELOAD
+                openNotification("Value Relation Added")
+            } else {
+                openNotification('ERROR: Relation NOT SAVED')
+            }
+        })
+    } else {
+        openNotification("Please make a selection")
+    }
+
 }
 
 // open(set)/close popup notificaiton

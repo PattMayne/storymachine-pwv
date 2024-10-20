@@ -72,14 +72,14 @@ class Api():
     def get_stories_list(self):
         return factory.get_story_ids_and_labels()
     
-    def get_characters(self):
-        return factory.get_characters()
+    def get_characters(self, story_id):
+        return factory.get_characters(story_id)
     
-    def get_locations(self):
-        return factory.get_locations()
+    def get_locations(self, story_id):
+        return factory.get_locations(story_id)
     
-    def get_values(self):
-        return factory.get_values()
+    def get_values(self, story_id):
+        return factory.get_values(story_id)
 
     def get_character_values(self):
         return factory.get_character_values()
@@ -99,8 +99,8 @@ class Api():
     def get_value_changes_by_value_id(self, value_id):
         return factory.get_value_changes_by_value_id(value_id)
 
-    def get_value_changes(self, id):
-        return factory.get_value_changes(id)
+    def get_value_changes(self, story_id):
+        return factory.get_value_changes(story_id)
 
     def get_value_change_by_id(self, id):
         return factory.get_value_change_by_id(id)

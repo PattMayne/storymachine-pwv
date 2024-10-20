@@ -38,7 +38,3 @@ INIT PAGE:
 * remove "author" table
 * * turn "author" field into a text field ("authors")
 
-**PROBLEM:**
-* I'm NOT getting value objects by story ID.
-* * I'm getting ALL the value objects sometimes
-* * * I must CHANGE this so that I'm always getting value objects by story ID.

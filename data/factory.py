@@ -939,15 +939,23 @@ def update_character_value(character_value_id, aligned):
     connect.close()
     return True
 
+'''
 
+{
+        'value_id': value_id
+    })
+
+    '''
 # GET value objects
 
-def get_values():
+def get_values(story_id):
     connect = sqlite3.connect('data/stories.db')
     cursor = connect.cursor()
-    cursor.execute("SELECT * FROM value")
-    records = cursor.fetchall()
+    cursor.execute("SELECT * FROM value where story_id=:story_id", {
+        'story_id': story_id
+    })
 
+    records = cursor.fetchall()
     values = []
 
     for record in records:
@@ -963,10 +971,12 @@ def get_values():
     return values
 
 
-def get_characters():
+def get_characters(story_id):
     connect = sqlite3.connect('data/stories.db')
     cursor = connect.cursor()
-    cursor.execute("SELECT * FROM character")
+    cursor.execute("SELECT * FROM character where story_id=:story_id", {
+        'story_id': story_id
+    })
     records = cursor.fetchall()
     characters = []
 
@@ -984,10 +994,12 @@ def get_characters():
     return characters
 
 
-def get_locations():
+def get_locations(story_id):
     connect = sqlite3.connect('data/stories.db')
     cursor = connect.cursor()
-    cursor.execute("SELECT * FROM location")
+    cursor.execute("SELECT * FROM location where story_id=:story_id", {
+        'story_id': story_id
+    })
     records = cursor.fetchall()
 
     connect.commit()
@@ -995,10 +1007,12 @@ def get_locations():
     return records
 
 
-def get_value_changes():
+def get_value_changes(story_id):
     connect = sqlite3.connect('data/stories.db')
     cursor = connect.cursor()
-    cursor.execute("SELECT * FROM value_change")
+    cursor.execute("SELECT * FROM value_change where story_id=:story_id", {
+        'story_id': story_id
+    })
     records = cursor.fetchall()
 
     connect.commit()
@@ -1326,38 +1340,6 @@ def unarchive_story(story_id):
 
 
 def delete_story(story_id):
-    '''
-    WITH STORY IDS:
-        act 
-        value   
-        value_change    
-        character   
-        location
-    
-    act leads to:
-        chapter
-        scene
-        beat
-    
-    value leads to:
-        character_value
-     
-    therefore DELETE FIRST
-
-        beat
-        scene
-        chapter
-        act
-
-        character_value
-        value_change
-        value
-        character
-        location
-
-        story
-    '''
-
     story = get_story_by_id(story_id)
 
     # delete subcomponents
@@ -1375,10 +1357,17 @@ def delete_story(story_id):
     connect = sqlite3.connect('data/stories.db')
     cursor = connect.cursor()
 
-    cursor.execute("DELETE FROM character_value WHERE story_id = :story_id",
-        {
-            'story_id': story_id
-        })
+    for value in story["values"]:
+        cursor.execute("DELETE FROM character_value WHERE value_id = :value_id",
+            {
+                'value_id': value["id"]
+            })
+
+    for character in story["characters"]:
+        cursor.execute("DELETE FROM character_value WHERE character_id = :character_id",
+            {
+                'character_id': character["id"]
+            })
 
     cursor.execute("DELETE FROM value_change WHERE story_id = :story_id",
         {

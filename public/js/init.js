@@ -43,6 +43,7 @@ const deleteStory = () => {
     pywebview.api.delete_story(storyIdToDelete).then(() => {
         storyIdToDelete = 0
         confirmationOverlay.style.display = "none"
+        location.reload()
     })
 }
 
