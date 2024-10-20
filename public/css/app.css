@@ -1,3 +1,5 @@
+/* sans-serif */
+
 @font-face {
     font-family: alte;
     src: url(../fonts/alte-haas-grotesk.regular.ttf);
@@ -7,6 +9,22 @@
     font-family: alte-bold;
     src: url(../fonts/alte-haas-grotesk.bold.ttf);
 }
+
+
+/* serif */
+
+@font-face {
+    font-family: roboto-slab-bold;
+    src: url(../fonts/RobotoSlab-Bold.ttf);
+}
+
+@font-face {
+    font-family: roboto-slab;
+    src: url(../fonts/RobotoSlab-Regular.ttf);
+}
+
+
+
 
 h1,
 h2,
@@ -20,18 +38,31 @@ h6 {
 
 p,
 a {
-    font-family: alte;
+    font-family: roboto-slab;
+}
+
+a:focus {
+    background-color: #000;
+    color: #fa8334;
 }
 
 body {
-    font-family: alte;
-    background-color: #ffffff;
+    font-family: roboto-slab;
+    background-color: #252525;
+    color: #a67d7d;
+    font-size: 18px;
 }
 
 input,
 textarea,
 select {
     border: 1px solid #111111 !important;
+    font-family: roboto-slab;
+}
+
+.bold {
+    font-family: roboto-slab;
+    font-style: oblique;
 }
 
 
@@ -39,31 +70,53 @@ select {
 
 .button {
     font-family: alte-bold;
-    background-color: #000;
+    background-color: #111;
     color: #fff;
+    -webkit-transition: background-color 0.05s ease-out, color 0.05s ease-out;
+    transition: background-color 0.05s ease-out, color 0.05s ease-out;
 }
 
-.button:hover {
+
+.menu>li {
+    background-color: #111;
+}
+
+
+.button:hover,
+.button:focus,
+.button.small:hover,
+.button.small:focus {
     color: #fa8334;
     background-color: #000;
 }
 
 
 .callout {
+    background-color: #c9cac0;
+    border: 1px solid black;
+    color: black;
+
+    alink,
+    vlink {
+        color: #0300ae;
+    }
+}
+
+.primary {
     background-color: #fff;
     border: 1px solid black;
 }
 
-.primary {
-    background-color: #ffffff;
+.callout.primary {
+    background-color: #e4ae39;
+    color: #222;
     border: 1px solid black;
 }
-
 
 /* general style addon classes */
 
 .red {
-    color: #e90000;
+    color: #ae0000;
 }
 
 .underline {
@@ -78,12 +131,12 @@ select {
 
 
 .solid {
-    background-color: #4b4b4b;
-    color: #cbcbcb;
+    background-color: #343865;
+    color: #e5e5e5;
     border: none;
 
     a {
-        color: #cbcbcb;
+        color: #e5e5e5;
     }
 
     a:hover {
@@ -92,16 +145,17 @@ select {
 }
 
 .solidInsert {
-    background-color: #cbcbcb;
-    color: #4b4b4b;
-    border: none;
+    background-color: #e4ae39;
+    color: #222222;
+    border: 1px solid black;
 
     a {
         color: #4b4b4b;
     }
 
     a:hover {
-        color: #cbcbcb;
+        color: #fa8334;
+        background-color: #0300ae;
     }
 
     .button {
@@ -109,24 +163,77 @@ select {
     }
 }
 
+.interLevelLabel {
+    display: inline-block;
+}
+
+.interLevelLabel:hover {
+    cursor: pointer;
+    color: #111;
+}
+
+.menuButton {
+    background-color: #f6f6f6;
+    color: #111;
+    border: 1px solid #111;
+    padding: 4px 7px 7px 7px;
+    font-family: alte;
+    font-size: 16px;
+}
+
+.menuButton:hover {
+    background-color: #111;
+    color: #98daee;
+}
+
+.editButton:hover {
+    color: rgb(10, 186, 10);
+}
+
+.archiveButton:hover,
+.archiveButton:focus {
+    background-color: rgb(255, 52, 52);
+    color: black;
+}
+
+.editComponentButtonBox {
+    display: inline;
+    justify-content: right;
+    text-align: right;
+    float: right;
+}
+
 .blackBack {
     background-color: #000;
     color: #fff;
 }
 
+#otherObjsBtnsCell {
+    text-align: right;
+}
+
+#back_button {
+    background-color: #ad496c;
+}
+
+#back_button:hover {
+    color: #ddff00;
+}
+
+
 .storyTitleCardBox {
     background-color: white;
-    border: none;
-    color: black;
+    border: 1px solid black;
+    color: #ae0000;
     margin: 0px 0px 10px 0px;
-    padding: 2px 10px;
+    padding: 6px 10px 0px 10px;
 
     a {
-        color: black;
+        color: #111;
     }
 
     a:hover {
-        color: #e90000;
+        color: #ae0000;
     }
 }
 
@@ -135,8 +242,39 @@ select {
     font-weight: bold;
 }
 
-.storyTitle:hover {
-    color: #e90000;
+.storyTitle:hover,
+.storyTitle:focus {
+    color: #ae0000;
+}
+
+#relatedCharactersBox {
+    margin: auto 0px;
+    padding: auto 0px;
+    width: 100%;
+}
+
+.characterValuesListItem {
+    display: flex;
+    width: 100%;
+}
+
+.characterValuesListItem>div {
+    margin: 2px;
+    padding: 1px 2px 0px 4px;
+    background-color: #4b4b4b;
+    color: white;
+}
+
+.characterValuesListItemName {
+    flex-grow: 8;
+}
+
+.characterValuesListItemAligned {
+    flex-grow: 1;
+}
+
+.characterValuesListItemDelete {
+    flex-grow: 1;
 }
 
 
@@ -165,14 +303,32 @@ select {
     font-weight: 600;
 }
 
+.newElementButton {
+    font-weight: bold;
+    color: #111;
+    padding: 0px 4px 3px 4px;
+    border: none;
+    border-radius: 5px;
+    margin: auto;
+    text-align: center;
+    margin-top: 3px;
+    font-family: alte;
+}
+
+.newElementButton:hover {
+    background-color: #000;
+    color: #fa8334;
+}
+
 .orderPar {
     display: inline-block;
     border: 1px solid black;
     margin-right: 5px;
     padding: 0px 5px;
     vertical-align: top;
-    color: #e90000;
+    color: #ae0000;
     font-weight: 600;
+    background-color: #e1e1e1;
 }
 
 #storyInfoBox {
@@ -192,9 +348,41 @@ select {
 }
 
 
+/* popup notifications */
+
+.notificationWrapper {
+    z-index: 999;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #2603036a;
+}
+
+.notificationCallout {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 1000;
+}
+
+
+.deleteButton {
+    margin-left: 3px;
+    color: rgb(220, 49, 49);
+    border: 1px solid #111;
+}
+
+.deleteButton:hover {
+    background-color: rgb(220, 49, 49) !important;
+    color: #111 !important;
+}
+
 /* inner items */
 
-#storiesList {
+#storiesList,
+#archiveList {
     list-style-type: none;
     padding: 0;
     margin: 0;
@@ -205,7 +393,12 @@ select {
 }
 
 .storiesListItem:hover {
-    color: #e90000;
+    color: #ae0000;
+}
+
+.componentCardNav {
+    font-size: 14px;
+    font-family: alte-bold;
 }
 
 .cardBottomMenu {
@@ -221,10 +414,16 @@ select {
 }
 
 .newComponentButtonLeft {
-    padding: 3px 14px 0px 14px;
+    padding: 0px 4px 3px 4px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 3px;
     justify-content: left;
     margin: 0px;
     margin-right: auto;
+    margin-top: 3px;
+    color: #111;
+    font-family: alte;
 }
 
 .switchButtonRight {
@@ -232,27 +431,60 @@ select {
     text-align: right;
     margin: 0px;
     margin-left: auto;
+    padding: 0px 4px 3px 4px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 3px;
+    color: #111;
+    font-family: alte;
+}
+
+.nullButtonRight {
+    padding: 5px 14px 0px 14px;
+    text-align: right;
+    margin: 0px;
+    margin-left: auto;
+    padding: 0px 4px 3px 4px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 3px;
+    color: transparent;
+    font-family: alte;
+}
+
+.nullButtonRight:hover {
+    cursor: default;
+    color: transparent;
 }
 
 .deleteButtonMiddle {
-    padding: 5px 14px 0px 14px;
-    text-align: center;
+    color: #111;
+    padding: 0px 4px 3px 4px;
+    border: none;
+    border-radius: 5px;
     margin: auto;
+    text-align: center;
+    margin-top: 3px;
+    font-family: alte;
 }
 
 .switchButtonRight:hover {
-    background-color: blue;
-    color: #fa8334;
+    background-color: rgb(247, 247, 255);
+    color: #111;
 }
 
 .newComponentButtonLeft:hover {
-    background-color: #023436;
-    color: #fa8334;
+    background-color: rgb(247, 247, 255);
+    color: #111;
 }
 
 .deleteButtonMiddle:hover {
-    background-color: red;
-    color: black;
+    background-color: rgb(196, 0, 0);
+    color: white;
+}
+
+.align_right {
+    text-align: right;
 }
 
 #loadingOverlay {
@@ -266,8 +498,7 @@ select {
     z-index: 199;
 }
 
-#confirmatioOverlay {
-    display: none;
+#confirmationOverlay {
     background-color: #7D451B;
     position: fixed;
     top: 0px;
@@ -290,9 +521,9 @@ select {
     height: 30vh;
 }
 
-.white_button {
-    background-color: white;
-    color: black;
+.whiteButton {
+    background-color: #ebebeb;
+    color: #111;
     border: none;
     padding: 7px 9px 7px 9px;
 }
@@ -303,18 +534,22 @@ select {
     border-radius: 7px;
     padding: 7px 10px;
     margin-top: 0px;
+    font-family: alte;
+    font-size: 16px;
 }
 
 .cardTitleLink:hover {
     cursor: pointer;
+    color: #e1e364
 }
 
 .componentLabel {
     display: inline-block;
+    background-color: #e1e1e1;
     border: 1px solid black;
     margin-right: 5px;
     padding: 4px;
-    color: #e90000;
+    color: #ae0000;
     font-weight: 600;
 }
 

@@ -28,11 +28,21 @@
             </div>
 
             <!-- create or edit VALUE -->
+
             <div class="large-12 cell" id="value_cell">
                 <div class="callout">
-                    <h3 class="red">VALUE</h3>
+                    <div class="grid-x">
+                        <div class="large-6 medium-6 small-6 cell">
+                            <h3 class="red">VALUE</h3>
+                        </div>
+
+                        <div class="large-6 medium-6 small-6 cell align_right">
+                            <a class="button small" id="deleteValueButton" onclick="deleteValue()">DELETE</a>
+                        </div>
+                    </div>
+
                     <label for="valueLabel">Label:</label>
-                    <input id="valueLabel" type="text" value="Subcomponent" placeholder="Label or Name" />
+                    <input id="valueLabel" type="text" placeholder="Label or Name" autocomplete="on" />
 
                     <div class="grid-x grid-padding-x">
                         <div class="large-6 medium-6 small-12 cell">
@@ -44,17 +54,18 @@
                             <textarea placeholder="Notes" id="valueNotes"></textarea>
                         </div>
                     </div>
-                    <input id="valueSubmit" class="button" type="submit" onclick="submit()" />
+                    <input id="valueSubmit" class="button submit" type="submit" onclick="submit()" />
                 </div>
-                <div class="callout" id="relations_cell">
+                <div class="callout" id="char_relations_cell">
                     <div class="grid-x grid-padding-x">
                         <div class="large-12 cell">
-                            <h3 class="red">Character Relationships:</h3>
+                            <h3 class="red">CHARACTER RELATIONSHIPS:</h3>
                         </div>
 
                         <div class="large-6 medium-6 small-12 cell">
-                            <p>Here we will display a chart of characters, with the option to invert their alignment or
-                                delete their relationship.</p>
+                            <p>A character can have a "relationship" with Values. They can be aligned with, or against,
+                                the Value.</p>
+                            <div id="relatedCharactersBox"></div>
                         </div>
 
                         <div class="large-6 medium-6 small-12 cell">
@@ -68,9 +79,20 @@
                             <br />
 
                             <input id="addCharacterRelation" class="button small" type="submit"
-                                onclick="addCharacterRelation" value="Add Relation" />
+                                onclick="addCharacterRelation()" value="Add Relation" />
 
                         </div>
+                    </div>
+                </div>
+
+                <div class="callout">
+                    <div class="grid-x grid-padding-x">
+                        <div class="large-12 cell">
+                            <h3 class="red">VALUE CHANGES:</h3>
+                        </div>
+                    </div>
+                    <div class="grid-x grid-padding-x" id="value_changes_grid">
+
                     </div>
                 </div>
             </div>
@@ -79,9 +101,19 @@
             <!-- beat_id and value_id will be fed in via querystring params -->
             <div class="large-12 cell" id="value_change_cell">
                 <div class="callout">
-                    <h3 class="red">VALUE CHANGE</h3>
+                    <div class="grid-x">
+                        <div class="large-6 medium-6 small-6 cell">
+                            <h3 class="red">VALUE CHANGE</h3>
+                        </div>
+
+                        <div class="large-6 medium-6 small-6 cell align_right">
+                            <a class="button small" id="deleteValueChangeButton"
+                                onclick="deleteValueChange()">DELETE</a>
+                        </div>
+                    </div>
+
                     <label for="valueChangeLabel">Label:</label>
-                    <input id="valueChangeLabel" type="text" value="Subcomponent" placeholder="Label or Name" />
+                    <input id="valueChangeLabel" type="text" placeholder="Label or Name" required />
                     <div class="grid-x grid-padding-x">
                         <div class="large-6 medium-6 small-12 cell">
                             <label for="valueChangeDescription">Description:</label>
@@ -92,18 +124,38 @@
                             <textarea id="valueChangeNotes" placeholder="Notes"></textarea>
                         </div>
                         <div class="large-6 medium-6 small-12 cell">
-                            <label for="valueChangeMag">Magnitude of change:</label>
-                            <input type="number" id="valueChangeMag" />
+                            <label for="valueToChange">Value to change:</label>
+                            <select id="valueToChange" required>
+                                <option selected disabled>Choose a Value</option>
+                            </select>
                         </div>
+                        <div class="large-6 medium-6 small-12 cell">
+                            <label for="valueChangeMag">Magnitude of change:</label>
+                            <input type="number" id="valueChangeMag" required />
+                        </div>
+
                     </div>
-                    <input id="submit" class="button" type="submit" onclick="submit()" />
+                    <input id="submitValueChangeBtn" class="button submit" type="submit" onclick="submit()" />
+                </div>
+
+                <div class="callout">
+                    <p>Get the values to change and make a list.</p>
+                    <p>On submit, send the selection AND the beat_id to python.</p>
                 </div>
             </div>
 
             <!-- create or edit CHARACTER -->
             <div class="large-12 cell" id="character_cell">
                 <div class="callout">
-                    <h3 class="red">CHARACTER</h3>
+                    <div class="grid-x">
+                        <div class="large-6 medium-6 small-6 cell">
+                            <h3 class="red">CHARACTER</h3>
+                        </div>
+
+                        <div class="large-6 medium-6 small-6 cell align_right">
+                            <a class="button small" id="deleteCharacterButton" onclick="deleteCharacter()">DELETE</a>
+                        </div>
+                    </div>
                     <div class="grid-x grid-padding-x">
                         <div class="large-6 medium-6 small-12 cell">
                             <label for="charFirstName">First Name:</label>
@@ -124,7 +176,36 @@
                         </div>
 
                         <div class="large-12 cell">
-                            <input id="submit" class="button" type="submit" onclick="submit()" />
+                            <input id="submitCharacterBtn" class="button submit" type="submit" onclick="submit()" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout" id="value_relations_cell">
+                    <div class="grid-x grid-padding-x">
+                        <div class="large-12 cell">
+                            <h3 class="red">Value Relationships:</h3>
+                        </div>
+
+                        <div class="large-6 medium-6 small-12 cell">
+                            <p>Here we will display a chart of values, with the option to invert their alignment or
+                                delete their relationship.</p>
+                            <div id="relatedValuesBox"></div>
+                        </div>
+
+                        <div class="large-6 medium-6 small-12 cell">
+                            <label for="valuesToRelate">Add Value Relationship:</label>
+                            <select id="valuesToRelate">
+                                <option selected disabled>Choose a Value</option>
+                            </select>
+
+                            <input type="checkbox" id="aligned_v" name="aligned_v">
+                            <label for="aligned_v">Character aligned with Value?</label>
+                            <br />
+
+                            <input id="addValueRelation" class="button small" type="submit" onclick="addValueRelation()"
+                                value="Add Relation" />
+
                         </div>
                     </div>
                 </div>
@@ -134,7 +215,15 @@
             <!-- create or edit LOCATION -->
             <div class="large-12 cell" id="location_cell">
                 <div class="callout">
-                    <h3 class="red">LOCATION</h3>
+                    <div class="grid-x">
+                        <div class="large-6 medium-6 small-6 cell">
+                            <h3 class="red">LOCATION</h3>
+                        </div>
+
+                        <div class="large-6 medium-6 small-6 cell align_right">
+                            <a class="button small" id="deleteLocationButton" onclick="deleteLocation()">DELETE</a>
+                        </div>
+                    </div>
                     <div class="grid-x grid-padding-x">
                         <div class="large-6 medium-6 small-12 cell">
                             <label for="locationName">Name / Title:</label>
@@ -154,8 +243,13 @@
                         </div>
 
                     </div>
-                    <input id="submit" class="button" type="submit" onclick="submit()" />
+                    <input id="submitLocationBtn" class="button submit" type="submit" onclick="submit()" />
                 </div>
+            </div>
+
+            <!-- "back" button -->
+            <div class="large-12 cell align_right">
+                <a class="button whiteButton" id="back_button" onclick="goBack()">BACK</a>
             </div>
 
         </div>
@@ -163,7 +257,6 @@
 
     <div id="loadingOverlay">
         <div class="grid-container">
-
             <div class="grid-x grid-padding-x">
                 <div class="large-12 cell">
                     <div class="overlayFiller"></div>
@@ -175,6 +268,15 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="notificationWrapper" id="notif-wrap-1" onclick="closeNotification()">
+        &nbsp;
+    </div>
+
+    <div class="callout notificationCallout" id="notif-call-1">
+        <p id="notif-text-1">[Body of notification]</p>
+        <a class="button submit" onclick="closeNotification()">OK</a>
     </div>
 
     <script src="js/vendor/jquery.js"></script>

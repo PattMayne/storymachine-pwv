@@ -1,10 +1,4 @@
 
-CREATE TABLE IF NOT EXISTS author (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    first_name text NOT NULL,
-    last_name text NOT NULL
-);
-
 -- story structures
 
 CREATE TABLE IF NOT EXISTS story (
@@ -13,8 +7,9 @@ CREATE TABLE IF NOT EXISTS story (
     controlling_idea text,
     genres text,
     description text,
-    author_ids text NOT NULL,
-    notes text
+    authors text,
+    notes text,
+    archived INTEGER DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS act (
@@ -54,17 +49,7 @@ CREATE TABLE IF NOT EXISTS beat (
 );
 
 
-
--- sequence overlay (sequence of scenes)
--- should we also have sequence of beats? Deal with this later.
-
-CREATE TABLE IF NOT EXISTS sequence (
-   id INTEGER PRIMARY KEY AUTOINCREMENT,
-   label text NOT NULL,
-   description text,
-   -- scene_ids_obj will be an OBJECT containing a LIST of scene_ids
-   scene_ids_obj text
-);
+-- NO SEQUENCES. Instead "sequences" will be automatically defined by series of scenes where a value is changed.
 
 
 -- Value-related objects
@@ -92,7 +77,7 @@ CREATE TABLE IF NOT EXISTS value_change (
     description text,
     beat_id INTEGER, -- One beat and one value per value_change
     value_id INTEGER,
-    magnitutde INTEGER NOT NULL,
+    magnitude INTEGER NOT NULL,
     notes text
 );
 

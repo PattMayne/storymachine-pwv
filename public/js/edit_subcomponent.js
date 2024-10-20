@@ -1,21 +1,21 @@
 // IMPORTS
 import * as consts from 'consts'
 
-// aspect is either creating a new story or editing an existing one
+// "aspect" is either creating a new story or editing an existing one
 const levels = consts.levels
 const aspects = {
     EDIT: 'edit',
     NEW: 'new'
 }
 
-var labelElement
-var descriptionElement
-var pageTitleElement
+var labelElement, descriptionElement, pageTitleElement
+var notificationWrapper, notificationCallout, notificationParagraph
 
 var subcomponent = null
 var aspect = null
 var level = null
 var storyId, actId, chapterId, sceneId, beatId
+var goBackAfterNotify = false
 
 // overlays
 var loadingOverlay, loadingText, loadingInterval
@@ -38,7 +38,7 @@ const setAspect = () => {
         labelElement = document.getElementById("label")
         descriptionElement = document.getElementById("description")
         pageTitleElement = document.getElementById("pageTitle")
-        pageTitleElement.innerHTML = "Edit " + level
+        pageTitleElement.innerHTML = "EDIT " + String(level).toUpperCase()
 
         // if EDIT, get the subcomponent and populate from that object
         // else, populate fields with boilerplate stuff for the NEW subcomponent
@@ -67,13 +67,19 @@ const getChapter = () => pywebview.api.get_chapter_by_id(chapterId).then(incomin
 const getScene = () => pywebview.api.get_scene_by_id(sceneId).then(incomingObject => setSubcomponent(incomingObject))
 const getBeat = () => pywebview.api.get_beat_by_id(beatId).then(incomingObject => setSubcomponent(incomingObject))
 
-const submit = () => aspect == aspects.EDIT ? updateComponent() : createComponent()
+const submit = () => {
+    if (!!labelElement.value) {
+        aspect == aspects.EDIT ? updateComponent() : createComponent()
+    } else {
+        openNotification("Please enter a value for \" label\"")
+    }
+}
 
 const createComponent = () => {
     // MAYBE REMOVE... maybe we only ever edit these subcomponents
     const label = labelElement.value
     const description = descriptionElement.value
-    pywebview.api.create_empty_story(label, description).then(newStoryId => window.location = "story.html?story_id=" + newStoryId)
+    pywebview.api.create_empty_story(label, description).then(newStoryId => window.location = "cards.html?story_id=" + newStoryId)
 }
 
 // find out which component we're using, and update that component.
@@ -84,67 +90,108 @@ const updateComponent = () => {
     if (level == levels.ACT) {
         pywebview.api.update_act(actId, label, description).then(success => {
             if (success) {
-                window.location =
-                    "story.html?story_id=" + storyId +
-                    "&act_id=" + actId +
-                    "&level=" + level
+                goBackAfterNotify = true
+                openNotification("Act Updated")
             } else {
                 console.log('failed to update act')
-                alert("ERROR")
+                openNotification("ERROR")
             }
         })
     } else if (level == levels.CHAPTER) {
         pywebview.api.update_chapter(chapterId, label, description).then(success => {
             if (success) {
-                window.location =
-                    "story.html?story_id=" + storyId +
-                    "&act_id=" + actId +
-                    "&chapter_id=" +
-                    chapterId +
-                    "&level=" + level
+                goBackAfterNotify = true
+                openNotification("Chapter Updated")
             } else {
                 console.log('failed to update chapter')
-                alert("ERROR")
+                openNotification("ERROR")
             }
         })
     } else if (level == levels.SCENE) {
         pywebview.api.update_scene(sceneId, label, description).then(success => {
             if (success) {
-                window.location =
-                    "story.html?story_id=" + storyId +
-                    "&act_id=" + actId +
-                    "&chapter_id=" + chapterId +
-                    "&scene_id=" + sceneId +
-                    "&level=" + level
+                goBackAfterNotify = true
+                openNotification("Scene Updated")
             } else {
                 console.log('failed to update scene')
-                alert("ERROR")
+                openNotification("ERROR")
             }
         })
     } else if (level == levels.BEAT) {
         pywebview.api.update_beat(beatId, label, description).then(success => {
             if (success) {
-                window.location =
-                    "story.html?story_id=" + storyId +
-                    "&act_id=" + actId +
-                    "&chapter_id=" + chapterId +
-                    "&scene_id=" + sceneId +
-                    "&beat_id=" + beatId +
-                    "&level=" + level
+                goBackAfterNotify = true
+                openNotification("Beat Updated")
             } else {
                 console.log('failed to update beat')
-                alert("ERROR")
+                openNotification("ERROR")
             }
         })
     }
 
 }
 
+const goBack = () => {
+    if (level == levels.ACT) {
+        window.location =
+            "cards.html?story_id=" + storyId +
+            "&act_id=" + actId +
+            "&level=" + level
+    } else if (level == levels.CHAPTER) {
+        window.location =
+            "cards.html?story_id=" + storyId +
+            "&act_id=" + actId +
+            "&chapter_id=" +
+            chapterId +
+            "&level=" + level
+    } else if (level == levels.SCENE) {
+        window.location =
+            "cards.html?story_id=" + storyId +
+            "&act_id=" + actId +
+            "&chapter_id=" + chapterId +
+            "&scene_id=" + sceneId +
+            "&level=" + level
+    } else if (level == levels.BEAT) {
+        window.location =
+            "cards.html?story_id=" + storyId +
+            "&act_id=" + actId +
+            "&chapter_id=" + chapterId +
+            "&scene_id=" + sceneId +
+            "&beat_id=" + beatId +
+            "&level=" + level
+    }
+}
+
+// open(set)/close popup notificaiton
+
+const openNotification = notificationText => {
+    console.log("Opened notification?")
+    notificationWrapper.style.display = ""
+    notificationCallout.style.display = ""
+    notificationParagraph.innerText = notificationText
+}
+
+const closeNotification = () => {
+    notificationWrapper.style.display = "none"
+    notificationCallout.style.display = "none"
+    !!goBackAfterNotify && goBack()
+}
+
+
 const loadDOM = () => {
     // overlay elements
     loadingOverlay = document.getElementById("loadingOverlay")
     loadingText = document.getElementById("loadingText")
+
+    // Notification elements
+    notificationWrapper = document.getElementById("notif-wrap-1")
+    notificationCallout = document.getElementById("notif-call-1")
+    notificationParagraph = document.getElementById("notif-text-1")
+
+    notificationWrapper.style.display = "none"
+    notificationCallout.style.display = "none"
 }
+
 
 const showLoading = () => {
     loadingOverlay.style.display = "inline-block"
@@ -161,6 +208,7 @@ const showLoading = () => {
     }, 340)
 }
 
+
 const hideLoading = () => {
     clearInterval(loadingInterval)
     loadingOverlay.style.display = "none"
@@ -168,3 +216,5 @@ const hideLoading = () => {
 
 window.addEventListener('load', () => setAspect())
 window.submit = submit
+window.goBack = goBack
+window.closeNotification = closeNotification

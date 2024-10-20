@@ -8,9 +8,12 @@ const aspects = {
 }
 var labelElement
 var descriptionElement
+var pageTitle
 
 var story = null
 var aspect = null
+var notificationWrapper, notificationCallout, notificationParagraph
+var goAfterNotify = null
 
 const setAspect = () => {
     // discover the purpose of this visit
@@ -19,32 +22,75 @@ const setAspect = () => {
 
     labelElement = document.getElementById("label")
     descriptionElement = document.getElementById("description")
+    pageTitle = document.getElementById("pageTitle")
+    notificationWrapper = document.getElementById("notif-wrap-1")
+    notificationCallout = document.getElementById("notif-call-1")
+    notificationParagraph = document.getElementById("notif-text-1")
+
+    notificationWrapper.style.display = "none"
+    notificationCallout.style.display = "none"
 
     // if EDIT, get the story and populate from that object
     // else, populate fields with boilerplate stuff
     if (aspect == aspects.EDIT) {
-        console.log("we are editing")
+        pageTitle.innerText = "EDIT STORY"
         const storyId = urlParams.get('story_id') || 0
 
-        // webview... get story
-        pywebview.api.get_story_by_id(storyId).then(incomingStory => {
-            story = incomingStory
-            // Load story data into fields
-            labelElement.value = story.label
-            descriptionElement.innerText = story.description
-        })
+        setTimeout(() => {
+            // webview... get story
+            pywebview.api.get_story_by_id(storyId).then(incomingStory => {
+                story = incomingStory
+                // Load story data into fields
+                labelElement.value = story.label
+                descriptionElement.innerText = story.description
+            })
+        }, 500)
+
 
     } else {
+        pageTitle.innerText = "NEW STORY"
         console.log("we are NOT editing")
     }
 }
 
-const submit = () => aspect == aspects.EDIT ? updateStory() : createStory()
+// open(set)/close popup notificaiton
+
+const openNotification = notificationText => {
+    console.log("Opened notification?")
+    notificationWrapper.style.display = ""
+    notificationCallout.style.display = ""
+    notificationParagraph.innerText = notificationText
+}
+
+const closeNotification = () => {
+    notificationWrapper.style.display = "none"
+    notificationCallout.style.display = "none"
+
+    if (!!goAfterNotify) {
+        window.location = goAfterNotify
+    }
+}
+
+const submit = () => {
+    if (!!labelElement.value) {
+        aspect == aspects.EDIT ? updateStory() : createStory()
+    } else {
+        // ERROR
+        openNotification("Please enter a name/label")
+    }
+}
+
+const returnURL = () => aspect == aspects.EDIT ? "cards.html?story_id=" + story.id : "init.html"
+
+const goBack = () => location.href = returnURL()
 
 const createStory = () => {
     const label = labelElement.value
     const description = descriptionElement.value
-    pywebview.api.create_empty_story(label, description).then(newStoryId => window.location = "story.html?story_id=" + newStoryId)
+    pywebview.api.create_empty_story(label, description).then(newStoryId => {
+        goAfterNotify = "cards.html?story_id=" + newStoryId
+        openNotification("Story created")
+    })
 }
 
 const updateStory = () => {
@@ -52,7 +98,8 @@ const updateStory = () => {
     const description = descriptionElement.value
     pywebview.api.update_story(story.id, label, description).then(success => {
         if (success) {
-            window.location = "story.html?story_id=" + story.id
+            goAfterNotify = "cards.html?story_id=" + story.id
+            openNotification("Story saved")
         } else {
             console.log('failed to update story')
             alert("ERROR")
@@ -62,3 +109,5 @@ const updateStory = () => {
 
 window.addEventListener('pywebviewready', setAspect())
 window.submit = submit
+window.goBack = goBack
+window.closeNotification = closeNotification

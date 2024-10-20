@@ -23,20 +23,30 @@
     <div class="grid-container">
         <div class="grid-x grid-padding-x">
             <div class="large-12 cell">
-                <div class="callout title_callout">
-                    <h1 class="title" id="pageTitle">EDIT STORY</h1>
-                </div>
+                <h1 class="title" id="pageTitle">EDIT STORY</h1>
             </div>
 
             <div class="large-12 cell">
                 <div class="callout primary">
-                    <h2>FORm</h2>
-                    <input id="label" type="text" value="Story" />
+                    <input id="label" placeholder="Name/Label" type="text" value="Story" />
                     <textarea id="description"></textarea>
                     <input id="submit" class="button" type="submit" onclick="submit()" />
                 </div>
             </div>
         </div>
+        <!-- "back" button -->
+        <div class="large-12 cell align_right">
+            <a class="button whiteButton" id="back_button" onclick="goBack()">BACK</a>
+        </div>
+    </div>
+
+    <div class="notificationWrapper" id="notif-wrap-1" onclick="closeNotification()">
+        &nbsp;
+    </div>
+
+    <div class="callout notificationCallout" id="notif-call-1">
+        <p id="notif-text-1">[Body of notification]</p>
+        <a class="button submit" onclick="closeNotification()">OK</a>
     </div>
 
     <script src="js/vendor/jquery.js"></script>

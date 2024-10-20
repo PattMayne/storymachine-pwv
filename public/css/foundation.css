@@ -4105,8 +4105,8 @@ screen and (min-width: 64em) {
     padding: 0.85em 1em;
     border: 1px solid transparent;
     border-radius: 0;
-    -webkit-transition: background-color 0.25s ease-out, color 0.25s ease-out;
-    transition: background-color 0.25s ease-out, color 0.25s ease-out;
+    -webkit-transition: background-color 0.1s ease-out, color 0.1s ease-out;
+    transition: background-color 0.1s ease-out, color 0.1s ease-out;
     font-family: inherit;
     font-size: 0.9rem;
     -webkit-appearance: none;
@@ -4145,14 +4145,14 @@ screen and (min-width: 64em) {
 .button[disabled]:hover,
 .button.disabled:focus,
 .button[disabled]:focus {
-    background-color: #1779ba;
-    color: #fefefe;
+    background-color: #6e6f6f;
+    color: #950606;
 }
 
 .button:hover,
 .button:focus {
-    background-color: #14679e;
-    color: #fefefe;
+    background-color: #3e7e0e;
+    color: #ffffff;
 }
 
 .button.primary,
@@ -4168,8 +4168,8 @@ screen and (min-width: 64em) {
 
 .button.primary:hover,
 .button.primary:focus {
-    background-color: #126195;
-    color: #fefefe;
+    background-color: #000000;
+    color: #dc9a37;
 }
 
 .button.secondary,
